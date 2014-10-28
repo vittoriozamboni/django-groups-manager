@@ -10,3 +10,21 @@ class GroupDjangoGroupSyncError(BaseException):
     '''
     Raised when try to access to Group.django_group attribute and it is None.'''
     pass
+
+
+class GroupNotSavedError(BaseException):
+    '''
+    Raised when try to use a group as a foreign key'''
+    pass
+
+
+class MemberNotSavedError(BaseException):
+    '''
+    Raised when try to use a member as a foreign key'''
+    pass
+
+
+class GetRoleError(BaseException):
+    '''
+    Raised when try to fetch a Role via non-int and non-string object'''
+    pass

@@ -5,7 +5,7 @@ GROUPS_MANAGER_SETTINGS = getattr(settings, 'GROUPS_MANAGER', {})
 
 SETTINGS_PERMISSIONS = GROUPS_MANAGER_SETTINGS.get('PERMISSIONS', {})
 PERMISSIONS = {
-    'self': 'vcd',
+    'owner': 'vcd',
     'group': 'vc',
     'groups_upstream': 'v',
     'groups_downstream': '',
@@ -20,5 +20,6 @@ GROUPS_MANAGER = {
     'GROUP_NAME_SUFFIX': GROUPS_MANAGER_SETTINGS.get('GROUP_NAME_SUFFIX', '_$$random'),
     'USER_USERNAME_PREFIX': GROUPS_MANAGER_SETTINGS.get('USER_USERNAME_PREFIX', 'DGM_'),
     'USER_USERNAME_SUFFIX': GROUPS_MANAGER_SETTINGS.get('USER_USERNAME_SUFFIX', '_$$random'),
+    # Permissions
     'PERMISSIONS': PERMISSIONS,
 }

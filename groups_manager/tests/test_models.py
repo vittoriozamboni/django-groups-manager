@@ -14,7 +14,7 @@ GROUPS_MANAGER_MOCK = {
     'USER_USERNAME_PREFIX': 'DGM_',
     'USER_USERNAME_SUFFIX': '_$$random',
     'PERMISSIONS': {
-        'self': 'vcd',
+        'owner': 'vcd',
         'group': 'vc',
         'groups_upstream': 'v',
         'groups_downstream': '',
@@ -33,7 +33,7 @@ class TestMember(TestCase):
             first_name='Lucio',
             last_name='Silla',
             username='lucio_silla',
-            email='lucio_silla@ancient.rome')
+            email='lucio_silla@ancient_rome.com')
 
     def test_unicode(self):
         self.assertEqual(unicode(self.member), 'Lucio Silla')
@@ -42,15 +42,13 @@ class TestMember(TestCase):
         self.assertEqual(self.member.full_name, 'Lucio Silla')
 
     def test_save_auto_create_username(self):
-        member = models.Member(first_name='Giulio', last_name='Cesare')
-        member.save()
+        member = models.Member.objects.create(first_name='Giulio', last_name='Cesare')
         self.assertEqual(member.username, 'giulio_cesare')
 
     def test_member_save(self):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
-        member = models.Member(first_name='Caio', last_name='Mario')
-        member.save()
+        member = models.Member.objects.create(first_name='Caio', last_name='Mario')
         self.assertIsNotNone(member.django_user)
         self.assertTrue(member.django_user.username.startswith(
                 GROUPS_MANAGER_MOCK['USER_USERNAME_PREFIX']))
@@ -61,8 +59,7 @@ class TestMember(TestCase):
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         settings.GROUPS_MANAGER['USER_USERNAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['USER_USERNAME_SUFFIX'] = ''
-        member = models.Member(first_name='Caio', last_name='Mario')
-        member.save()
+        member = models.Member.objects.create(first_name='Caio', last_name='Mario')
         self.assertEqual(member.username, member.django_user.username)
 
     def test_has_perm_exception(self):
@@ -114,41 +111,30 @@ class TestGroup(TestCase):
         self.assertEqual(str(self.group), self.group.name)
 
     def test_save(self):
-        group = models.Group(name='Istituto di Genomica Applicata')
-        group.save()
+        group = models.Group.objects.create(name='Istituto di Genomica Applicata')
         self.assertEqual(group.codename, 'istituto-di-genomica-applicata')
         self.assertEqual(group.full_name, group.name)
 
     def test_nested_group(self):
-        main = models.Group(name='Main')
-        main.save()
-        subgroup = models.Group(name='Sub Group', parent=main)
-        subgroup.save()
+        main = models.Group.objects.create(name='Main')
+        subgroup = models.Group.objects.create(name='Sub Group', parent=main)
         self.assertEqual(subgroup.full_name, 'Main - Sub Group')
 
     def test_nested_entities(self):
-        e1 = models.GroupEntity(label='Partner')
-        e1.save()
-        e2 = models.GroupEntity(label='Customer')
-        e2.save()
-        main = models.Group(name='Main')
-        main.save()
+        e1 = models.GroupEntity.objects.create(label='Partner')
+        e2 = models.GroupEntity.objects.create(label='Customer')
+        main = models.Group.objects.create(name='Main')
         main.group_entities.add(e1)
-        subgroup = models.Group(name='Sub Group', parent=main)
-        subgroup.save()
+        subgroup = models.Group.objects.create(name='Sub Group', parent=main)
         subgroup.group_entities.add(e2)
         self.assertEqual(main.entities, [e1, e2])
         self.assertEqual(subgroup.entities, [e2])
 
     def test_nested_members(self):
-        m1 = models.Member(first_name='Caio', last_name='Mario')
-        m1.save()
-        m2 = models.Member(first_name='Lucio', last_name='Silla')
-        m2.save()
-        main = models.Group(name='Main')
-        main.save()
-        subgroup = models.Group(name='Sub Group', parent=main)
-        subgroup.save()
+        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+        m2 = models.Member.objects.create(first_name='Lucio', last_name='Silla')
+        main = models.Group.objects.create(name='Main')
+        subgroup = models.Group.objects.create(name='Sub Group', parent=main)
         models.GroupMember.objects.create(group=main, member=m1)
         models.GroupMember.objects.create(group=subgroup, member=m2)
         self.assertEqual(main.members, [m1, m2])
@@ -169,8 +155,7 @@ class TestGroup(TestCase):
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
-        group = models.Group(name='Main Group')
-        group.save()
+        group = models.Group.objects.create(name='Main Group')
         self.assertEqual(group.name, group.django_group.name)
 
     def test_group_save_parent_no_prefix_suffix(self):
@@ -178,8 +163,7 @@ class TestGroup(TestCase):
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
-        group = models.Group(name='Main Group')
-        group.save()
+        group = models.Group.objects.create(name='Main Group')
         subgroup = models.Group(name='Sub group', parent=group)
         subgroup.save()
         self.assertEqual(subgroup.django_group.name, 'Main Group-Sub group')
@@ -189,8 +173,7 @@ class TestGroup(TestCase):
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
-        group = models.Group(name='Main Group')
-        group.save()
+        group = models.Group.objects.create(name='Main Group')
         group.name = 'Test change'
         group.save()
         self.assertEqual(group.django_group.name, group.name)
@@ -198,18 +181,62 @@ class TestGroup(TestCase):
     def test_nested_users(self):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
-        m1 = models.Member(first_name='Caio', last_name='Mario')
-        m1.save()
-        m2 = models.Member(first_name='Lucio', last_name='Silla')
-        m2.save()
-        main = models.Group(name='Main')
-        main.save()
-        subgroup = models.Group(name='Sub Group', parent=main)
-        subgroup.save()
+        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+        m2 = models.Member.objects.create(first_name='Lucio', last_name='Silla')
+        main = models.Group.objects.create(name='Main')
+        subgroup = models.Group.objects.create(name='Sub Group', parent=main)
         models.GroupMember.objects.create(group=main, member=m1)
         models.GroupMember.objects.create(group=subgroup, member=m2)
         self.assertEqual(main.users, [m1.django_user, m2.django_user])
         self.assertEqual(subgroup.users, [m2.django_user])
+
+    def test_add_member(self):
+        dictators = models.Group(name='Dictators')
+        dictators.save()
+        sulla = models.Member(first_name='Lucius', last_name='Sulla')
+        sulla.save()
+        membership = dictators.add_member(sulla)
+        self.assertEqual(membership.group, dictators)
+        self.assertEqual(membership.member, sulla)
+
+    def test_add_member_unsaved_group(self):
+        dictators = models.Group(name='Dictators')
+        sulla = models.Member(first_name='Lucius', last_name='Sulla')
+        sulla.save()
+        with self.assertRaises(exceptions.GroupNotSavedError):
+            dictators.add_member(sulla)
+
+    def test_add_member_unsaved_member(self):
+        dictators = models.Group.objects.create(name='Dictators')
+        sulla = models.Member(first_name='Lucius', last_name='Sulla')
+        with self.assertRaises(exceptions.MemberNotSavedError):
+            dictators.add_member(sulla)
+
+    def test_add_member_with_role(self):
+        romans = models.Group.objects.create(name='Romans')
+        sulla = models.Member.objects.create(first_name='Lucius', last_name='Sulla')
+        dictator = models.GroupMemberRole.objects.create(label='Dictator')
+        membership = romans.add_member(sulla, [dictator])
+        self.assertEqual(membership.group, romans)
+        self.assertEqual(membership.member, sulla)
+        self.assertIn(dictator, membership.roles.all())
+        # role from ID
+        caesar = models.Member.objects.create(first_name='Julius', last_name='Caesar')
+        membership = romans.add_member(caesar, [dictator.id])
+        self.assertIn(dictator, membership.roles.all())
+        # role from codename
+        plebeian = models.GroupMemberRole.objects.create(label='Plebeian')
+        manlius = models.Member.objects.create(first_name='Quintus', last_name='Manlius')
+        membership = romans.add_member(manlius, ['plebeian'])
+        self.assertIn(plebeian, membership.roles.all())
+        # role from label
+        caius = models.Member.objects.create(first_name='Caius', last_name='Petronius')
+        membership = romans.add_member(caius, ['Plebeian'])
+        self.assertIn(plebeian, membership.roles.all())
+        # invalid role
+        valerius = models.Member.objects.create(first_name='Valerius', last_name='Postumos')
+        with self.assertRaises(exceptions.GetRoleError):
+            romans.add_member(valerius, [{'role': 'invalid'}])
 
 
 class TestGroupMemberRole(TestCase):
@@ -229,24 +256,18 @@ class TestGroupMemberRole(TestCase):
 class TestGroupMember(TestCase):
 
     def test_unicode(self):
-        m1 = models.Member(first_name='Caio', last_name='Mario')
-        m1.save()
-        main = models.Group(name='Main')
-        main.save()
+        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+        main = models.Group.objects.create(name='Main')
         gm = models.GroupMember.objects.create(group=main, member=m1)
         self.assertEqual(str(gm), '%s - %s' % (gm.group.name, gm.member.full_name))
 
     def test_groups_membership_django_integration(self):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
-        m1 = models.Member(first_name='Caio', last_name='Mario', email='caio_mario@ancient.rome')
-        m1.save()
-        m2 = models.Member(first_name='Lucio', last_name='Silla')
-        m2.save()
-        main = models.Group(name='Main')
-        main.save()
-        subgroup = models.Group(name='Sub Group', parent=main)
-        subgroup.save()
+        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+        m2 = models.Member.objects.create(first_name='Lucio', last_name='Silla')
+        main = models.Group.objects.create(name='Main')
+        subgroup = models.Group.objects.create(name='Sub Group', parent=main)
         gm1 = models.GroupMember.objects.create(group=main, member=m1)
         models.GroupMember.objects.create(group=subgroup, member=m2)
         self.assertTrue(main.django_group in m1.django_user.groups.all())
