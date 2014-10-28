@@ -18,6 +18,7 @@ setup(
         'awesome-slugify',
         'django>=1.4',
         'django-braces',
+        'django-guardian',
         'django-mptt',
         'jsonfield',
     ],

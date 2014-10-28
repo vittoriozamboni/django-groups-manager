@@ -1,1 +1,9 @@
+awesome-slugify
+django>=1.4
+django-braces
+django-guardian
+django-mptt
+jsonfield
+
+django-extensions
 https://bitbucket.org/zamboni/django-helper-forms/get/tip.zip
