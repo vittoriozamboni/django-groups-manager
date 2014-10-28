@@ -1,0 +1,70 @@
+{
+  "checksum": {
+    "previous": "4e35e5b56e5801c54a6aaa63ccb47cb1790a49514428d9bbca71bbb531528bb4",
+    "current": "4e35e5b56e5801c54a6aaa63ccb47cb1790a49514428d9bbca71bbb531528bb4"
+  },
+  "fonts": [
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager.ttf",
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager.svg",
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager.woff",
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager.eot"
+  ],
+  "glyphs": {
+    "group": {
+      "codepoint": 61696,
+      "source": "./group.svg"
+    },
+    "group-entity": {
+      "codepoint": 61697,
+      "source": "./group-entity.svg"
+    },
+    "group-member": {
+      "codepoint": 61698,
+      "source": "./group-member.svg"
+    },
+    "group-member-role": {
+      "codepoint": 61702,
+      "source": "./group-member-role.svg"
+    },
+    "group-type": {
+      "codepoint": 61699,
+      "source": "./group-type.svg"
+    },
+    "groups-manager": {
+      "codepoint": 61701,
+      "source": "./groups-manager.svg"
+    },
+    "member": {
+      "codepoint": 61700,
+      "source": "./member.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": false,
+    "css_selector": ".fa-groups-manager-{{glyph}}",
+    "debug": false,
+    "font_name": "groups_manager",
+    "force": false,
+    "input": {
+      "templates": ".",
+      "vectors": "."
+    },
+    "no_hash": true,
+    "output": {
+      "css": "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons",
+      "fonts": "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons",
+      "preview": "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons"
+    },
+    "preprocessor_path": null,
+    "quiet": false,
+    "templates": [
+      "css",
+      "preview"
+    ]
+  },
+  "templates": [
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager.css",
+    "/Users/zamboni/repositories/django-groups-manager/groups_manager/static/groups_manager/css/icons/groups_manager-preview.html"
+  ]
+}

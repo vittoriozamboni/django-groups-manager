@@ -1,0 +1,62 @@
+ul.dashboard-icons {
+  float: left;
+  display: block;
+  margin-bottom: 20px; }
+  ul.dashboard-icons li {
+    float: left;
+    display: inline;
+    margin: 0 15px 15px 0;
+    padding: 4px;
+    border: 1px solid #EEE; }
+    ul.dashboard-icons li a {
+      display: block;
+      width: 106px;
+      text-decoration: none;
+      color: #555;
+      text-align: center; }
+      ul.dashboard-icons li a:hover {
+        background: #EFEFEF;
+        color: #FF7400; }
+      ul.dashboard-icons li a img {
+        display: inline;
+        width: 60px;
+        margin-top: 8px; }
+      ul.dashboard-icons li a i {
+        margin-top: 7px;
+        text-align: center; }
+      ul.dashboard-icons li a span {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 11px;
+        vertical-align: middle;
+        height: 40px; }
+
+.table-objects-list td:last-of-type {
+  text-align: right;
+  width: auto; }
+  .table-objects-list td:last-of-type a {
+    margin-right: 4px; }
+    .table-objects-list td:last-of-type a:last-of-type {
+      margin-right: 0px; }
+    .table-objects-list td:last-of-type a:hover {
+      text-transform: none; }
+
+#sidebar {
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-width: 0px 1px 0px 0px;
+  background-color: #f2f2f2;
+  margin: 0px;
+  /*border-right: 1px solid #FF00FF;*/ }
+
+
+.sidebar-title {
+  border: 1px solid #ccc;
+  border-width: 0px 0 0 0;
+  background-color: #ECECEC;
+  color: #676767; }
+  .sidebar-title span:first-of-type {
+    position: relative;
+    top: -3px; }

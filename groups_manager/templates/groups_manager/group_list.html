@@ -1,0 +1,57 @@
+{% extends "groups_manager/group.html" %}
+
+{% load groups_manager_filters %}
+
+{% block content %}
+    
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-group"></i> Groups
+</h2>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <table class="table table-striped table-objects-list table-hover" id="group_list">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Parent</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for group in object_list %}
+        <tr>
+            <td>
+                <a href="{% url 'groups_manager:group_detail' group.id %}">
+                    {% for i in group.level|int_range %}<span class="mptt-son"></span>{% endfor %}
+                    {{ group.name }}
+                </a>
+            </td>
+            <td>
+                {% if group.parent %}
+                    <a href="{% url 'groups_manager:group_detail' group.parent.id %}">
+                        {{ group.parent }}
+                    </a>
+                {% endif %}
+            </td>
+            <td>
+                <!--PERMESSIHERE-->
+                {% if perms.groups_manager.can_change_group %}
+                    <a href="{% url 'groups_manager:group_edit' group.id %}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                {% endif %}
+                {% if perms.groups_manager.can_delete_group %}
+                    <a href="{% url 'groups_manager:group_delete' group.id %}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

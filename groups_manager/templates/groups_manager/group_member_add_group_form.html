@@ -1,0 +1,30 @@
+{% extends "groups_manager/member_detail.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href=".">Add to group</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="page-title">
+    <i class="fa fa-group_members-manager-group-member"></i>
+    Add member {{ member }} to group
+</h2>
+
+
+<form action="." method="post" id="group_member_form" class="django form-horizontal">
+{% csrf_token %}
+
+{% include "django_helper_forms/forms/form_template.html" %}
+
+{% include "django_helper_forms/forms/form_template_bottom.html" %}
+
+</form>
+        
+{% endblock content %}

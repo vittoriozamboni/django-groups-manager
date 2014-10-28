@@ -1,0 +1,38 @@
+{% extends "groups_manager/group.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href="{% url 'groups_manager:group_member_delete' group_member.id %}">Delete</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-group-entity"></i> Delete group membership
+</h2>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="bs-callout bs-callout-danger">
+                <h3>{{ group_member }}</h3>
+                <p>Are you sure you want to delete this group membership?</p>
+                <div class="align-center">
+                    <form action="{% url 'groups_manager:group_member_delete' group_member.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger" value="Delete" />
+                        <a href="{% url 'groups_manager:group_detail' group.id %}" class="btn">Back to group</a>
+                    </form>
+                    
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

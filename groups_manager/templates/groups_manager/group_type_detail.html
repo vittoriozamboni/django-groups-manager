@@ -1,0 +1,97 @@
+{% extends "groups_manager/group_type.html" %}
+{% load admin_urls %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href="{% url 'groups_manager:group_type_detail' group_type.id %}">{{ group_type }}</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-list">
+    <li>
+        <ul class="nav nav-list">
+            <!--PERMESSIHERE-->
+            {% if perms.groups_manager.can_change_grouptype %}
+            <li>
+                <a href="{% url 'groups_manager:group_type_edit' group_type.id %}">
+                    <i class="fa fa-edit"></i>
+                    Edit group type
+                </a>    
+            </li>
+            {% endif %}
+        
+            <!--PERMESSIHERE-->
+            {% if perms.groups_manager.can_delete_grouptype %}
+            <li>
+                <a href="{% url 'groups_manager:group_type_delete' group_type.id %}">
+                    <i class="fa fa-times"></i>
+                    Delete group type
+                </a>
+            </li>
+            {% endif %}
+            </li>
+        </ul>
+    </li>
+</ul>
+
+{% endblock sidebar %}
+
+{% block content %}
+
+
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-group-type"></i> {{ group_type }}
+</h2>
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span6">
+            <h3>Details</h3>
+            <table class="table table-striped">
+            <tr>
+                <th>Label</th>
+                <td>{{ group_type.label }}</td>
+            </tr>
+            <tr>
+                <th>Codename</th>
+                <td>{{ group_type.codename }}</td>
+            </tr>
+            </table>
+        </div>
+        <div class="span6">
+            <h3>Groups</h3>
+            {% with group_type_groups=group_type.groups.all %}
+            {% if group_type_groups %}
+                <table class="table table-striped">
+                <tr>
+                    <td>Group</td>
+                </tr>
+                {% for group in group_type_groups}
+                <tr>
+                    <td>
+                        <a href="{% url 'group_managers:group_detail' group.id %}">
+                            {{ group.name }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </table>
+            {% else %}
+                <div class="bs-callout bs-callout-info">
+                    <p>This group type is not related to any group.</p>
+                </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

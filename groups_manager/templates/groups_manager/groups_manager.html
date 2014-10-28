@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}groups_manager/css/groups_manager.css" type="text/css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}groups_manager/css/icons/groups_manager.css" type="text/css">
+{% endblock extra_css %}
+
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}groups_manager/js/groups_manager.js" charset="utf-8"></script>
+{% endblock extra_scripts %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href="{% url 'groups_manager:groups_manager' %}">Groups Manager</a>
+    </li>
+{% endblock breadcrumbs %}
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-list">
+    <li>
+        <a class="sidebar-title" href="{% url 'groups_manager:groups_manager' %}">
+            <i class="fa fa-2x fa-groups-manager-groups-manager"></i> <span >Groups manager</span>
+        </a>
+        <ul class="nav nav-list">
+          <li>
+              <a href="{% url 'groups_manager:group_list' %}" class="groups-manager-color">
+                  <i class="fa fa-groups-manager-group"></i> Groups
+              </a>    
+          </li>
+          <li>
+              <a href="{% url 'groups_manager:member_list' %}" class="groups-manager-color">
+                  <i class="fa fa-groups-manager-member"></i> Members
+              </a>    
+          </li>
+        </ul>
+    </li>
+</ul>
+
+{% endblock sidebar %}

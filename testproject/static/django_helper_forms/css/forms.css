@@ -1,0 +1,11 @@
+.field-error {
+  border-color: #900000 !important;
+  background-color: #FCB3B0 !important; }
+
+.angular-multiple-form-select-label {
+  color: #313131;
+  text-decoration: underline; }
+
+.multiple-form-selected-text {
+  width: 450px;
+  height: 300px; }

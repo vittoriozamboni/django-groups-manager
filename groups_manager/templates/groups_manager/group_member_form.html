@@ -1,0 +1,38 @@
+{% extends "groups_manager/group_detail.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        {% if group_member %}
+            <a href="{% url 'groups_manager:group_member_edit' group_member.id %}">Edit</a>
+        {% else %}
+            <a href="{% url 'groups_manager:group_member_add' %}">Add</a>
+        {% endif %}
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="page-title">
+    <i class="fa fa-group_members-manager-group_member"></i>
+    {% if group_member %}
+        Edit "{{ group_member }}"
+    {% else %}
+        Create Group Member
+    {% endif %}
+</h2>
+
+
+<form action="." method="post" id="group_member_form" class="django form-horizontal">
+{% csrf_token %}
+
+{% include "django_helper_forms/forms/form_template.html" %}
+
+{% include "django_helper_forms/forms/form_template_bottom.html" %}
+
+</form>
+        
+{% endblock content %}

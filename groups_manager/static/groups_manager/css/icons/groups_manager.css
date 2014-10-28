@@ -1,0 +1,53 @@
+/*
+  Icon Font: groups_manager
+*/
+
+@font-face {
+  font-family: "groups_manager";
+  src: url("./groups_manager.eot");
+  src: url("./groups_manager.eot?#iefix") format("embedded-opentype"),
+       url("./groups_manager.woff") format("woff"),
+       url("./groups_manager.ttf") format("truetype"),
+       url("./groups_manager.svg#groups_manager") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "groups_manager";
+    src: url("./groups_manager.svg#groups_manager") format("svg");
+  }
+}
+
+[data-icon]:before { content: attr(data-icon); }
+
+[data-icon]:before,
+.fa-groups-manager-group:before,
+.fa-groups-manager-group-entity:before,
+.fa-groups-manager-group-member:before,
+.fa-groups-manager-group-member-role:before,
+.fa-groups-manager-group-type:before,
+.fa-groups-manager-groups-manager:before,
+.fa-groups-manager-member:before {
+  display: inline-block;
+  font-family: "groups_manager";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.fa-groups-manager-group:before { content: "\f100"; }
+.fa-groups-manager-group-entity:before { content: "\f101"; }
+.fa-groups-manager-group-member:before { content: "\f102"; }
+.fa-groups-manager-group-member-role:before { content: "\f106"; }
+.fa-groups-manager-group-type:before { content: "\f103"; }
+.fa-groups-manager-groups-manager:before { content: "\f105"; }
+.fa-groups-manager-member:before { content: "\f104"; }

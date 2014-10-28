@@ -1,0 +1,40 @@
+{% extends "groups_manager/groups_manager.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href="{% url 'groups_manager:group_entity_list' %}">Group Entities</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-list">
+    <li>
+        <a class="sidebar-title groups-manager-color" href="{% url 'groups_manager:group_entity_list' %}">
+            <i class="fa fa-fw fa-2x fa-groups-manager-group-entity"></i> <span >Group Entities</span>
+        </a>
+        <ul class="nav nav-list">
+          <li>
+              <a href="{% url 'groups_manager:group_entity_list' %}">
+                  <i class="fa fa-list"></i> List group entities
+              </a>    
+          </li>
+          <!--PERMESSIHERE-->
+          {% if perms.groups_manager.add_groupentity %}
+          <li>
+              <a href="{% url 'groups_manager:group_entity_add' %}">
+                  <i class="fa fa-plus"></i> Add group entity
+              </a>    
+          </li>
+          {% endif %}
+        </ul>
+  </li>
+</ul>
+
+{% endblock sidebar %}

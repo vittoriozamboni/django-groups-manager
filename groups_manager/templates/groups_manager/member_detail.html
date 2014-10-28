@@ -1,0 +1,122 @@
+{% extends "groups_manager/member.html" %}
+{% load admin_urls %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <span class="divider">&raquo;</span>
+        <a href="{% url 'groups_manager:member_detail' member.id %}">{{ member }}</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-list">
+    <li>
+        <ul class="nav nav-list">
+            <!--PERMESSIHERE-->
+            {% if perms.groups_manager.can_change_member %}
+            <li>
+                <a href="{% url 'groups_manager:member_edit' member.id %}">
+                    <i class="fa fa-edit"></i>
+                    Edit member
+                </a>    
+            </li>
+            {% endif %}
+        
+            <!--PERMESSIHERE-->
+            {% if perms.groups_manager.can_delete_member %}
+            <li>
+                <a href="{% url 'groups_manager:member_delete' member.id %}">
+                    <i class="fa fa-times"></i>
+                    Delete member
+                </a>
+            </li>
+            {% endif %}
+            </li>
+        </ul>
+    </li>
+</ul>
+
+{% endblock sidebar %}
+
+{% block content %}
+
+
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-member"></i> {{ member }}
+</h2>
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span6">
+            <h3>Details</h3>
+            <table class="table table-striped">
+            <tr>
+                <th>First name</th>
+                <td>{{ member.first_name }}</td>
+            </tr>
+            <tr>
+                <th>Last name</th>
+                <td>{{ member.last_name }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ member.email }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ member.username }}</td>
+            </tr>
+            </table>
+        </div>
+        <div class="span6">
+            <h3>Groups</h3>
+            {% with member_memberships=member.group_membership.all %}
+            {% if member_memberships %}
+                <table class="table table-striped">
+                <tr>
+                    <td>Group</td>
+                    <td>Roles</td>
+                </tr>
+                {% for group_membership in member_memberships %}
+                <tr>
+                    <td>
+                        <a href="{% url 'groups_manager:group_detail' group_membership.group.id %}">
+                            {{ group_membership.group.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {% for role in group_member.roles.all %}
+                            {{ role }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </table>
+            {% else %}
+                <div class="bs-callout bs-callout-info">
+                    <p>This member is not related to any group.</p>
+                </div>
+            {% endif %}
+
+            <!--PERMESSIHERE-->
+            {% if perms.groups_manager.can_add_groupmember %}
+            <p>
+                <a href="{% url 'groups_manager:group_member_add_group' member.id %}">
+                    <i class="fa fa-plus"></i>
+                    Add member to group
+                </a>
+            </p>    
+            {% endif %}
+
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

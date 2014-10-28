@@ -1,0 +1,59 @@
+{% extends "groups_manager/groups_manager.html" %}
+
+{% block content %}
+
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-groups-manager"></i> Groups Manager
+</h2>
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+
+        <ul class="dashboard-icons">
+        <li>
+            <a href="{% url 'groups_manager:group_list' %}">
+                <i class="fa fa-5x fa-groups-manager-group"></i>
+                <span >Groups</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'groups_manager:member_list' %}">
+                <i class="fa fa-5x fa-groups-manager-member"></i>
+                <span >Members</span>
+            </a>
+        </li>
+        </ul>
+
+    </div>
+    
+    <hr />
+
+    <div class="row-fluid">
+
+        <ul class="dashboard-icons">
+        <li>
+            <a href="{% url 'groups_manager:group_type_list' %}">
+                <i class="fa fa-5x fa-groups-manager-group-type"></i>
+                <span >Group Types</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'groups_manager:group_entity_list' %}">
+                <i class="fa fa-5x fa-groups-manager-group-entity"></i>
+                <span >Group Entities</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'groups_manager:group_member_role_list' %}">
+                <i class="fa fa-5x fa-groups-manager-group-member-role"></i>
+                <span >Group Member Roles</span>
+            </a>
+        </li>
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,34 @@
+ul.dashboard-icons {
+  float: left;
+  display: block;
+  margin-bottom: 20px; }
+  ul.dashboard-icons li {
+    float: left;
+    display: inline;
+    margin: 0 15px 15px 0;
+    padding: 4px;
+    border: 1px solid #EEE; }
+    ul.dashboard-icons li a {
+      display: block;
+      width: 106px;
+      text-decoration: none;
+      color: #555;
+      text-align: center; }
+      ul.dashboard-icons li a:hover {
+        background: #EFEFEF;
+        color: #FF7400; }
+      ul.dashboard-icons li a img {
+        display: inline;
+        width: 60px;
+        margin-top: 8px; }
+      ul.dashboard-icons li a i {
+        margin-top: 7px;
+        text-align: center; }
+      ul.dashboard-icons li a span {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 11px;
+        vertical-align: middle;
+        height: 40px; }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Meta -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <!-- FONT -->
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css' />
+        
+        <!-- Page title -->
+        <title>Test</title>
+        
+        <!--------- CSS ---------->
+        <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}testproject/testproject.css" rel="stylesheet">
+        {% block extra_css %}{% endblock extra_css %}
+        
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+        {% block extra_head %}{% endblock extra_head %}
+    </head>
+
+    <body style="padding-top: 50px;">
+    {% block body %}
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                </a>
+                <a class="brand" href="{% url 'home' %}">TEST Project</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li>
+                            <a href="{% url 'groups_manager:groups_manager' %}">Groups Manager</a>
+                        </li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Container -->
+    {% block container %}
+    <div class="container-fluid main-container">
+        <div class="row-fluid" style="height: 100%;">
+            {% block content_layout %}
+            <div id="sidebar" class="span3">
+                <div class="main-sidebar">
+                    {% block sidebar %}
+                    {% endblock sidebar %}
+                </div>
+            </div>
+
+            <div id="main" class="span9">
+                <ul class="breadcrumb">
+                {% block breadcrumbs %}
+                    <li>
+                        <span class="divider">&raquo;</span>
+                        <a href="{% url 'home' %}">Dashboard</a>
+                    </li>
+                {% endblock breadcrumbs %}
+                </ul>
+                <div id="main_content">
+                {% block content %}
+                {% endblock content %}
+                </div>
+            </div>
+            {% endblock content_layout %}
+        </div>
+    </div>
+    <!-- End of Container -->
+    {% endblock container %}
+
+    <!-- Footer -->
+    {% block footer %}
+    <div class="navbar navbar-fixed-bottom navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <ul class="nav pull-left">
+                    <li>
+                        <!-- IPv6-test.com button BEGIN -->
+                        <!-- <a href='http://ipv6-test.com/validate.php?url=referer'><img src='http://ipv6-test.com/button-ipv6-80x15.png' alt='ipv6 ready' title='ipv6 ready' border='0' /></a> -->
+                        <!-- IPv6-test.com button END -->
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a>&copy; Vittorio Zamboni 2014. All rights reserved.</a></li>
+                </ul>
+                {% block extra_footer %}{% endblock extra_footer %}
+            </div>
+        </div>
+    </div>
+    {% endblock footer %}
+    <!-- End of Footer -->
+    
+    {% endblock body %}
+
+    <!---------- JS ----------->
+    <!-- django-helper-forms -->
+    <!----- extra scripts------>
+    {% include "django_helper_forms/shortcuts/js.html" %}
+    {% block extra_scripts %}{% endblock extra_scripts %}
+    <!------- END OF JS ------->
+    
+    </body>
+</html>
