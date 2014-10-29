@@ -44,6 +44,9 @@ class Member(models.Model):
     def __unicode__(self):
         return self.full_name
 
+    def __str__(self):
+        return self.full_name
+
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = slugify(self.full_name, to_lower=True, separator="_")
@@ -154,6 +157,9 @@ class GroupType(models.Model):
     def __unicode__(self):
         return self.label
 
+    def __str__(self):
+        return self.label
+
     def save(self, *args, **kwargs):
         if not self.codename:
             self.codename = slugify(self.label, to_lower=True)
@@ -176,6 +182,9 @@ class GroupEntity(models.Model):
         ordering = ('label', )
 
     def __unicode__(self):
+        return self.label
+
+    def __str__(self):
         return self.label
 
     def save(self, *args, **kwargs):
@@ -236,6 +245,9 @@ class Group(MPTTModel):
         order_insertion_by = ['name', ]
 
     def __unicode__(self):
+        return '%s' % self.name
+
+    def __str__(self):
         return '%s' % self.name
 
     def save(self, *args, **kwargs):
@@ -405,6 +417,9 @@ class GroupMemberRole(models.Model):
     def __unicode__(self):
         return self.label
 
+    def __str__(self):
+        return self.label
+
     def save(self, *args, **kwargs):
         if not self.codename:
             self.codename = slugify(self.label, to_lower=True)
@@ -430,6 +445,9 @@ class GroupMember(models.Model):
         unique_together = (('group', 'member'), )
 
     def __unicode__(self):
+        return '%s - %s' % (self.group.name, self.member.full_name)
+
+    def __str__(self):
         return '%s - %s' % (self.group.name, self.member.full_name)
 
     def assign_object(self, obj, **kwargs):

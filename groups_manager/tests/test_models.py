@@ -1,5 +1,5 @@
-import os
 import re
+import sys
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.test import TestCase
@@ -34,8 +34,12 @@ class TestMember(TestCase):
             last_name='Silla',
             username='lucio_silla',)
 
+    def test_str(self):
+        self.assertEqual(str(self.member), 'Lucio Silla')
+
     def test_unicode(self):
-        self.assertEqual(unicode(self.member), 'Lucio Silla')
+        if sys.version_info < (3, ):
+            self.assertEqual(unicode(self.member), 'Lucio Silla')
 
     def test_full_name(self):
         self.assertEqual(self.member.full_name, 'Lucio Silla')
@@ -79,8 +83,12 @@ class TestGroupType(TestCase):
         self.maxDiff = None
         self.group_type = models.GroupType(label='Organization')
 
+    def test_str(self):
+        self.assertEqual(str(self.group_type), 'Organization')
+
     def test_unicode(self):
-        self.assertEqual(str(self.group_type), self.group_type.label)
+        if sys.version_info < (3, ):
+            self.assertEqual(unicode(self.group_type), 'Organization')
 
     def test_save(self):
         self.group_type.save()
@@ -93,8 +101,12 @@ class TestGroupEntity(TestCase):
         self.maxDiff = None
         self.group_entity = models.GroupEntity(label='Organization Partner')
 
+    def test_str(self):
+        self.assertEqual(str(self.group_entity), 'Organization Partner')
+
     def test_unicode(self):
-        self.assertEqual(str(self.group_entity), self.group_entity.label)
+        if sys.version_info < (3, ):
+            self.assertEqual(unicode(self.group_entity), 'Organization Partner')
 
     def test_save(self):
         self.group_entity.save()
@@ -107,8 +119,12 @@ class TestGroup(TestCase):
         self.maxDiff = None
         self.group = models.Group(name='Istituto di Genomica Applicata')
 
+    def test_str(self):
+        self.assertEqual(str(self.group), 'Istituto di Genomica Applicata')
+
     def test_unicode(self):
-        self.assertEqual(str(self.group), self.group.name)
+        if sys.version_info < (3, ):
+            self.assertEqual(unicode(self.group), 'Istituto di Genomica Applicata')
 
     def test_save(self):
         group = models.Group.objects.create(name='Istituto di Genomica Applicata')
@@ -250,8 +266,12 @@ class TestGroupMemberRole(TestCase):
         self.maxDiff = None
         self.group_member_role = models.GroupMemberRole(label='Administrator')
 
+    def test_str(self):
+        self.assertEqual(str(self.group_member_role), 'Administrator')
+
     def test_unicode(self):
-        self.assertEqual(str(self.group_member_role), self.group_member_role.label)
+        if sys.version_info < (3, ):
+            self.assertEqual(unicode(self.group_member_role), 'Administrator')
 
     def test_save(self):
         self.group_member_role.save()
@@ -260,11 +280,17 @@ class TestGroupMemberRole(TestCase):
 
 class TestGroupMember(TestCase):
 
+    def test_str(self):
+        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+        main = models.Group.objects.create(name='Main')
+        gm = models.GroupMember.objects.create(group=main, member=m1)
+        self.assertEqual(str(gm), 'Main - Caio Mario')
+
     def test_unicode(self):
         m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
         main = models.Group.objects.create(name='Main')
         gm = models.GroupMember.objects.create(group=main, member=m1)
-        self.assertEqual(str(gm), '%s - %s' % (gm.group.name, gm.member.full_name))
+        self.assertEqual(unicode(gm), 'Main - Caio Mario')
 
     def test_groups_membership_django_integration(self):
         from groups_manager import settings

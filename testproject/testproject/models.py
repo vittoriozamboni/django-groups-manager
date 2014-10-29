@@ -19,6 +19,9 @@ class Legion(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
 
 '''
 Football team example
