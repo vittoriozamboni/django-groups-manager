@@ -12,6 +12,7 @@ env:
 install:
   - pip install -q Django==$DJANGO_VERSION coverage coveralls
   - pip install . --use-mirrors
+  - pip install -r testproject/requirements.txt --use-mirrors
 
 script:
   - coverage run testproject/manage.py test testproject groups_manager
@@ -24,12 +25,10 @@ after_success:
 matrix:
     exclude:
         - python: 3.3
-          env: DJANGO_VERSION=1.2.7
-        - python: 3.3
-          env: DJANGO_VERSION=1.3.7
-        - python: 3.3
           env: DJANGO_VERSION=1.4.16
     include:
+        - python: 2.7
+          env: DJANGO_VERSION=1.7.1
         - python: 3.3
           env: DJANGO_VERSION=1.7.1
         - python: 3.4

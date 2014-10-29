@@ -467,11 +467,18 @@ def group_member_delete(sender, instance, *args, **kwargs):
     '''
     from settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
-        django_user = instance.member.django_user
-        django_group = instance.group.django_group
-        if django_user and django_group:
-            if django_group in django_user.groups.all():
-                django_user.groups.remove(django_group)
+        member = instance.member
+        # Django 1.4 compatibility
+        try:
+            group = instance.group
+        except Group.DoesNotExist:
+            group = None
+        if member and group:
+            django_user = instance.member.django_user
+            django_group = instance.group.django_group
+            if django_user and django_group:
+                if django_group in django_user.groups.all():
+                    django_user.groups.remove(django_group)
 
 post_save.connect(group_member_save, sender=GroupMember)
 post_delete.connect(group_member_delete, sender=GroupMember)

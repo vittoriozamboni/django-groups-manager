@@ -9,4 +9,6 @@ if StrictVersion(django.get_version()) >= StrictVersion('1.6'):
 else:
     def get_permission_name(action, obj):
         # Follow standard guidelines: 'action_modelname'
-        return '%s_%s' % (action, obj._meta.model_name)
+        if hasattr(obj._meta, 'model_name'):
+            return '%s_%s' % (action, obj._meta.model_name)
+        return '%s_%s' % (action, obj._meta.module_name)
