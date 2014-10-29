@@ -17,7 +17,7 @@ script:
   - coverage run testproject/manage.py test testproject groups_manager
 
 after_success:
-  - coverage report  --omit='groups_manager/forms.py,groups_manager/urls.py,groups_manager/utils.py,groups_manager/views.py,groups_manager/__init__.py' -m groups_manager/*.py
+  - coverage report
   - coveralls
 
 

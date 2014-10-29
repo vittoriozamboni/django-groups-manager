@@ -1,0 +1,5 @@
+[run]
+source = groups_manager
+omit = groups_manager/tests/*,groups_manager/forms.py,groups_manager/templatetags/*,groups_manager/utils.py,groups_manager/urls.py,groups_manager/views.py
+branch = 1
+
