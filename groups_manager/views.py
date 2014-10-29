@@ -6,8 +6,8 @@ from braces.views import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 
-import models
-import forms
+from groups_manager import models
+from groups_manager import forms
 
 
 class GroupsManagerView(TemplateView):

@@ -3,7 +3,7 @@ import re
 from django.test import TestCase
 
 from groups_manager import models
-import models as testproject_models
+from testproject import models as testproject_models
 
 GROUPS_MANAGER_MOCK = {
     'AUTH_MODELS_SYNC': True,
