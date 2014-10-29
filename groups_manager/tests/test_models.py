@@ -287,10 +287,11 @@ class TestGroupMember(TestCase):
         self.assertEqual(str(gm), 'Main - Caio Mario')
 
     def test_unicode(self):
-        m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
-        main = models.Group.objects.create(name='Main')
-        gm = models.GroupMember.objects.create(group=main, member=m1)
-        self.assertEqual(unicode(gm), 'Main - Caio Mario')
+        if sys.version_info < (3, ):
+            m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
+            main = models.Group.objects.create(name='Main')
+            gm = models.GroupMember.objects.create(group=main, member=m1)
+            self.assertEqual(unicode(gm), 'Main - Caio Mario')
 
     def test_groups_membership_django_integration(self):
         from groups_manager import settings
