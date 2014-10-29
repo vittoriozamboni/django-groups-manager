@@ -6,13 +6,13 @@ except ImportError:
     def assign_perm(perm_name, group_or_user, obj):
         pass
 
-from .utils import get_permission_name
+from groups_manager.utils import get_permission_name
 
 
 def assign_object_to_member(group_member, obj, **kwargs):
     """Assign an object to a GroupMember instance object.
     """
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and \
             group_member.group.django_group and group_member.member.django_user:
         roles_attr = kwargs.get('roles_attr', 'roles')

@@ -90,7 +90,7 @@ def member_save(sender, instance, created, *args, **kwargs):
     '''
     Add User to Django Users
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         prefix = GROUPS_MANAGER['USER_USERNAME_PREFIX']
         suffix = GROUPS_MANAGER['USER_USERNAME_SUFFIX']
@@ -125,7 +125,7 @@ def member_delete(sender, instance, *args, **kwargs):
     '''
     Remove the related Django Group
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         if instance.django_user:
             django_user = instance.django_user
@@ -348,7 +348,7 @@ def group_save(sender, instance, created, *args, **kwargs):
     '''
     Add Group to Django Groups
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         # create a name compatible with django group name limit of 80 chars
         prefix = GROUPS_MANAGER['GROUP_NAME_PREFIX']
@@ -376,7 +376,7 @@ def group_delete(sender, instance, *args, **kwargs):
     '''
     Remove the related Django Group
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         if instance.django_group:
             django_group = instance.django_group
@@ -451,7 +451,7 @@ def group_member_save(sender, instance, created, *args, **kwargs):
     '''
     Add Django User to Django Groups
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
         django_user = instance.member.django_user
         django_group = instance.group.django_group
@@ -464,7 +464,7 @@ def group_member_delete(sender, instance, *args, **kwargs):
     '''
     Remove Django User from Django Groups
     '''
-    from settings import GROUPS_MANAGER
+    from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
         member = instance.member
         # Django 1.4 compatibility
