@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-import models
+from groups_manager import models
 
 
 admin.site.register(models.Member)
