@@ -12,11 +12,11 @@ GROUPS_MANAGER_MOCK = {
     'USER_USERNAME_PREFIX': '',
     'USER_USERNAME_SUFFIX': '',
     'PERMISSIONS': {
-        'owner': 'vcd',
-        'group': 'vc',
-        'groups_upstream': 'v',
-        'groups_downstream': '',
-        'groups_siblings': 'v',
+        'owner': ['view', 'change', 'delete'],
+        'group': ['view', 'change'],
+        'groups_upstream': ['view'],
+        'groups_downstream': [],
+        'groups_siblings': ['view'],
     },
 }
 
@@ -69,7 +69,7 @@ class TestPermissions(TestCase):
         legio_5 = testproject_models.Legion(name='Legio V')
         legio_5.save()
         relation = models.GroupMember.objects.get(group=self.consuls, member=self.sulla)
-        relation.assing_object(legio_4)
+        relation.assign_object(legio_4)
 
         # owner - read
         self.assertTrue(self.sulla.has_perm('testproject.view_legion', legio_4))
@@ -104,18 +104,18 @@ class TestPermissions(TestCase):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         custom_permissions = {
-            'owner': 'vcd',
-            'group': 'vcd',
-            'groups_upstream': 'vcd',
-            'groups_downstream': 'vcd',
-            'groups_siblings': 'vcd',
+            'owner': ['view', 'change', 'delete'],
+            'group': ['view', 'change', 'delete'],
+            'groups_upstream': ['view', 'change', 'delete'],
+            'groups_downstream': ['view', 'change', 'delete'],
+            'groups_siblings': ['view', 'change', 'delete'],
         }
         legio_4 = testproject_models.Legion(name='Legio IV')
         legio_4.save()
         legio_5 = testproject_models.Legion(name='Legio V')
         legio_5.save()
         relation = models.GroupMember.objects.get(group=self.consuls, member=self.sulla)
-        relation.assing_object(legio_4, custom_permissions=custom_permissions)
+        relation.assign_object(legio_4, custom_permissions=custom_permissions)
 
         # owner - read
         self.assertTrue(self.sulla.has_perm('testproject.view_legion', legio_4))
@@ -145,6 +145,74 @@ class TestPermissions(TestCase):
             ['testproject.view_legion', 'testproject.change_legion', 'testproject.delete_legion'],
             legio_4))
 
+    def test_roles(self):
+        """
+        John and Patrick are member of the group. John is the commercial referent,
+        and Patrick is the web developer. John can sell the site, but only Patrcik can change it.
+        Standard permissions for owners are based on global roles.
+        """
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        custom_permissions = {
+            'owner': {'commercial-referent': ['sell'],
+                      'web-developer': ['change', 'delete'],
+                      'default': ['view']},
+            'group': ['view'],
+            'groups_upstream': ['view', 'change', 'delete'],
+            'groups_downstream': ['view'],
+            'groups_siblings': ['view'],
+        }
+        company = models.Group.objects.create(name='Company')
+        commercial_referent = models.GroupMemberRole.objects.create(label='Commercial referent')
+        web_developer = models.GroupMemberRole.objects.create(label='Web developer')
+        john = models.Member.objects.create(first_name='John', last_name='Money')
+        patrick = models.Member.objects.create(first_name='Patrick', last_name='Html')
+        company.add_member(john, [commercial_referent])
+        company.add_member(patrick, [web_developer])
+        site = testproject_models.Site.objects.create(name='Django groups manager website')
+        john.assign_object(company, site, custom_permissions=custom_permissions)
+        patrick.assign_object(company, site, custom_permissions=custom_permissions)
+        self.assertTrue(john.has_perms(['view_site', 'sell_site'], site))
+        self.assertFalse(john.has_perm('change_site', site))
+        self.assertFalse(john.has_perm('delete_site', site))
+        self.assertTrue(patrick.has_perms(['view_site', 'change_site', 'delete_site'], site))
+        self.assertFalse(patrick.has_perm('sell_site', site))
+
+    def test_football_match(self):
+        """
+        Thohir is the president of FC Internazionale, and Palacio is a team player.
+        Thohir organize a friendly match against FC Barcelona. Palacio can play the match, but
+        Thohir can't. In the same way, Thohir can change the FC Internazionale budget, but
+        Palacio can't.
+        """
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        custom_permissions = {
+            'owner': ['view', 'change', 'delete'],
+            'group': ['view', 'change'],
+            'groups_upstream': ['view', 'change', 'delete'],
+            'groups_downstream': ['view'],
+            'groups_siblings': ['view'],
+        }
+        fc_internazionale = models.Group.objects.create(name='F.C. Internazionale Milan')
+        staff = models.Group.objects.create(name='Staff', parent=fc_internazionale)
+        players = models.Group.objects.create(name='Players', parent=fc_internazionale)
+        thohir = models.Member.objects.create(first_name='Eric', last_name='Thohir')
+        staff.add_member(thohir)
+        palacio = models.Member.objects.create(first_name='Rodrigo', last_name='Palacio')
+        players.add_member(palacio)
+        # test budget
+        small_budget = testproject_models.TeamBudget.objects.create(euros='1000')
+        thohir.assign_object(staff, small_budget)
+        self.assertTrue(thohir.has_perm('change_teambudget', small_budget))
+        self.assertFalse(palacio.has_perm('change_teambudget', small_budget))
+        # test match
+        fc_barcelona = models.Group.objects.create(name='FC Barcelona')
+        friendly_match = testproject_models.Match.objects.create(home=fc_internazionale, away=fc_barcelona)
+        palacio.assign_object(players, friendly_match, custom_permissions={'owner': ['play'], 'group': ['play']})
+        self.assertFalse(thohir.has_perm('play_match', friendly_match))
+        self.assertTrue(palacio.has_perm('play_match', friendly_match))
+
     def test_proxy_models(self):
         """
         John Boss is the project leader. Marcus Worker and Julius Backend are the
@@ -158,21 +226,18 @@ class TestPermissions(TestCase):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         custom_permissions = {
-            'owner': 'vcd',
-            'group': 'vc',
-            'groups_upstream': 'vcd',
-            'groups_downstream': 'v',
-            'groups_siblings': '',
+            'owner': ['view', 'change', 'delete'],
+            'group': ['view', 'change'],
+            'groups_upstream': ['view', 'change', 'delete'],
+            'groups_downstream': ['view'],
+            'groups_siblings': [],
         }
-        project_main = testproject_models.Project(name='Workgroups Main Project')
-        project_main.save()
-        django_backend = testproject_models.WorkGroup(name='WorkGroup Backend', parent=project_main)
-        django_backend.save()
-        django_backend_watchers = testproject_models.WorkGroup(name='Backend Watchers',
-                                                            parent=django_backend)
-        django_backend_watchers.save()
-        django_frontend = testproject_models.WorkGroup(name='WorkGroup FrontEnd', parent=project_main)
-        django_frontend.save()
+        project_main = testproject_models.Project.objects.create(name='Workgroups Main Project')
+        django_backend = testproject_models.WorkGroup.objects.create(
+            name='WorkGroup Backend', parent=project_main)
+        django_backend_watchers = testproject_models.WorkGroup.objects.create(
+            name='Backend Watchers', parent=django_backend)
+        django_frontend = testproject_models.WorkGroup.objects.create(name='WorkGroup FrontEnd', parent=project_main)
         self.assertTrue(len(testproject_models.Project.objects.all()), 1)
         self.assertTrue(len(testproject_models.WorkGroup.objects.all()), 3)
         self.assertTrue(len(testproject_models.WorkGroup.objects.filter(name__startswith='W')), 2)
@@ -189,7 +254,7 @@ class TestPermissions(TestCase):
         django_backend_watchers.add_member(jack)
 
         pipeline = testproject_models.Pipeline.objects.create(name='Test Runner')
-        marcus.assing_object(django_backend, pipeline, custom_permissions=custom_permissions)
+        marcus.assign_object(django_backend, pipeline, custom_permissions=custom_permissions)
 
         # owner
         self.assertTrue(marcus.has_perms(

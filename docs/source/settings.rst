@@ -17,15 +17,17 @@ Permissions
 -----------
 
 - ``"PERMISSIONS"`` dictionary: this setting controls the ``assign_object`` method of a ``GroupMember`` instance.
-Each key controls a specific group type. Values are strings (or, in case of ``"owner"``, also a dictionary) with a combination of ``"v"`` (view), ``"c"`` (change), ``"d"`` (delete) characters. Obviously, a ``"view_modelname"`` permission must be added to the model permissions. 
+Each key controls a specific group type. Values are lists (or, in case of ``"owner"``, also a dictionary) with a combination of permissions' prefixes ``"view"`` (view), ``"change"`` (change), ``"delete"`` (delete) characters. Obviously, a ``"view_modelname"`` permission must be added to the model permissions. You can also add your custom permissions in form of ``<prefix>`` where your permission is ``<prefix>_modelname``.
 
 Valid keys are:
 
-	- ``"owner"``: a string or a dictionary (with keys as roles' codename attribute). This object-permissions are assigned directly to the user (default: ``"vcd"``)
-	- ``"group"``: a string. This object-permissions are assigned to the related group (default: ``"vc"``)
-	- ``"groups_upstream"``: a string. This object-permissions are assigned to the ancestors groups (default: ``"v"``)
-	- ``"groups_downstream"``: a string. This object-permissions are assigned to the descendants groups (default: ``""``)
-	- ``"groups_siblings"``: a string. This object-permissions are assigned to the siblings groups (default: ``"v"``)
+	- ``"owner"``: a list or a dictionary (with keys as roles' codename attribute). This object-permissions are assigned directly to the user (default: ``['view', 'change', 'delete']``)
+	- ``"group"``: a string. This object-permissions are assigned to the related group (default: ``['view', 'change']``)
+	- ``"groups_upstream"``: a string. This object-permissions are assigned to the ancestors groups (default: ``['view']``)
+	- ``"groups_downstream"``: a string. This object-permissions are assigned to the descendants groups (default: ``[]``)
+	- ``"groups_siblings"``: a string. This object-permissions are assigned to the siblings groups (default: ``['view']``)
+
+An example of permissions assigned by role can be found on use cases.
 
 Defaults
 --------
@@ -41,10 +43,10 @@ Default values are::
         'USER_USERNAME_SUFFIX': '_$$random',
         # Permissions
         'PERMISSIONS': {
-            'owner': 'vcd',
-            'group': 'vc',
-            'groups_upstream': 'v',
-            'groups_downstream': '',
-            'groups_siblings': 'v',
+            'owner': ['view', 'change', 'delete'],
+            'group': ['view', 'change'],
+            'groups_upstream': ['view'],
+            'groups_downstream': [],
+            'groups_siblings': ['view'],
         },
     }

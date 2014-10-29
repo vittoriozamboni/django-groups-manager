@@ -70,7 +70,7 @@ class Member(models.Model):
             raise exceptions.MemberDjangoUserSyncError(
                 "Can't check for perms %s since member %s has no django_user" % (perm_list, self))
 
-    def assing_object(self, group, obj, **kwargs):
+    def assign_object(self, group, obj, **kwargs):
         """Assign an object to the member honours the group relation.
 
         :Parameters:
@@ -203,6 +203,8 @@ class Group(MPTTModel):
       - `django_group`: django auth related group
       - `django_auth_sync`: synchronize or not the group (if setting DJANGO_AUTH_SYNC is True)
         (default: True)
+      - `level`: ``django-mptt`` level attribute
+        (default: True)
 
     .. note::
      If you want to add a custom manager for a sublcass of Group, use django-mppt
@@ -325,7 +327,7 @@ class Group(MPTTModel):
                         raise exceptions.GetRoleError(e)
         return group_member
 
-    def assing_object(self, obj, **kwargs):
+    def assign_object(self, obj, **kwargs):
         """Assign an object to the group.
 
         :Parameters:
@@ -431,7 +433,7 @@ class GroupMember(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.group.name, self.member.full_name)
 
-    def assing_object(self, obj, **kwargs):
+    def assign_object(self, obj, **kwargs):
         """Assign an object to the member.
 
         :Parameters:

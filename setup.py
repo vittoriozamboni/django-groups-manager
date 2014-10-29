@@ -1,4 +1,11 @@
-from distutils.core import setup
+import os
+from setuptools import setup
+
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+    README = readme.read()
+
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 from groups_manager import VERSION
 
@@ -6,14 +13,16 @@ setup(
     name='django-groups-manager',
     version=VERSION,
     description="Django groups manager through django-mptt.",
+    long_description=README,
     author='Vittorio Zamboni',
     author_email='vittorio.zamboni@gmail.com',
     license='MIT',
-    url='http://bitbucket.org/zamboni/django-groups-manager',
+    url='https://github.com/vittoriozamboni/django-groups-manager',
     packages=[
         'groups_manager',
         'groups_manager.templatetags',
     ],
+    include_package_data=True,
     install_requires=[
         'awesome-slugify',
         'django>=1.4',
@@ -21,5 +30,17 @@ setup(
         'django-guardian',
         'django-mptt',
         'jsonfield',
+    ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License', # example license
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        #'Programming Language :: Python :: 3',
+        'Topic :: Security',
     ],
 )

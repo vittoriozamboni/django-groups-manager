@@ -5,11 +5,11 @@ GROUPS_MANAGER_SETTINGS = getattr(settings, 'GROUPS_MANAGER', {})
 
 SETTINGS_PERMISSIONS = GROUPS_MANAGER_SETTINGS.get('PERMISSIONS', {})
 PERMISSIONS = {
-    'owner': 'vcd',
-    'group': 'vc',
-    'groups_upstream': 'v',
-    'groups_downstream': '',
-    'groups_siblings': 'v',
+    'owner': ['view', 'change', 'delete'],
+    'group': ['view', 'change'],
+    'groups_upstream': ['view'],
+    'groups_downstream': [],
+    'groups_siblings': ['view'],
 }
 PERMISSIONS.update(SETTINGS_PERMISSIONS)
 

@@ -14,11 +14,11 @@ GROUPS_MANAGER_MOCK = {
     'USER_USERNAME_PREFIX': 'DGM_',
     'USER_USERNAME_SUFFIX': '_$$random',
     'PERMISSIONS': {
-        'owner': 'vcd',
-        'group': 'vc',
-        'groups_upstream': 'v',
-        'groups_downstream': '',
-        'groups_siblings': 'v',
+        'owner': ['view', 'change', 'delete'],
+        'group': ['view', 'change'],
+        'groups_upstream': ['view'],
+        'groups_downstream': [],
+        'groups_siblings': ['view'],
     },
 }
 
@@ -32,8 +32,7 @@ class TestMember(TestCase):
         self.member = models.Member(
             first_name='Lucio',
             last_name='Silla',
-            username='lucio_silla',
-            email='lucio_silla@ancient_rome.com')
+            username='lucio_silla',)
 
     def test_unicode(self):
         self.assertEqual(unicode(self.member), 'Lucio Silla')
@@ -42,7 +41,8 @@ class TestMember(TestCase):
         self.assertEqual(self.member.full_name, 'Lucio Silla')
 
     def test_save_auto_create_username(self):
-        member = models.Member.objects.create(first_name='Giulio', last_name='Cesare')
+        member = models.Member.objects.create(first_name='Giulio', last_name='Cesare',
+                                              email='julius_caesar@ancient_rome.com')
         self.assertEqual(member.username, 'giulio_cesare')
 
     def test_member_save(self):
@@ -65,12 +65,12 @@ class TestMember(TestCase):
     def test_has_perm_exception(self):
         member = models.Member(first_name='Caio', last_name='Mario')
         with self.assertRaises(exceptions.MemberDjangoUserSyncError):
-            member.has_perm('view', member)
+            member.has_perm('view_member', member)
 
     def test_has_perms_exception(self):
         member = models.Member(first_name='Caio', last_name='Mario')
         with self.assertRaises(exceptions.MemberDjangoUserSyncError):
-            member.has_perms(['view'], member)
+            member.has_perms(['view_member'], member)
 
 
 class TestGroupType(TestCase):
@@ -237,6 +237,11 @@ class TestGroup(TestCase):
         valerius = models.Member.objects.create(first_name='Valerius', last_name='Postumos')
         with self.assertRaises(exceptions.GetRoleError):
             romans.add_member(valerius, [{'role': 'invalid'}])
+
+    def test_assign_object(self):
+        romans = models.Group.objects.create(name='Romans')
+        with self.assertRaises(NotImplementedError):
+            romans.assign_object(romans)
 
 
 class TestGroupMemberRole(TestCase):

@@ -18,57 +18,41 @@ def assign_object_to_member(group_member, obj, **kwargs):
         roles_attr = kwargs.get('roles_attr', 'roles')
         permissions = copy.deepcopy(GROUPS_MANAGER['PERMISSIONS'])
         permissions.update(kwargs.get('custom_permissions', {}))
-        view_perm = get_permission_name('view', obj)
-        change_perm = get_permission_name('change', obj)
-        delete_perm = get_permission_name('delete', obj)
         # owner
-        permission = permissions['owner']
-        if isinstance(permission, dict):
+        if isinstance(permissions['owner'], dict):
             roles = getattr(group_member, roles_attr).values_list('codename', flat=True)
-            permission = ''.join([permission.get(k, '') for k in
-                    list(set(roles).union(set(permission.keys()))) + ['default']])
-        if 'v' in permission:
-            assign_perm(view_perm, group_member.member.django_user, obj)
-        if 'c' in permission:
-            assign_perm(change_perm, group_member.member.django_user, obj)
-        if 'd' in permission:
-            assign_perm(delete_perm, group_member.member.django_user, obj)
+            owner_perms = []
+            for role in list(set(roles).intersection(set(permissions['owner'].keys()))) + ['default']:
+                owner_perms += permissions['owner'].get(role, [])
+        else:
+            owner_perms = permissions['owner']
+        for permission in list(set(owner_perms)):
+            perm_name = get_permission_name(permission, obj)
+            assign_perm(perm_name, group_member.member.django_user, obj)
         # group
-        permission = permissions.get('group', '')
-        if 'v' in permission:
-            assign_perm(view_perm, group_member.group.django_group, obj)
-        if 'c' in permission:
-            assign_perm(change_perm, group_member.group.django_group, obj)
-        if 'd' in permission:
-            assign_perm(delete_perm, group_member.group.django_group, obj)
+        group_perms = permissions.get('group', [])
+        for permission in list(set(group_perms)):
+            perm_name = get_permission_name(permission, obj)
+            assign_perm(perm_name, group_member.group.django_group, obj)
         # groups_upstream
         upstream_groups = [group.django_group for group in group_member.group.get_ancestors()]
+        upstream_perms = permissions.get('groups_upstream', [])
         for django_group in upstream_groups:
-            permission = permissions.get('groups_upstream', '')
-            if 'v' in permission:
-                assign_perm(view_perm, django_group, obj)
-            if 'c' in permission:
-                assign_perm(change_perm, django_group, obj)
-            if 'd' in permission:
-                assign_perm(delete_perm, django_group, obj)
+            for permission in list(set(upstream_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
         # groups_downstream
         downstream_groups = \
             [group.django_group for group in group_member.group.get_descendants()]
+        downstream_perms = permissions.get('groups_downstream', [])
         for django_group in downstream_groups:
-            permission = permissions.get('groups_downstream', '')
-            if 'v' in permission:
-                assign_perm(view_perm, django_group, obj)
-            if 'c' in permission:
-                assign_perm(change_perm, django_group, obj)
-            if 'd' in permission:
-                assign_perm(delete_perm, django_group, obj)
+            for permission in list(set(downstream_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
         # groups_siblings
         siblings_groups = [group.django_group for group in group_member.group.get_siblings()]
+        siblings_perms = permissions.get('groups_siblings', [])
         for django_group in siblings_groups:
-            permission = permissions.get('groups_siblings', '')
-            if 'v' in permission:
-                assign_perm(view_perm, django_group, obj)
-            if 'c' in permission:
-                assign_perm(change_perm, django_group, obj)
-            if 'd' in permission:
-                assign_perm(delete_perm, django_group, obj)
+            for permission in list(set(siblings_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)

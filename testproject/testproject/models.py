@@ -5,6 +5,10 @@ from mptt.models import TreeManager
 
 from groups_manager.models import Group, GroupType, group_save, group_delete
 
+'''
+Legion main example
+'''
+
 
 class Legion(models.Model):
     name = models.CharField(max_length=100)
@@ -14,6 +18,45 @@ class Legion(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+'''
+Football team example
+'''
+
+
+class TeamBudget(models.Model):
+    euros = models.IntegerField()
+
+    class Meta:
+        permissions = (('view_teambudget', 'View team budget'), )
+
+
+class Match(models.Model):
+    home = models.ForeignKey(Group, related_name='match_home')
+    away = models.ForeignKey(Group, related_name='match_away')
+
+    class Meta:
+        permissions = (('view_match', 'View match'),
+                       ('play_match', 'Play match'), )
+
+
+'''
+Roles example
+'''
+
+
+class Site(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        permissions = (('view_site', 'View site'),
+                       ('sell_site', 'Sell site'), )
+
+
+'''
+Proxy example
+'''
 
 
 class ProjectManager(TreeManager):

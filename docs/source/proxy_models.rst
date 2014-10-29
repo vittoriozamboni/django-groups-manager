@@ -84,11 +84,11 @@ stop (delete) the pipeline.
 **5) Create the pipeline and assign custom permissions**::
 
     custom_permissions = {
-        'owner': 'vcd',
-        'group': 'vc',
-        'groups_upstream': 'vcd',
-        'groups_downstream': 'v',
-        'groups_siblings': '',
+        'owner': ['view', 'change', 'delete'],
+        'group': ['view', 'change'],
+        'groups_upstream': ['view', 'change', 'delete'],
+        'groups_downstream': ['view'],
+        'groups_siblings': [],
     }
     pipeline = testproject_models.Pipeline.objects.create(name='Test Runner')
     marcus.assing_object(django_backend, pipeline, custom_permissions=custom_permissions)
