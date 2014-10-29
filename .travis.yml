@@ -14,7 +14,7 @@ install:
   - pip install . --use-mirrors
 
 script:
-  - coverage run --source=groups_manager setup.py test
+  - coverage run testproject/manage.py test testproject groups_manager
 
 after_success:
   - coverage report --omit "groups_manager/utils.py" -m groups_manager/*.py
