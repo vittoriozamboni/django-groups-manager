@@ -13,6 +13,7 @@ It's possible to *map* groups and members with Django's auth models, in order to
 
 The basic idea of Groups is that each `Group` instance could have a `Group` instance as parent (this relation is managed via django-mptt).
 
+The code is hosted on `github <https://github.com/vittoriozamboni/django-groups-manager>`_.
 
 Documentation
 =============

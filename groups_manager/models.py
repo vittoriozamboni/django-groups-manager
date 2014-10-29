@@ -13,9 +13,8 @@ from jsonfield import JSONField
 from mptt.models import MPTTModel, TreeForeignKey
 from slugify import slugify
 
-import exceptions
-
-from .perms import assign_object_to_member
+from groups_manager import exceptions
+from groups_manager.perms import assign_object_to_member
 
 
 class Member(models.Model):
