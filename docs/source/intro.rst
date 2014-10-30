@@ -11,6 +11,10 @@ Add ``groups_manager`` to installed apps::
        'groups_manager',
    )
 
+Run ``syncdb``::
+
+   python manage.py syncdb
+
 If you want to use standard templates, add groups_manager's urls from ``urls.py``::
 
 	urlpatterns = ('',

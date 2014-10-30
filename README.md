@@ -30,7 +30,13 @@ pip install django-groups-manager
 
  If you want to use permissions related features, add also ``django-guardian``.
 
-2. To enable django ``auth.models`` synchronization, add to the settings module:
+2. Run syncdb:
+
+    ```bash
+    python manage.py syncdb
+    ```
+
+ 3. To enable django ``auth.models`` synchronization, add to the settings module:
 
     ```python
     GROUPS_MANAGER = {
