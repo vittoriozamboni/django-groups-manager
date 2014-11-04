@@ -36,7 +36,7 @@ pip install django-groups-manager
     python manage.py syncdb
     ```
 
- 3. To enable django ``auth.models`` synchronization, add to the settings module:
+3. To enable django ``auth.models`` synchronization, add to the settings module:
 
     ```python
     GROUPS_MANAGER = {
