@@ -28,7 +28,7 @@ setup(
         'django>=1.4',
         'django-braces',
         'django-guardian',
-        'django-mptt',
+        'django-mptt<=0.6.1',
         'jsonfield',
     ],
     classifiers=[
