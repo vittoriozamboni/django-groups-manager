@@ -2,7 +2,7 @@ awesome-slugify
 django>=1.3
 django-braces
 django-guardian
-django-mptt<=0.6.1
+django-mptt
 jsonfield
 
 django-extensions
