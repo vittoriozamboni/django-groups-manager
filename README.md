@@ -1,6 +1,6 @@
 # Django groups manager
 
-[![Build Status](https://travis-ci.org/vittoriozamboni/django-groups-manager.svg?branch=master)](https://travis-ci.org/vittoriozamboni/django-groups-manager) [![Coverage Status](https://coveralls.io/repos/vittoriozamboni/django-groups-manager/badge.png?branch=master)](https://coveralls.io/r/vittoriozamboni/django-groups-manager?branch=master) ![Version](https://pypip.in/v/django-groups-manager/badge.png)
+[![Build Status](https://travis-ci.org/vittoriozamboni/django-groups-manager.svg?branch=master)](https://travis-ci.org/vittoriozamboni/django-groups-manager) [![Coverage Status](https://coveralls.io/repos/vittoriozamboni/django-groups-manager/badge.png?branch=master)](https://coveralls.io/r/vittoriozamboni/django-groups-manager?branch=master) ![Version](https://badge.fury.io/py/django-groups-manager.svg)
 
 This application allows to create hierarchical groups by using [django-mptt](https://github.com/django-mptt/django-mptt) tree structure.
 It is also possible to synchronize the groups with Django's ``auth.models`` Group and User, in order to take advantage of permissions applications like [django-guardian](https://github.com/lukaszb/django-guardian/).
