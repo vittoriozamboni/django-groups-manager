@@ -131,6 +131,10 @@ class TestGroup(TestCase):
         self.assertEqual(group.codename, 'istituto-di-genomica-applicata')
         self.assertEqual(group.full_name, group.name)
 
+    def test_member_model(self):
+        group = models.Group.objects.create(name='Istituto di Genomica Applicata')
+        self.assertEqual(group.member_model, models.Member)
+
     def test_nested_group(self):
         main = models.Group.objects.create(name='Main')
         subgroup = models.Group.objects.create(name='Sub Group', parent=main)

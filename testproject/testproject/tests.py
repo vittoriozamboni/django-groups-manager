@@ -154,7 +154,7 @@ class TestPermissions(TestCase):
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         custom_permissions = {
-            'owner': {'commercial-referent': ['sell'],
+            'owner': {'commercial-referent': ['sell_site'],
                       'web-developer': ['change', 'delete'],
                       'default': ['view']},
             'group': ['view'],
@@ -208,8 +208,10 @@ class TestPermissions(TestCase):
         self.assertFalse(palacio.has_perm('change_teambudget', small_budget))
         # test match
         fc_barcelona = models.Group.objects.create(name='FC Barcelona')
-        friendly_match = testproject_models.Match.objects.create(home=fc_internazionale, away=fc_barcelona)
-        palacio.assign_object(players, friendly_match, custom_permissions={'owner': ['play'], 'group': ['play']})
+        friendly_match = testproject_models.Match.objects.create(
+                home=fc_internazionale, away=fc_barcelona)
+        palacio.assign_object(players, friendly_match,
+                custom_permissions={'owner': ['play_match'], 'group': ['play_match']})
         self.assertFalse(thohir.has_perm('play_match', friendly_match))
         self.assertTrue(palacio.has_perm('play_match', friendly_match))
 
@@ -237,7 +239,8 @@ class TestPermissions(TestCase):
             name='WorkGroup Backend', parent=project_main)
         django_backend_watchers = testproject_models.WorkGroup.objects.create(
             name='Backend Watchers', parent=django_backend)
-        django_frontend = testproject_models.WorkGroup.objects.create(name='WorkGroup FrontEnd', parent=project_main)
+        django_frontend = testproject_models.WorkGroup.objects.create(
+            name='WorkGroup FrontEnd', parent=project_main)
         self.assertTrue(len(testproject_models.Project.objects.all()), 1)
         self.assertTrue(len(testproject_models.WorkGroup.objects.all()), 3)
         self.assertTrue(len(testproject_models.WorkGroup.objects.filter(name__startswith='W')), 2)
@@ -276,3 +279,20 @@ class TestPermissions(TestCase):
         self.assertTrue(john.has_perms(
             ['testproject.view_pipeline', 'testproject.change_pipeline',
              'testproject.delete_pipeline'], pipeline))
+
+    def test_proxy_model_custom_member(self):
+        organization = testproject_models.Organization.objects.create(name='Awesome Org, Inc.')
+        john_boss = testproject_models.OrganizationMember.objects.create(
+            first_name='John', last_name='Boss')
+        organization.add_member(john_boss)
+        org_members = organization.members
+        self.assertIsInstance(org_members[0], testproject_models.OrganizationMember)
+
+    def test_subclassed_model_custom_member(self):
+        organization = testproject_models.OrganizationSubclass.objects.create(
+            name='Awesome Org, Inc.', address='First Street')
+        john_boss = testproject_models.OrganizationMemberSubclass.objects.create(
+            first_name='John', last_name='Boss', phone_number='033 32 33 34')
+        organization.add_member(john_boss)
+        org_members = organization.members
+        self.assertIsInstance(org_members[0], testproject_models.OrganizationMemberSubclass)

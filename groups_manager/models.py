@@ -244,6 +244,9 @@ class Group(MPTTModel):
         level_attr = 'level'
         order_insertion_by = ['name', ]
 
+    class GroupsManagerMeta:
+        member_model = 'groups_manager.Member'
+
     def __unicode__(self):
         return '%s' % self.name
 
@@ -261,13 +264,29 @@ class Group(MPTTModel):
             return '%s - %s' % (self.parent._get_full_name(), self.name)
         return self.name
 
+    @property
+    def member_model(self):
+        return models.get_model(*self.GroupsManagerMeta.member_model.split('.'))
+
     def get_members(self, subgroups=False):
         """Return group members.
+        The result is a list of GroupsManagerMeta's attribute ``member_model`` instances.
 
         :Parameters:
           - `subgroups`: return also descendants members (default: `False`)
         """
-        members = list(self.group_members.all())
+        member_model = self.member_model
+        if member_model == Member:
+            members = list(self.group_members.all())
+        else:
+            # proxy model
+            if member_model._meta.proxy:
+                members = list(member_model.objects.filter(
+                    id__in=self.group_members.values_list('id', flat=True)))
+            # subclassed
+            else:
+                members = list(member_model.objects.filter(
+                    member_ptr__in=self.group_members.all()))
         if subgroups:
             for subgroup in self.subgroups.all():
                 members += subgroup.members

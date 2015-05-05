@@ -17,7 +17,7 @@ Permissions
 -----------
 
 - ``"PERMISSIONS"`` dictionary: this setting controls the ``assign_object`` method of a ``GroupMember`` instance.
-Each key controls a specific group type. Values are lists (or, in case of ``"owner"``, also a dictionary) with a combination of permissions' prefixes ``"view"`` (view), ``"change"`` (change), ``"delete"`` (delete) characters. Obviously, a ``"view_modelname"`` permission must be added to the model permissions. You can also add your custom permissions in form of ``<prefix>`` where your permission is ``<prefix>_modelname``.
+   Each key controls a specific group type. Values are lists (or, in case of ``"owner"``, also a dictionary) with a combination of permissions' prefixes ``"view"`` (view), ``"change"`` (change), ``"delete"`` (delete) characters. Obviously, a ``"view_modelname"`` permission must be added to the model permissions. You can also add your custom permissions in form of ``<prefix>`` where your permission is ``<prefix>_modelname``.
 
 Valid keys are:
 
@@ -26,6 +26,12 @@ Valid keys are:
 	- ``"groups_upstream"``: a string. This object-permissions are assigned to the ancestors groups (default: ``['view']``)
 	- ``"groups_downstream"``: a string. This object-permissions are assigned to the descendants groups (default: ``[]``)
 	- ``"groups_siblings"``: a string. This object-permissions are assigned to the siblings groups (default: ``['view']``)
+
+.. _permission-name-policy:
+
+.. note::
+   The three special permission names ``"view"``, ``"change"``,  and ``"delete"`` are translated to ``<permission>_<model_name>`` string during permission's name lookup.
+   This allows to use a standard permission policy (*view*, *change*, *delete*) but also allows to use :ref:`custom permissions <custom-permissions-by-role>`.
 
 An example of permissions assigned by role can be found on use cases.
 

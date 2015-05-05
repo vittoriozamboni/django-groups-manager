@@ -28,6 +28,7 @@ Documentation
    API 
    tests
    todo
+   changelog
 
 .. include:: changelog.rst
 

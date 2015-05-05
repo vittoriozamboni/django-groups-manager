@@ -1,3 +1,5 @@
+.. _custom-permissions-by-role:
+
 Resource assignment via role permissions
 ----------------------------------------
 
@@ -17,25 +19,25 @@ John can view and sell the site, and Patrick can view, change and delete the sit
 **2) Create models and relations**::
 
     from groups_manager.models import Group, GroupMemberRole, Member
-	from models import Site
-	# Group
+    from models import Site
+    # Group
     company = Group.objects.create(name='Company')
-	# Group Member roles
+    # Group Member roles
     commercial_referent = GroupMemberRole.objects.create(label='Commercial referent')
     web_developer = GroupMemberRole.objects.create(label='Web developer')
-	# Members
+    # Members
     john = Member.objects.create(first_name='John', last_name='Money')
     patrick = Member.objects.create(first_name='Patrick', last_name='Html')
-	# Add to company
+    # Add to company
     company.add_member(john, [commercial_referent])
     company.add_member(patrick, [web_developer])
-	# Create the site
+    # Create the site
     site = Site.objects.create(name='Django groups manager website')
 
 **3) Define custom permissions and assign the site object**::
 
     custom_permissions = {
-        'owner': {'commercial-referent': ['sell'],
+        'owner': {'commercial-referent': ['sell_site'],
                   'web-developer': ['change', 'delete'],
                   'default': ['view']},
         'group': ['view'],
