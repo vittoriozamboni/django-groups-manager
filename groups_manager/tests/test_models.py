@@ -258,11 +258,6 @@ class TestGroup(TestCase):
         with self.assertRaises(exceptions.GetRoleError):
             romans.add_member(valerius, [{'role': 'invalid'}])
 
-    def test_assign_object(self):
-        romans = models.Group.objects.create(name='Romans')
-        with self.assertRaises(NotImplementedError):
-            romans.assign_object(romans)
-
 
 class TestGroupMemberRole(TestCase):
 

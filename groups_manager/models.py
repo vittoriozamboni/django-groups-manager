@@ -14,7 +14,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from slugify import slugify
 
 from groups_manager import exceptions
-from groups_manager.perms import assign_object_to_member
+from groups_manager.perms import assign_object_to_member, assign_object_to_group
 
 
 class Member(models.Model):
@@ -90,9 +90,9 @@ class Member(models.Model):
 
 
 def member_save(sender, instance, created, *args, **kwargs):
-    '''
+    """
     Add User to Django Users
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         prefix = GROUPS_MANAGER['USER_USERNAME_PREFIX']
@@ -125,9 +125,9 @@ def member_save(sender, instance, created, *args, **kwargs):
 
 
 def member_delete(sender, instance, *args, **kwargs):
-    '''
+    """
     Remove the related Django Group
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         if instance.django_user:
@@ -335,10 +335,10 @@ class Group(MPTTModel):
         """
         if not self.id:
             raise exceptions.GroupNotSavedError(
-                    "You must save the group before to create a relation with members")
+                "You must save the group before to create a relation with members")
         if not member.id:
             raise exceptions.MemberNotSavedError(
-                    "You must save the member before to create a relation with groups")
+                "You must save the member before to create a relation with groups")
         group_member = GroupMember(member=member, group=self)
         group_member.save()
         if roles:
@@ -368,17 +368,14 @@ class Group(MPTTModel):
 
         .. note::
          This method needs django-guardian.
-
-        .. todo::
-         Create a method that allows to assign_objects directly to group.
         """
-        raise NotImplementedError("This method has not yet implemented")
+        return assign_object_to_group(self, obj, **kwargs)
 
 
 def group_save(sender, instance, created, *args, **kwargs):
-    '''
+    """
     Add Group to Django Groups
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         # create a name compatible with django group name limit of 80 chars
@@ -404,9 +401,9 @@ def group_save(sender, instance, created, *args, **kwargs):
 
 
 def group_delete(sender, instance, *args, **kwargs):
-    '''
+    """
     Remove the related Django Group
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
         if instance.django_group:
@@ -485,9 +482,9 @@ class GroupMember(models.Model):
 
 
 def group_member_save(sender, instance, created, *args, **kwargs):
-    '''
+    """
     Add Django User to Django Groups
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
         django_user = instance.member.django_user
@@ -498,9 +495,9 @@ def group_member_save(sender, instance, created, *args, **kwargs):
 
 
 def group_member_delete(sender, instance, *args, **kwargs):
-    '''
+    """
     Remove Django User from Django Groups
-    '''
+    """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
         member = instance.member

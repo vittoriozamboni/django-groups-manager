@@ -1,5 +1,8 @@
 Changelog
 =========
+- 16-02-25 (0.3.0):
+    - Added permissions assignment to groups
+
 - 15-05-05 (0.2.1):
     - Added 'add' to default permissions
 

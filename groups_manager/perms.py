@@ -11,6 +11,13 @@ from groups_manager.utils import get_permission_name
 
 def assign_object_to_member(group_member, obj, **kwargs):
     """Assign an object to a GroupMember instance object.
+
+    :Parameters:
+      - `group_member`: groups_manager.model.GroupMember instance
+      - `obj`: object to set permissions
+
+    :Kwargs:
+      - `custom_permissions`: updates settings.GROUPS_MANAGER['PERMISSIONS']
     """
     from groups_manager.settings import GROUPS_MANAGER
     if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and \
@@ -51,6 +58,50 @@ def assign_object_to_member(group_member, obj, **kwargs):
                 assign_perm(perm_name, django_group, obj)
         # groups_siblings
         siblings_groups = [group.django_group for group in group_member.group.get_siblings()]
+        siblings_perms = permissions.get('groups_siblings', [])
+        for django_group in siblings_groups:
+            for permission in list(set(siblings_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
+
+
+def assign_object_to_group(group, obj, **kwargs):
+    """Assign an object to a Group instance object.
+
+    :Parameters:
+      - `group`: groups_manager.model.Group instance
+      - `obj`: object to set permissions
+
+    :Kwargs:
+      - `custom_permissions`: updates settings.GROUPS_MANAGER['PERMISSIONS']
+    """
+    from groups_manager.settings import GROUPS_MANAGER
+    if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and group.django_group:
+        permissions = copy.deepcopy(GROUPS_MANAGER['PERMISSIONS'])
+        permissions.update(kwargs.get('custom_permissions', {}))
+        # owner is ignored from permissions
+        # group
+        group_perms = permissions.get('group', [])
+        for permission in list(set(group_perms)):
+            perm_name = get_permission_name(permission, obj)
+            assign_perm(perm_name, group.django_group, obj)
+        # groups_upstream
+        upstream_groups = [ancestor_group.django_group for ancestor_group in group.get_ancestors()]
+        upstream_perms = permissions.get('groups_upstream', [])
+        for django_group in upstream_groups:
+            for permission in list(set(upstream_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
+        # groups_downstream
+        downstream_groups = \
+            [downstream_group.django_group for downstream_group in group.get_descendants()]
+        downstream_perms = permissions.get('groups_downstream', [])
+        for django_group in downstream_groups:
+            for permission in list(set(downstream_perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
+        # groups_siblings
+        siblings_groups = [sibling_group.django_group for sibling_group in group.get_siblings()]
         siblings_perms = permissions.get('groups_siblings', [])
         for django_group in siblings_groups:
             for permission in list(set(siblings_perms)):

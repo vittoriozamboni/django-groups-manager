@@ -46,6 +46,27 @@ class Match(models.Model):
 
 
 '''
+Group permissions example
+'''
+
+
+class ITObject(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        permissions = (('view_itobject', 'View IT Object'),
+                       ('manage_itobject', 'Manage IT Object'), )
+
+
+class Newsletter(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        permissions = (('view_newsletter', 'View Newsletter'),
+                       ('send_newsletter', 'Send Newsletter'), )
+
+
+'''
 Roles example
 '''
 

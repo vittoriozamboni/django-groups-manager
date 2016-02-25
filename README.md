@@ -67,6 +67,11 @@ small_budget = TeamBudget.objects.create(euros='1000')
 thohir.assign_object(staff, small_budget)
 thohir.has_perm('change_teambudget', small_budget)  # True
 palacio.has_perm('change_teambudget', small_budget)  # False
+# or via group
+mid_budget = TeamBudget.objects.create(euros='3000')
+staff.assign_object(mid_budget)
+thohir.has_perm('change_teambudget', mid_budget)  # True
+palacio.has_perm('change_teambudget', mid_budget)  # False
 ```
 
 Owner/Group members policies can be defined via ``PERMISSIONS`` setting, as a dictionary of ``GROUPS_MANAGER``, but can also be overwritten via ``custom_permissions`` ``kwarg``:

@@ -29,8 +29,8 @@ class TestPermissions(TestCase):
         pass
 
     def create_legions(self):
-        '''
-        Silla owns one Legion. There are three groups:
+        """
+        Sulla owns one Legion. There are three groups:
          - Gods, with Mars,
          - Consuls, which Sulla and Metellus Pius are part of,
          - Generals, which Marius is part of,
@@ -41,7 +41,7 @@ class TestPermissions(TestCase):
         Gods -|- Consuls - Plebeians
               |- Generals
         Greeks
-        '''
+        """
         from groups_manager import settings
         settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
         self.mars = models.Member.objects.create(first_name='Mars', last_name='Gradivus')
@@ -209,11 +209,40 @@ class TestPermissions(TestCase):
         # test match
         fc_barcelona = models.Group.objects.create(name='FC Barcelona')
         friendly_match = testproject_models.Match.objects.create(
-                home=fc_internazionale, away=fc_barcelona)
+            home=fc_internazionale, away=fc_barcelona)
         palacio.assign_object(players, friendly_match,
-                custom_permissions={'owner': ['play_match'], 'group': ['play_match']})
+            custom_permissions={'owner': ['play_match'], 'group': ['play_match']})
         self.assertFalse(thohir.has_perm('play_match', friendly_match))
         self.assertTrue(palacio.has_perm('play_match', friendly_match))
+
+    def test_group_permissions(self):
+        """
+        On company IT Stars, Mike is the sys admin and Juliet is the marketing manager.
+        Of course, Mike can administrate infrastructures (Juliet can't),
+        and Juliet can create newsletters, and Mike too (tech newsletters!).
+        """
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        it_stars = models.Group.objects.create(name='IT stars')
+        sys_admins = models.Group.objects.create(name='Sys Admins', parent=it_stars)
+        marketing = models.Group.objects.create(name='Marketing', parent=it_stars)
+        mike = models.Member.objects.create(first_name='Mike', last_name='Sys')
+        sys_admins.add_member(mike)
+        juliet = models.Member.objects.create(first_name='Juliet', last_name='Marks')
+        marketing.add_member(juliet)
+        sysadmins_permissions = {'group': ['manage_itobject']}
+        newsletter_permissions = {'group': ['send_newsletter'],
+                                  'groups_siblings': ['send_newsletter']}
+        # test sysadmins
+        pc1 = testproject_models.ITObject.objects.create(name='PC 1')
+        sys_admins.assign_object(pc1, custom_permissions=sysadmins_permissions)
+        self.assertTrue(mike.has_perm('manage_itobject', pc1))
+        self.assertFalse(juliet.has_perm('manage_itobject', pc1))
+        # test newsletters
+        newsletter_tech = testproject_models.Newsletter.objects.create(name='Tech news')
+        marketing.assign_object(newsletter_tech, custom_permissions=newsletter_permissions)
+        self.assertTrue(mike.has_perm('send_newsletter', newsletter_tech))
+        self.assertTrue(juliet.has_perm('send_newsletter', newsletter_tech))
 
     def test_proxy_models(self):
         """
