@@ -2,14 +2,15 @@ language: python
 python:
  - 2.7
  - 3.3
+ - 3.4
 
 env:
- - DJANGO_VERSION=1.4.20
- - DJANGO_VERSION=1.5.11
- - DJANGO_VERSION=1.6.8
+ - DJANGO_VERSION="<1.9" GUARDIAN_VERSION=">=1.4"
+ - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4"
 
 install:
-  - pip install -q Django==$DJANGO_VERSION coverage coveralls
+  - pip install -q "Django$DJANGO_VERSION" coverage coveralls
+  - pip install "django-guardian$GUARDIAN_VERSION"
   - pip install . --use-mirrors
   - pip install -r testproject/requirements.txt --use-mirrors
 
@@ -22,13 +23,24 @@ after_success:
 
 
 matrix:
-    exclude:
-        - python: 3.3
-          env: DJANGO_VERSION=1.4.20
     include:
         - python: 2.7
-          env: DJANGO_VERSION=1.7.1
+          env: DJANGO_VERSION="<1.5" GUARDIAN_VERSION="<1.4"
+        - python: 2.7
+          env: DJANGO_VERSION="<1.6" GUARDIAN_VERSION="<1.4"
         - python: 3.3
-          env: DJANGO_VERSION=1.7.1
+          env: DJANGO_VERSION="<1.6" GUARDIAN_VERSION="<1.4"
         - python: 3.4
-          env: DJANGO_VERSION=1.7.1
+          env: DJANGO_VERSION="<1.6" GUARDIAN_VERSION="<1.4"
+        - python: 2.7
+          env: DJANGO_VERSION="<1.7" GUARDIAN_VERSION="<1.4"
+        - python: 3.3
+          env: DJANGO_VERSION="<1.7" GUARDIAN_VERSION="<1.4"
+        - python: 3.4
+          env: DJANGO_VERSION="<1.7" GUARDIAN_VERSION="<1.4"
+        - python: 2.7
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4"
+        - python: 3.3
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4"
+        - python: 3.4
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4"

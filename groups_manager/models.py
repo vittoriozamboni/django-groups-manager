@@ -5,6 +5,12 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
+try:
+    from django.db.models import get_model as django_get_model
+except ImportError:
+    from django.apps import apps
+    django_get_model = apps.get_model
+
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User as DefaultUser
 DjangoUser = getattr(django_settings, 'AUTH_USER_MODEL', DefaultUser)
@@ -266,7 +272,7 @@ class Group(MPTTModel):
 
     @property
     def member_model(self):
-        return models.get_model(*self.GroupsManagerMeta.member_model.split('.'))
+        return django_get_model(*self.GroupsManagerMeta.member_model.split('.'))
 
     def get_members(self, subgroups=False):
         """Return group members.

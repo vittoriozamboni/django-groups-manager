@@ -1,7 +1,11 @@
 Installation
 ============
 
-First of all, install the repository master version with ``pip``::
+First of all, install the latest build with ``pip``::
+
+   pip install django-groups-manager
+
+or the repository master version for latest updates::
 
    pip install https://github.com/vittoriozamboni/django-groups-manager/archive/master.zip
 

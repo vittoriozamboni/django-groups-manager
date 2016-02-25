@@ -2,6 +2,7 @@ Changelog
 =========
 - 16-02-25 (0.3.0):
     - Added permissions assignment to groups
+    - Added support for Django 1.8 and 1.9
 
 - 15-05-05 (0.2.1):
     - Added 'add' to default permissions
