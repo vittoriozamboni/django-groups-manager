@@ -2,7 +2,7 @@ from copy import deepcopy
 import re
 
 from django.contrib.auth import models as auth_models
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from groups_manager import models, exceptions
 from testproject import models as testproject_models
