@@ -8,7 +8,7 @@ Add to your ``settings`` file::
 
 	
 	GROUPS_MANAGER = {
-	    'AUTH_MODEL_SYNC': True,
+	    'AUTH_MODELS_SYNC': True,
 	}
 
 This will generate auth's groups and users each time a new groups_manager's group or member is created.

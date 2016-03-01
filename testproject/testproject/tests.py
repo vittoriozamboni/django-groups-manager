@@ -1,8 +1,10 @@
+from copy import deepcopy
 import re
 
-from django.test import TestCase
+from django.contrib.auth import models as auth_models
+from django.test import TestCase, override_settings
 
-from groups_manager import models
+from groups_manager import models, exceptions
 from testproject import models as testproject_models
 
 GROUPS_MANAGER_MOCK = {
@@ -43,7 +45,7 @@ class TestPermissions(TestCase):
         Greeks
         """
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         self.mars = models.Member.objects.create(first_name='Mars', last_name='Gradivus')
         self.sulla = models.Member.objects.create(first_name='Lucius', last_name='Sulla')
         self.metellus = models.Member.objects.create(first_name='Quintus', last_name='Metellus Pius')
@@ -56,13 +58,16 @@ class TestPermissions(TestCase):
         self.plebeians = models.Group.objects.create(name='Plebeians', parent=self.consuls)
         self.greeks = models.Group.objects.create(name='Greeks')
         models.GroupMember.objects.create(group=self.gods, member=self.mars)
-        models.GroupMember.objects.create(group=self.consuls, member=self.sulla)
+        self.sulla_consuls = \
+            models.GroupMember.objects.create(group=self.consuls, member=self.sulla)
         models.GroupMember.objects.create(group=self.consuls, member=self.metellus)
         models.GroupMember.objects.create(group=self.generals, member=self.marius)
         models.GroupMember.objects.create(group=self.plebeians, member=self.quintus)
         models.GroupMember.objects.create(group=self.greeks, member=self.archelaus)
 
     def test_standard_permissions(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         self.create_legions()
         legio_4 = testproject_models.Legion(name='Legio IV')
         legio_4.save()
@@ -99,10 +104,19 @@ class TestPermissions(TestCase):
         self.assertFalse(self.archelaus.has_perm('testproject.change_legion', legio_4))
         self.assertFalse(self.archelaus.has_perm('testproject.delete_legion', legio_4))
 
+    def test_assign_object_without_models_sync(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = False
+        self.create_legions()
+        legio_4 = testproject_models.Legion(name='Legio IV')
+        legio_4.save()
+        self.sulla.assign_object(self.consuls, legio_4)
+
     def test_all_true_permissions(self):
         self.create_legions()
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         custom_permissions = {
             'owner': ['view', 'change', 'delete'],
             'group': ['view', 'change', 'delete'],
@@ -152,7 +166,7 @@ class TestPermissions(TestCase):
         Standard permissions for owners are based on global roles.
         """
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         custom_permissions = {
             'owner': {'commercial-referent': ['sell_site'],
                       'web-developer': ['change', 'delete'],
@@ -186,7 +200,7 @@ class TestPermissions(TestCase):
         Palacio can't.
         """
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         custom_permissions = {
             'owner': ['view', 'change', 'delete'],
             'group': ['view', 'change'],
@@ -220,19 +234,24 @@ class TestPermissions(TestCase):
         On company IT Stars, Mike is the sys admin and Juliet is the marketing manager.
         Of course, Mike can administrate infrastructures (Juliet can't),
         and Juliet can create newsletters, and Mike too (tech newsletters!).
+        Anna is part of Templates group, a subgroup of Newsletters: she can only view newsletters.
         """
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         it_stars = models.Group.objects.create(name='IT stars')
         sys_admins = models.Group.objects.create(name='Sys Admins', parent=it_stars)
         marketing = models.Group.objects.create(name='Marketing', parent=it_stars)
+        templates = models.Group.objects.create(name='Templates', parent=marketing)
         mike = models.Member.objects.create(first_name='Mike', last_name='Sys')
         sys_admins.add_member(mike)
         juliet = models.Member.objects.create(first_name='Juliet', last_name='Marks')
         marketing.add_member(juliet)
+        anna = models.Member.objects.create(first_name='Anna', last_name='Temple')
+        templates.add_member(anna)
         sysadmins_permissions = {'group': ['manage_itobject']}
         newsletter_permissions = {'group': ['send_newsletter'],
-                                  'groups_siblings': ['send_newsletter']}
+                                  'groups_siblings': ['send_newsletter'],
+                                  'groups_downstream': ['view']}
         # test sysadmins
         pc1 = testproject_models.ITObject.objects.create(name='PC 1')
         sys_admins.assign_object(pc1, custom_permissions=sysadmins_permissions)
@@ -243,6 +262,9 @@ class TestPermissions(TestCase):
         marketing.assign_object(newsletter_tech, custom_permissions=newsletter_permissions)
         self.assertTrue(mike.has_perm('send_newsletter', newsletter_tech))
         self.assertTrue(juliet.has_perm('send_newsletter', newsletter_tech))
+        self.assertTrue(anna.has_perm('view_newsletter', newsletter_tech))
+        self.assertFalse(anna.has_perm('send_newsletter', newsletter_tech))
+        # test downstream groups
 
     def test_proxy_models(self):
         """
@@ -255,7 +277,7 @@ class TestPermissions(TestCase):
         stop (delete) the pipeline.
         """
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         custom_permissions = {
             'owner': ['view', 'change', 'delete'],
             'group': ['view', 'change'],
@@ -325,3 +347,103 @@ class TestPermissions(TestCase):
         organization.add_member(john_boss)
         org_members = organization.members
         self.assertIsInstance(org_members[0], testproject_models.OrganizationMemberSubclass)
+
+    def test_signals_kwargs(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = False
+
+        # TEST 'get_auth_models_sync_func'
+        # default signal
+        w = testproject_models.WorkGroup(name='New workgroup')
+        w.save()
+        self.assertIsNone(w.django_group)
+        # test signal wrapping
+        pg = testproject_models.ProjectGroup(name='Project group')
+        pg.save()
+        self.assertIsNotNone(pg.django_group)
+        self.assertTrue(pg.django_group.name.startswith('PGS_'))
+        self.assertTrue(pg.django_group.name.endswith('_Project'))
+        pm = testproject_models.ProjectMember(first_name='Mike', last_name='Miky')
+        pm.save()
+        self.assertTrue(pm.django_user.username.startswith('PGS_'))
+        self.assertTrue(pm.django_user.username.endswith('_Project'))
+        self.assertIsNotNone(pm.django_user)
+        pg.add_member(pm)
+        self.assertTrue(pg.django_group in pm.django_user.groups.all())
+        pg.remove_member(pm)
+        # Test catch exception
+        with self.assertRaises(exceptions.GetGroupMemberError):
+            pg.remove_member(pm)
+        self.assertFalse(pg.django_group in pm.django_user.groups.all())
+        self.assertFalse(pm in pg.members)
+        pm_django_user_id = pm.django_user.id
+        pm.delete()
+        django_user = auth_models.User.objects.filter(id=pm_django_user_id)
+        self.assertEqual(len(django_user), 0)
+        pg_django_group_id = pg.django_group.id
+        pg.delete()
+        django_group = auth_models.Group.objects.filter(id=pg_django_group_id)
+        self.assertEqual(len(django_group), 0)
+
+    def test_models_sync_inconsistencies(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+
+        # change sync between group creation and deletion
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = False
+        w = testproject_models.WorkGroup(name='New workgroup')
+        w.save()
+        self.assertIsNone(w.django_group)
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = True
+        w.delete()
+
+        # change sync between member creation and deletion
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = False
+        m = testproject_models.OrganizationMember(first_name='Name', last_name='Surname')
+        m.save()
+        self.assertIsNone(m.django_user)
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = True
+        m.delete()
+
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = True
+        w = testproject_models.WorkGroup(name='New workgroup')
+        w.save()
+        m = testproject_models.OrganizationMember(first_name='Name', last_name='Surname')
+        m.save()
+        # add to group outside membership
+        m.django_user.groups.add(w.django_group)
+        w.add_member(m)
+        self.assertTrue(w.django_group in m.django_user.groups.all())
+        w.remove_member(m)
+        # delete django group
+        w.django_group = None
+        w.add_member(m)
+
+    def test_models_sync_inconsistencies_group_member(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+
+        # change sync between group creation and deletion
+        w = testproject_models.WorkGroup(name='New workgroup')
+        w.save()
+        m = testproject_models.OrganizationMember(first_name='Name', last_name='Surname')
+        m.save()
+
+        # remove django group from django user manually
+        w.add_member(m)
+        m.django_user.groups.remove(w.django_group)
+        w.remove_member(m)
+
+        # manually remove django group
+        w.add_member(m)
+        g = w.django_group
+        w.django_group = None
+        w.remove_member(m)
+        w.django_group = g
+
+        # manually delete django group
+        w.add_member(m)
+        g = w.django_group
+        g.delete()
+        w.remove_member(m)

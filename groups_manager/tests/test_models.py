@@ -1,3 +1,4 @@
+from copy import deepcopy
 import re
 import sys
 
@@ -51,7 +52,7 @@ class TestMember(TestCase):
 
     def test_member_save(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         member = models.Member.objects.create(first_name='Caio', last_name='Mario')
         self.assertIsNotNone(member.django_user)
         self.assertTrue(member.django_user.username.startswith(
@@ -60,9 +61,10 @@ class TestMember(TestCase):
 
     def test_member_save_no_prefix_suffix(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
-        settings.GROUPS_MANAGER['USER_USERNAME_PREFIX'] = ''
-        settings.GROUPS_MANAGER['USER_USERNAME_SUFFIX'] = ''
+        empty_ps = deepcopy(GROUPS_MANAGER_MOCK)
+        empty_ps['USER_USERNAME_PREFIX'] = ''
+        empty_ps['USER_USERNAME_SUFFIX'] = ''
+        settings.GROUPS_MANAGER = empty_ps
         member = models.Member.objects.create(first_name='Caio', last_name='Mario')
         self.assertEqual(member.username, member.django_user.username)
 
@@ -91,6 +93,12 @@ class TestGroupType(TestCase):
             self.assertEqual(unicode(self.group_type), 'Organization')
 
     def test_save(self):
+        self.group_type.codename = ''
+        self.group_type.save()
+        self.assertEqual(self.group_type.codename, 'organization')
+
+    def test_save_with_codename(self):
+        self.group_type.codename = 'organization'
         self.group_type.save()
         self.assertEqual(self.group_type.codename, 'organization')
 
@@ -109,6 +117,11 @@ class TestGroupEntity(TestCase):
             self.assertEqual(unicode(self.group_entity), 'Organization Partner')
 
     def test_save(self):
+        self.group_entity.save()
+        self.assertEqual(self.group_entity.codename, 'organization-partner')
+
+    def test_save_with_codename(self):
+        self.group_entity.codename = 'organization-partner'
         self.group_entity.save()
         self.assertEqual(self.group_entity.codename, 'organization-partner')
 
@@ -149,6 +162,8 @@ class TestGroup(TestCase):
         subgroup.group_entities.add(e2)
         self.assertEqual(main.entities, [e1, e2])
         self.assertEqual(subgroup.entities, [e2])
+        # Only main entities
+        self.assertEqual(main.get_entities(), [e1])
 
     def test_nested_members(self):
         m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
@@ -159,10 +174,12 @@ class TestGroup(TestCase):
         models.GroupMember.objects.create(group=subgroup, member=m2)
         self.assertEqual(main.members, [m1, m2])
         self.assertEqual(subgroup.members, [m2])
+        # get only main members
+        self.assertEqual(main.get_members(), [m1])
 
     def test_group_save(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         group = models.Group(name='Main Group')
         group.save()
         self.assertIsNotNone(group.django_group)
@@ -172,7 +189,7 @@ class TestGroup(TestCase):
 
     def test_group_save_no_prefix_suffix(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
         group = models.Group.objects.create(name='Main Group')
@@ -180,7 +197,7 @@ class TestGroup(TestCase):
 
     def test_group_save_parent_no_prefix_suffix(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
         group = models.Group.objects.create(name='Main Group')
@@ -190,7 +207,7 @@ class TestGroup(TestCase):
 
     def test_group_save_django_group_change_name(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         settings.GROUPS_MANAGER['GROUP_NAME_PREFIX'] = ''
         settings.GROUPS_MANAGER['GROUP_NAME_SUFFIX'] = ''
         group = models.Group.objects.create(name='Main Group')
@@ -200,7 +217,7 @@ class TestGroup(TestCase):
 
     def test_nested_users(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
         m2 = models.Member.objects.create(first_name='Lucio', last_name='Silla')
         main = models.Group.objects.create(name='Main')
@@ -209,6 +226,17 @@ class TestGroup(TestCase):
         models.GroupMember.objects.create(group=subgroup, member=m2)
         self.assertEqual(main.users, [m1.django_user, m2.django_user])
         self.assertEqual(subgroup.users, [m2.django_user])
+
+    def test_users_without_model_sync(self):
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+        settings.GROUPS_MANAGER['AUTH_MODELS_SYNC'] = False
+        dictators = models.Group(name='Dictators')
+        dictators.save()
+        sulla = models.Member(first_name='Lucius', last_name='Sulla')
+        sulla.save()
+        dictators.add_member(sulla)
+        self.assertEqual(dictators.users, [])
 
     def test_add_member(self):
         dictators = models.Group(name='Dictators')
@@ -276,6 +304,11 @@ class TestGroupMemberRole(TestCase):
         self.group_member_role.save()
         self.assertEqual(self.group_member_role.codename, 'administrator')
 
+    def test_save_with_codename(self):
+        self.group_member_role.codename = 'administrator'
+        self.group_member_role.save()
+        self.assertEqual(self.group_member_role.codename, 'administrator')
+
 
 class TestGroupMember(TestCase):
 
@@ -294,7 +327,7 @@ class TestGroupMember(TestCase):
 
     def test_groups_membership_django_integration(self):
         from groups_manager import settings
-        settings.GROUPS_MANAGER = GROUPS_MANAGER_MOCK
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
         m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
         m2 = models.Member.objects.create(first_name='Lucio', last_name='Silla')
         main = models.Group.objects.create(name='Main')

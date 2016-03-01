@@ -6,3 +6,5 @@ Use cases
 .. include:: permissions_by_role.rst
 
 .. include:: custom_member.rst
+
+.. include:: custom_signals.rst

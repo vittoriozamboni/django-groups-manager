@@ -23,6 +23,11 @@ from groups_manager import exceptions
 from groups_manager.perms import assign_object_to_member, assign_object_to_group
 
 
+def get_auth_models_sync_func_default(instance):
+    from groups_manager.settings import GROUPS_MANAGER
+    return GROUPS_MANAGER['AUTH_MODELS_SYNC']
+
+
 class Member(models.Model):
     """Member represents a person that can be related to one or more groups.
 
@@ -100,9 +105,13 @@ def member_save(sender, instance, created, *args, **kwargs):
     Add User to Django Users
     """
     from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
-        prefix = GROUPS_MANAGER['USER_USERNAME_PREFIX']
-        suffix = GROUPS_MANAGER['USER_USERNAME_SUFFIX']
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance) and instance.django_auth_sync:
+        original_prefix = kwargs.get('prefix', GROUPS_MANAGER['USER_USERNAME_PREFIX'])
+        original_suffix = kwargs.get('suffix', GROUPS_MANAGER['USER_USERNAME_SUFFIX'])
+        prefix = original_prefix
+        suffix = original_suffix
         if suffix == '_$$random':
             suffix = '_%s' % str(uuid4())[:8]
         username = '%s%s%s' % (prefix, instance.username, suffix)
@@ -119,10 +128,9 @@ def member_save(sender, instance, created, *args, **kwargs):
             instance.django_user = django_user
             instance.save()
         else:
-            if (instance.django_user.username != username and
-                suffix != '_$$random') \
+            if (instance.django_user.username != username and suffix != '_$$random') \
                 or (instance.django_user.username[:-len(suffix)] != username[:-len(suffix)] and
-                    GROUPS_MANAGER['USER_USERNAME_SUFFIX'] == '_$$random'):
+                    original_suffix == '_$$random'):
                 instance.django_user.username = username
             instance.django_user.first_name = instance.first_name
             instance.django_user.last_name = instance.last_name
@@ -134,8 +142,9 @@ def member_delete(sender, instance, *args, **kwargs):
     """
     Remove the related Django Group
     """
-    from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance) and instance.django_auth_sync:
         if instance.django_user:
             django_user = instance.django_user
             django_user.delete()
@@ -252,6 +261,7 @@ class Group(MPTTModel):
 
     class GroupsManagerMeta:
         member_model = 'groups_manager.Member'
+        group_member_model = 'groups_manager.GroupMember'
 
     def __unicode__(self):
         return '%s' % self.name
@@ -272,7 +282,15 @@ class Group(MPTTModel):
 
     @property
     def member_model(self):
-        return django_get_model(*self.GroupsManagerMeta.member_model.split('.'))
+        member_model_path = getattr(self.GroupsManagerMeta,
+                                    'member_model', 'groups_manager.Member')
+        return django_get_model(*member_model_path.split('.'))
+
+    @property
+    def group_member_model(self):
+        group_member_model_path = getattr(self.GroupsManagerMeta,
+                                          'group_member_model', 'groups_manager.GroupMember')
+        return django_get_model(*group_member_model_path.split('.'))
 
     def get_members(self, subgroups=False):
         """Return group members.
@@ -282,17 +300,21 @@ class Group(MPTTModel):
           - `subgroups`: return also descendants members (default: `False`)
         """
         member_model = self.member_model
-        if member_model == Member:
-            members = list(self.group_members.all())
-        else:
-            # proxy model
-            if member_model._meta.proxy:
-                members = list(member_model.objects.filter(
-                    id__in=self.group_members.values_list('id', flat=True)))
-            # subclassed
+        group_member_model = self.group_member_model
+        if group_member_model == GroupMember:
+            if member_model == Member:
+                members = list(self.group_members.all())
             else:
-                members = list(member_model.objects.filter(
-                    member_ptr__in=self.group_members.all()))
+                # proxy model
+                if member_model._meta.proxy:
+                    members = list(member_model.objects.filter(
+                        id__in=self.group_members.values_list('id', flat=True)))
+                # subclassed
+                else:
+                    members = list(member_model.objects.filter(
+                        member_ptr__in=self.group_members.all()))
+        else:
+            members = [gm.member for gm in group_member_model.objects.filter(group=self)]
         if subgroups:
             for subgroup in self.subgroups.all():
                 members += subgroup.members
@@ -345,7 +367,8 @@ class Group(MPTTModel):
         if not member.id:
             raise exceptions.MemberNotSavedError(
                 "You must save the member before to create a relation with groups")
-        group_member = GroupMember(member=member, group=self)
+        group_member_model = self.group_member_model
+        group_member = group_member_model(member=member, group=self)
         group_member.save()
         if roles:
             for role in roles:
@@ -362,6 +385,19 @@ class Group(MPTTModel):
                     except Exception as e:
                         raise exceptions.GetRoleError(e)
         return group_member
+
+    def remove_member(self, member):
+        """Remove a member from the group.
+
+        :Parameters:
+          - `member`: member (required)
+        """
+        group_member_model = self.group_member_model
+        try:
+            group_member = group_member_model.objects.get(member=member, group=self)
+        except Exception as e:
+            raise exceptions.GetGroupMemberError(e)
+        group_member.delete()
 
     def assign_object(self, obj, **kwargs):
         """Assign an object to the group.
@@ -383,10 +419,14 @@ def group_save(sender, instance, created, *args, **kwargs):
     Add Group to Django Groups
     """
     from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance) and instance.django_auth_sync:
         # create a name compatible with django group name limit of 80 chars
-        prefix = GROUPS_MANAGER['GROUP_NAME_PREFIX']
-        suffix = GROUPS_MANAGER['GROUP_NAME_SUFFIX']
+        original_prefix = kwargs.get('prefix', GROUPS_MANAGER['GROUP_NAME_PREFIX'])
+        original_suffix = kwargs.get('suffix', GROUPS_MANAGER['GROUP_NAME_SUFFIX'])
+        prefix = original_prefix
+        suffix = original_suffix
         if suffix == '_$$random':
             suffix = '_%s' % str(uuid4())[:8]
         parent_name = ''
@@ -398,10 +438,9 @@ def group_save(sender, instance, created, *args, **kwargs):
             django_group.save()
             instance.django_group = django_group
             instance.save()
-        elif (instance.django_group.name != name and
-              GROUPS_MANAGER['GROUP_NAME_SUFFIX'] != '_$$random') \
+        elif (instance.django_group.name != name and original_suffix != '_$$random') \
                 or (instance.django_group.name[:-len(suffix)] != name[:-len(suffix)] and
-                    GROUPS_MANAGER['GROUP_NAME_SUFFIX'] == '_$$random'):
+                    original_suffix == '_$$random'):
             instance.django_group.name = name
             instance.django_group.save()
 
@@ -410,8 +449,9 @@ def group_delete(sender, instance, *args, **kwargs):
     """
     Remove the related Django Group
     """
-    from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC'] and instance.django_auth_sync:
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance) and instance.django_auth_sync:
         if instance.django_group:
             django_group = instance.django_group
             django_group.delete()
@@ -491,8 +531,9 @@ def group_member_save(sender, instance, created, *args, **kwargs):
     """
     Add Django User to Django Groups
     """
-    from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance):
         django_user = instance.member.django_user
         django_group = instance.group.django_group
         if django_user and django_group:
@@ -504,8 +545,9 @@ def group_member_delete(sender, instance, *args, **kwargs):
     """
     Remove Django User from Django Groups
     """
-    from groups_manager.settings import GROUPS_MANAGER
-    if GROUPS_MANAGER['AUTH_MODELS_SYNC']:
+    get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
+                                           get_auth_models_sync_func_default)
+    if get_auth_models_sync_func(instance):
         member = instance.member
         # Django 1.4 compatibility
         try:

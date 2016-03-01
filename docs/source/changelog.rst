@@ -1,5 +1,9 @@
 Changelog
 =========
+- 16-03-01 (0.4.0):
+    - Added kwargs to signals for override settings parameters
+    - Added remove_member to group as a method (previously must be done manually)
+
 - 16-02-25 (0.3.0):
     - Added permissions assignment to groups
     - Added support for Django 1.8 and 1.9
