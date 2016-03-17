@@ -234,7 +234,7 @@ class Group(MPTTModel):
      mptt.models.TreeManager.
 
     """
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     codename = models.SlugField(blank=True, max_length=255)
     description = models.TextField(default='', blank=True)
     comment = models.TextField(default='', blank=True)
