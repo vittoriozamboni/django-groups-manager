@@ -1,5 +1,10 @@
 Changelog
 =========
+- 16-04-19 (0.4.1):
+    - Added initial migrations
+    - Removed unique to group name (this cause issues when subclassing, since it does not allows to have same names for different models)
+    - Fixed issue with python 3 compatibility in templatetags (thank you Josh Manning!)
+
 - 16-03-01 (0.4.0):
     - Added kwargs to signals for override settings parameters
     - Added remove_member to group as a method (previously must be done manually)

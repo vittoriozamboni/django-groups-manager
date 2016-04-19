@@ -15,9 +15,13 @@ Add ``groups_manager`` to installed apps::
        'groups_manager',
    )
 
-Run ``syncdb``::
+Run ``syncdb`` or ``migrate``::
 
+   # django < 1.7
    python manage.py syncdb
+
+   # django >= 1.7
+   python manage.py migrate
 
 If you want to use standard templates, add groups_manager's urls from ``urls.py``::
 
