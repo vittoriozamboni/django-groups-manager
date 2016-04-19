@@ -118,7 +118,7 @@ def generate_uuid4():
 def obj_method(obj, method_name, *args):
     try:
         value = getattr(obj, method_name)(*args)
-    except Exception, e:
+    except Exception as e:
         value = e
     return value
 
