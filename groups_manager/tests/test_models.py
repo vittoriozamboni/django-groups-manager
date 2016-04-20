@@ -5,7 +5,7 @@ import sys
 from django.contrib.auth.models import Group as DjangoGroup
 from django.test import TestCase
 
-from groups_manager import models, exceptions
+from groups_manager import models, exceptions_gm
 
 
 GROUPS_MANAGER_MOCK = {
@@ -70,12 +70,12 @@ class TestMember(TestCase):
 
     def test_has_perm_exception(self):
         member = models.Member(first_name='Caio', last_name='Mario')
-        with self.assertRaises(exceptions.MemberDjangoUserSyncError):
+        with self.assertRaises(exceptions_gm.MemberDjangoUserSyncError):
             member.has_perm('view_member', member)
 
     def test_has_perms_exception(self):
         member = models.Member(first_name='Caio', last_name='Mario')
-        with self.assertRaises(exceptions.MemberDjangoUserSyncError):
+        with self.assertRaises(exceptions_gm.MemberDjangoUserSyncError):
             member.has_perms(['view_member'], member)
 
 
@@ -251,13 +251,13 @@ class TestGroup(TestCase):
         dictators = models.Group(name='Dictators')
         sulla = models.Member(first_name='Lucius', last_name='Sulla')
         sulla.save()
-        with self.assertRaises(exceptions.GroupNotSavedError):
+        with self.assertRaises(exceptions_gm.GroupNotSavedError):
             dictators.add_member(sulla)
 
     def test_add_member_unsaved_member(self):
         dictators = models.Group.objects.create(name='Dictators')
         sulla = models.Member(first_name='Lucius', last_name='Sulla')
-        with self.assertRaises(exceptions.MemberNotSavedError):
+        with self.assertRaises(exceptions_gm.MemberNotSavedError):
             dictators.add_member(sulla)
 
     def test_add_member_with_role(self):
@@ -283,7 +283,7 @@ class TestGroup(TestCase):
         self.assertIn(plebeian, membership.roles.all())
         # invalid role
         valerius = models.Member.objects.create(first_name='Valerius', last_name='Postumos')
-        with self.assertRaises(exceptions.GetRoleError):
+        with self.assertRaises(exceptions_gm.GetRoleError):
             romans.add_member(valerius, [{'role': 'invalid'}])
 
 

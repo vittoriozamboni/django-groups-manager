@@ -4,7 +4,7 @@ import re
 from django.contrib.auth import models as auth_models
 from django.test import TestCase
 
-from groups_manager import models, exceptions
+from groups_manager import models, exceptions_gm
 from testproject import models as testproject_models
 
 GROUPS_MANAGER_MOCK = {
@@ -373,7 +373,7 @@ class TestPermissions(TestCase):
         self.assertTrue(pg.django_group in pm.django_user.groups.all())
         pg.remove_member(pm)
         # Test catch exception
-        with self.assertRaises(exceptions.GetGroupMemberError):
+        with self.assertRaises(exceptions_gm.GetGroupMemberError):
             pg.remove_member(pm)
         self.assertFalse(pg.django_group in pm.django_user.groups.all())
         self.assertFalse(pm in pg.members)
