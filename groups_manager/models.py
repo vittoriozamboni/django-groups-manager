@@ -586,7 +586,8 @@ class GroupMemberMixin(models.Model):
     class Meta:
         abstract = True
         ordering = ('group', 'member')
-        unique_together = (('group', 'member'), )
+        # BUG in Django: https://code.djangoproject.com/ticket/16732
+        # unique_together = (('group', 'member'), )
 
     def __unicode__(self):
         return '%s - %s' % (self.group.name, self.member.full_name)
