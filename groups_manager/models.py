@@ -616,6 +616,7 @@ class GroupMember(GroupMemberMixin):
     roles = models.ManyToManyField(GroupMemberRole, null=True, blank=True)
 
     class Meta(GroupMemberMixin.Meta):
+        unique_together = (('group', 'member'), )  # retrocompatibility with Django < 1.8
         abstract = False
 
 
