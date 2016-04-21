@@ -9,6 +9,7 @@ from testproject import models as testproject_models
 
 GROUPS_MANAGER_MOCK = {
     'AUTH_MODELS_SYNC': True,
+    'AUTH_USER_GET_OR_CREATE': False,
     'GROUP_NAME_PREFIX': '',
     'GROUP_NAME_SUFFIX': '',
     'USER_USERNAME_PREFIX': '',

@@ -133,11 +133,12 @@ def member_save(sender, instance, created, *args, **kwargs):
         username = '%s%s%s' % (prefix, instance.username, suffix)
         if not instance.django_user:
             UserModel = instance._meta.get_field('django_user').rel.to
-            django_user = UserModel(
-                first_name=instance.first_name,
-                last_name=instance.last_name,
-                username=username
-            )
+            if GROUPS_MANAGER['AUTH_USER_GET_OR_CREATE']:
+                django_user, c = UserModel.objects.get_or_create(username=username)
+            else:
+                django_user = UserModel(username=username)
+            django_user.first_name = instance.first_name
+            django_user.last_name = instance.last_name
             if instance.email:
                 django_user.email = instance.email
             django_user.save()

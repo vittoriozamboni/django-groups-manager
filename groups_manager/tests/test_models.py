@@ -10,6 +10,7 @@ from groups_manager import models, exceptions_gm
 
 GROUPS_MANAGER_MOCK = {
     'AUTH_MODELS_SYNC': True,
+    'AUTH_USER_GET_OR_CREATE': False,
     'GROUP_NAME_PREFIX': 'DGM_',
     'GROUP_NAME_SUFFIX': '_$$random',
     'USER_USERNAME_PREFIX': 'DGM_',
