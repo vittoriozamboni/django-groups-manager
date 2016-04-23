@@ -133,7 +133,7 @@ def member_save(sender, instance, created, *args, **kwargs):
         username = '%s%s%s' % (prefix, instance.username, suffix)
         if not instance.django_user:
             UserModel = instance._meta.get_field('django_user').rel.to
-            if GROUPS_MANAGER['AUTH_USER_GET_OR_CREATE']:
+            if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
                 django_user, c = UserModel.objects.get_or_create(username=username)
             else:
                 django_user = UserModel(username=username)
@@ -512,7 +512,10 @@ def group_save(sender, instance, created, *args, **kwargs):
             parent_name = '%s-' % instance.parent.name
         name = '%s%s%s%s' % (prefix, parent_name, instance.name, suffix)
         if not instance.django_group:
-            django_group = DjangoGroup(name=name)
+            if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
+                django_group, c = DjangoGroup.objects.get_or_create(name=name)
+            else:
+                django_group = DjangoGroup(name=name)
             django_group.save()
             instance.django_group = django_group
             instance.save()
