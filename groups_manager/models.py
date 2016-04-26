@@ -510,7 +510,12 @@ def group_save(sender, instance, created, *args, **kwargs):
         parent_name = ''
         if instance.parent:
             parent_name = '%s-' % instance.parent.name
-        name = '%s%s%s%s' % (prefix, parent_name, instance.name, suffix)
+        # Django 80-len group name fix: remove from parent
+        mid_name = '%s%s' % (parent_name, instance.name)
+        name = '%s%s%s' % (prefix, mid_name, suffix)
+        if len(name) > 80:
+            fix_length = len(prefix) + len(instance.name) + len(suffix)
+            name = '%s%s%s%s' % (prefix, parent_name[-(80-fix_length):], instance.name, suffix)
         if not instance.django_group:
             if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
                 django_group, c = DjangoGroup.objects.get_or_create(name=name)
