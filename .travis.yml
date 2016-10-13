@@ -10,8 +10,8 @@ env:
 install:
   - pip install -q "Django$DJANGO_VERSION" coverage coveralls
   - pip install "django-guardian$GUARDIAN_VERSION" "django-mptt$MPTT_VERSION"
-  - pip install . --use-mirrors
-  - pip install -r testproject/requirements.txt --use-mirrors
+  - pip install .
+  - pip install -r testproject/requirements.txt
 
 script:
   - coverage run testproject/manage.py test testproject groups_manager
