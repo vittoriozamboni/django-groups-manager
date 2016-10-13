@@ -23,6 +23,10 @@ Run ``syncdb`` or ``migrate``::
    # django >= 1.7
    python manage.py migrate
 
+If you are upgrading from version <0.4.2, fake the initial migration::
+
+   python manage.py migrate groups_manager 0001 --fake
+
 If you want to use standard templates, add groups_manager's urls from ``urls.py``::
 
     urlpatterns = ('',

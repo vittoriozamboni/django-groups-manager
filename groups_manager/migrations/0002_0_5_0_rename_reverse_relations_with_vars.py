@@ -10,7 +10,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups_manager', '0002_auto_20160317_1325'),
+        ('groups_manager', '0001_initial'),
     ]
 
     operations = [

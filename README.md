@@ -35,10 +35,16 @@ pip install django-groups-manager
 
  If you want to use permissions related features, add also ``django-guardian``.
 
-2. Run syncdb:
+2. Create models with ``migrate``:
 
     ```bash
-    python manage.py syncdb
+    python manage.py migrate
+    ```
+
+    Note: for users that are upgrading from <0.4.2, launch:
+
+    ```bash
+    python manage.py migrate groups_manager 0001 --fake
     ```
 
 3. To enable django ``auth.models`` synchronization, add to the settings module:
