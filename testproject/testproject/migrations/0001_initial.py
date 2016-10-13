@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups_manager', '0002_auto_20160317_1325'),
+        ('groups_manager', '0002_0_5_0_rename_reverse_relations_with_vars'),
     ]
 
     operations = [

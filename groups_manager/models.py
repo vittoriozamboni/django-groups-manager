@@ -481,7 +481,7 @@ class Group(GroupMixin):
 
     group_type = models.ForeignKey(GroupType, null=True, blank=True, on_delete=models.SET_NULL,
                                    related_name='%(app_label)s_%(class)s_set')
-    group_entities = models.ManyToManyField(GroupEntity, null=True, blank=True,
+    group_entities = models.ManyToManyField(GroupEntity, blank=True,
                                             related_name='%(app_label)s_%(class)s_set')
 
     django_group = models.ForeignKey(DjangoGroup, null=True, blank=True, on_delete=models.SET_NULL)
@@ -623,7 +623,7 @@ class GroupMember(GroupMemberMixin):
 
     group = models.ForeignKey(Group, related_name='group_membership')
     member = models.ForeignKey(Member, related_name='group_membership')
-    roles = models.ManyToManyField(GroupMemberRole, null=True, blank=True)
+    roles = models.ManyToManyField(GroupMemberRole, blank=True)
 
     class Meta(GroupMemberMixin.Meta):
         unique_together = (('group', 'member'), )  # retrocompatibility with Django < 1.8
