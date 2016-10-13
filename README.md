@@ -41,7 +41,7 @@ pip install django-groups-manager
     python manage.py migrate
     ```
 
-Note: for users that are upgrading from <0.4.2, launch:
+    Note: for users that are upgrading from <0.4.2, launch:
 
     ```bash
     python manage.py migrate groups_manager 0001 --fake
