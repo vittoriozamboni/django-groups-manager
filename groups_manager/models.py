@@ -5,8 +5,12 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
-from django.apps import apps
-django_get_model = apps.get_model
+try:
+    # Pre Django 1.7 support
+    from django.db.models import get_model as django_get_model
+except ImportError:
+    from django.apps import apps
+    django_get_model = apps.get_model
 
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User as DefaultUser
