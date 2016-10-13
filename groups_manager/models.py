@@ -5,11 +5,8 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
-try:
-    from django.db.models import get_model as django_get_model
-except ImportError:
-    from django.apps import apps
-    django_get_model = apps.get_model
+from django.apps import apps
+django_get_model = apps.get_model
 
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User as DefaultUser
@@ -246,8 +243,7 @@ class Group(MPTTModel):
 
     group_type = models.ForeignKey(GroupType, null=True, blank=True, on_delete=models.SET_NULL,
                                    related_name='groups')
-    group_entities = models.ManyToManyField(GroupEntity, null=True, blank=True,
-                                            related_name='groups')
+    group_entities = models.ManyToManyField(GroupEntity, blank=True, related_name='groups')
 
     django_group = models.ForeignKey(DjangoGroup, null=True, blank=True, on_delete=models.SET_NULL)
     django_auth_sync = models.BooleanField(default=True, blank=True)
@@ -500,7 +496,7 @@ class GroupMember(models.Model):
     """
     group = models.ForeignKey(Group, related_name='group_membership')
     member = models.ForeignKey(Member, related_name='group_membership')
-    roles = models.ManyToManyField(GroupMemberRole, null=True, blank=True)
+    roles = models.ManyToManyField(GroupMemberRole, blank=True)
 
     class Meta:
         ordering = ('group', 'member')

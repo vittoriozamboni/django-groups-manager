@@ -1,7 +1,10 @@
 Changelog
 =========
+- 16-04-19 (0.4.2):
+    - Added initial migration
+    - Removed null attributes from m2m relations
+
 - 16-04-19 (0.4.1):
-    - Added initial migrations
     - Removed unique to group name (this cause issues when subclassing, since it does not allows to have same names for different models)
     - Fixed issue with python 3 compatibility in templatetags (thank you Josh Manning!)
 

@@ -20,6 +20,7 @@ setup(
     url='https://github.com/vittoriozamboni/django-groups-manager',
     packages=[
         'groups_manager',
+        'groups_manager.migrations',
         'groups_manager.templatetags',
     ],
     include_package_data=True,
