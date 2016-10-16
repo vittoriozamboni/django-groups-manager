@@ -1,6 +1,10 @@
 Changelog
 =========
-- 16-04-19 (0.4.2):
+- 16-11-08 (0.5.0):
+    - Added models mixins
+    - Removed compatibility for Django < 1.7
+
+- 16-10-10 (0.4.2):
     - Added initial migration
     - Removed null attributes from m2m relations
 

@@ -4,8 +4,8 @@ python:
  - 3.4
 
 env:
- - DJANGO_VERSION="<1.9" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<0.9"
- - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<0.9"
+ - DJANGO_VERSION="<1.9" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="2"
+ - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2"
 
 install:
   - pip install -q "Django$DJANGO_VERSION" coverage coveralls
@@ -24,16 +24,6 @@ after_success:
 matrix:
     include:
         - python: 2.7
-          env: DJANGO_VERSION="<1.5" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
-        - python: 2.7
-          env: DJANGO_VERSION="<1.6" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"
         - python: 3.4
-          env: DJANGO_VERSION="<1.6" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
-        - python: 2.7
-          env: DJANGO_VERSION="<1.7" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
-        - python: 3.4
-          env: DJANGO_VERSION="<1.7" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
-        - python: 2.7
-          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
-        - python: 3.4
-          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.3" MPTT_VERSION="<0.8"
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"

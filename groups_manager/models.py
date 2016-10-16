@@ -6,11 +6,8 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
-try:
-    from django.db.models import get_model as django_get_model
-except ImportError:
-    from django.apps import apps
-    django_get_model = apps.get_model
+from django.apps import apps
+django_get_model = apps.get_model
 
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User as DefaultUser
@@ -134,7 +131,7 @@ def member_save(sender, instance, created, *args, **kwargs):
         if not instance.django_user:
             UserModel = instance._meta.get_field('django_user').rel.to
             if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
-                django_user, c = UserModel.objects.get_or_create(username=username)
+                django_user, _ = UserModel.objects.get_or_create(username=username)
             else:
                 django_user = UserModel(username=username)
             django_user.first_name = instance.first_name
@@ -259,10 +256,6 @@ class GroupRelationsMixin(object):
         member_model = 'groups_manager.Member'
         group_member_model = 'groups_manager.GroupMember'
         group_members_attribute = 'group_members'
-
-    @property
-    def asd(self):
-        pass
 
     @property
     def member_model(self):
@@ -416,7 +409,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         """Return group entities."""
         return self.get_entities(True)
 
-    def add_member(self, member, roles=[]):
+    def add_member(self, member, roles=None):
         """Add a member to the group.
 
         :Parameters:
@@ -424,6 +417,8 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
           - `roles`: list of roles. Each role could be a role id, a role label or codename,
             a role instance (optional, default: ``[]``)
         """
+        if roles is None:
+            roles = []
         if not self.id:
             raise exceptions_gm.GroupNotSavedError(
                 "You must save the group before to create a relation with members")
@@ -518,7 +513,7 @@ def group_save(sender, instance, created, *args, **kwargs):
             name = '%s%s%s%s' % (prefix, parent_name[-(80-fix_length):], instance.name, suffix)
         if not instance.django_group:
             if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
-                django_group, c = DjangoGroup.objects.get_or_create(name=name)
+                django_group, _ = DjangoGroup.objects.get_or_create(name=name)
             else:
                 django_group = DjangoGroup(name=name)
             django_group.save()
@@ -626,7 +621,7 @@ class GroupMember(GroupMemberMixin):
     roles = models.ManyToManyField(GroupMemberRole, blank=True)
 
     class Meta(GroupMemberMixin.Meta):
-        unique_together = (('group', 'member'), )  # retrocompatibility with Django < 1.8
+        unique_together = (('group', 'member'), )  # compatibility with Django < 1.8
         abstract = False
 
 
@@ -651,18 +646,11 @@ def group_member_delete(sender, instance, *args, **kwargs):
     get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
                                            get_auth_models_sync_func_default)
     if get_auth_models_sync_func(instance):
-        member = instance.member
-        # Django 1.4 compatibility
-        try:
-            group = instance.group
-        except Group.DoesNotExist:
-            group = None
-        if member and group:
-            django_user = instance.member.django_user
-            django_group = instance.group.django_group
-            if django_user and django_group:
-                if django_group in django_user.groups.all():
-                    django_user.groups.remove(django_group)
+        django_user = instance.member.django_user
+        django_group = instance.group.django_group
+        if django_user and django_group:
+            if django_group in django_user.groups.all():
+                django_user.groups.remove(django_group)
 
 post_save.connect(group_member_save, sender=GroupMember)
 post_delete.connect(group_member_delete, sender=GroupMember)

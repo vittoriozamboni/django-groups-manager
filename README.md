@@ -11,7 +11,7 @@ Online documentation is available at http://django-groups-manager.rtfd.org/.
 
 ## Requirements
 
-    - Django >= 1.4
+    - Django >= 1.7
     - django-guardian for user permissions (<1.4 for Django < 1.8)
 
 ## Installation
@@ -45,6 +45,7 @@ pip install django-groups-manager
 
     ```bash
     python manage.py migrate groups_manager 0001 --fake
+    python manage.py migrate
     ```
 
 3. To enable django ``auth.models`` synchronization, add to the settings module:

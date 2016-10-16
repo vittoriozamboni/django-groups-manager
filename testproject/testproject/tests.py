@@ -202,13 +202,6 @@ class TestPermissions(TestCase):
         """
         from groups_manager import settings
         settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
-        custom_permissions = {
-            'owner': ['view', 'change', 'delete'],
-            'group': ['view', 'change'],
-            'groups_upstream': ['view', 'change', 'delete'],
-            'groups_downstream': ['view'],
-            'groups_siblings': ['view'],
-        }
         fc_internazionale = models.Group.objects.create(name='F.C. Internazionale Milan')
         staff = models.Group.objects.create(name='Staff', parent=fc_internazionale)
         players = models.Group.objects.create(name='Players', parent=fc_internazionale)

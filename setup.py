@@ -26,7 +26,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'awesome-slugify',
-        'django>=1.4',
+        'django>=1.7',
         'django-braces',
         'django-guardian',
         'django-mptt',
