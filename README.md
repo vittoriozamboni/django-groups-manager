@@ -38,13 +38,14 @@ pip install django-groups-manager
 2. Create models with ``migrate``:
 
     ```bash
-    python manage.py migrate
+    python manage.py migrate groups_manager
     ```
 
     Note: for users that are upgrading from <0.4.2, launch:
 
     ```bash
     python manage.py migrate groups_manager 0001 --fake
+    python manage.py migrate groups_manager
     ```
 
 3. To enable django ``auth.models`` synchronization, add to the settings module:

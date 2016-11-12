@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups_manager', '0001_initial'),
+        ('groups_manager', '0002_0_4_3_remove_m2m_null'),
     ]
 
     operations = [
