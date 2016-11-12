@@ -26,7 +26,25 @@ def get_auth_models_sync_func_default(instance):
     return GROUPS_MANAGER['AUTH_MODELS_SYNC']
 
 
-class MemberMixin(models.Model):
+class MemberRelationsMixin(object):
+
+    class GroupsManagerMeta:
+        group_model = 'groups_manager.Group'
+        group_member_model = 'groups_manager.GroupMember'
+
+    @property
+    def group_model(self):
+        group_model_path = getattr(self.GroupsManagerMeta, 'group_model', 'groups_manager.Group')
+        return django_get_model(*group_model_path.split('.'))
+
+    @property
+    def group_member_model(self):
+        group_member_model_path = getattr(self.GroupsManagerMeta,
+                                          'group_member_model', 'groups_manager.GroupMember')
+        return django_get_model(*group_member_model_path.split('.'))
+
+
+class MemberMixin(MemberRelationsMixin, models.Model):
     """Member represents a person that can be related to one or more groups.
 
     :Parameters:
@@ -100,7 +118,7 @@ class MemberMixin(models.Model):
         .. note::
          This method needs django-guardian.
         """
-        group_member = GroupMember.objects.get(group=group, member=self)
+        group_member = self.group_member_model.objects.get(group=group, member=self)
         return assign_object_to_member(group_member, obj, **kwargs)
 
 
@@ -577,15 +595,6 @@ class GroupMemberRole(GroupMemberRoleMixin):
 
 
 class GroupMemberMixin(models.Model):
-    """This model represents the intermediate model of the relation between a Member and a Group.
-    This middleware can have one or more GroupMemberRole associated.
-    A member could be in a group only once (group - member pair is unique).
-
-    :Parameters:
-      - `group`: Group (required) (defined in non abstract model)
-      - `member`: Member (required) (defined in non abstract model)
-      - `roles`: m2m to GroupMemberRole
-    """
 
     class Meta:
         abstract = True
@@ -615,6 +624,15 @@ class GroupMemberMixin(models.Model):
 
 
 class GroupMember(GroupMemberMixin):
+    """This model represents the intermediate model of the relation between a Member and a Group.
+    This middleware can have one or more GroupMemberRole associated.
+    A member could be in a group only once (group - member pair is unique).
+
+    :Parameters:
+      - `group`: Group (required) (defined in non abstract model)
+      - `member`: Member (required) (defined in non abstract model)
+      - `roles`: m2m to GroupMemberRole
+    """
 
     group = models.ForeignKey(Group, related_name='group_membership')
     member = models.ForeignKey(Member, related_name='group_membership')
