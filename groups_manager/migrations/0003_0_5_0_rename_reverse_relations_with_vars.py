@@ -10,14 +10,14 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups_manager', '0001_initial'),
+        ('groups_manager', '0002_0_4_3_remove_m2m_null'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='group',
             name='group_entities',
-            field=models.ManyToManyField(related_name='groups_manager_group_set', null=True, to='groups_manager.GroupEntity', blank=True),
+            field=models.ManyToManyField(related_name='groups_manager_group_set', to='groups_manager.GroupEntity', blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(
