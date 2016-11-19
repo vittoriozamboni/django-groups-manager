@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from groups_manager import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     url(r'^$',
         views.GroupsManagerView.as_view(),
@@ -102,4 +102,4 @@ urlpatterns = patterns('',
         views.GroupMemberAddGroupView.as_view(),
         name='group_member_add_group',),
 
-)
+]
