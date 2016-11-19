@@ -9,18 +9,21 @@ class MemberForm(forms.ModelForm):
 
     class Meta:
         model = models.Member
+        exclude = set()
 
 
 class GroupTypeForm(forms.ModelForm):
 
     class Meta:
         model = models.GroupType
+        exclude = set()
 
 
 class GroupEntityForm(forms.ModelForm):
 
     class Meta:
         model = models.GroupEntity
+        exclude = set()
 
 
 class GroupForm(forms.ModelForm, DictionaryFieldsForm):
@@ -39,6 +42,7 @@ class GroupMemberRoleForm(forms.ModelForm):
 
     class Meta:
         model = models.GroupMemberRole
+        exclude = set()
 
 
 class GroupMemberForm(forms.ModelForm):
@@ -54,6 +58,7 @@ class GroupMemberAddMemberForm(forms.ModelForm):
 
     class Meta:
         model = models.GroupMember
+        exclude = set()
 
 
 class GroupMemberAddGroupForm(forms.ModelForm):
@@ -62,3 +67,4 @@ class GroupMemberAddGroupForm(forms.ModelForm):
 
     class Meta:
         model = models.GroupMember
+        exclude = set()
