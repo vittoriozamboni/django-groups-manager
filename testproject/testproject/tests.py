@@ -4,11 +4,12 @@ import re
 from django.contrib.auth import models as auth_models
 from django.test import TestCase
 
-from groups_manager import models, exceptions
+from groups_manager import models, exceptions_gm
 from testproject import models as testproject_models
 
 GROUPS_MANAGER_MOCK = {
     'AUTH_MODELS_SYNC': True,
+    'AUTH_MODELS_GET_OR_CREATE': False,
     'GROUP_NAME_PREFIX': '',
     'GROUP_NAME_SUFFIX': '',
     'USER_USERNAME_PREFIX': '',
@@ -201,13 +202,6 @@ class TestPermissions(TestCase):
         """
         from groups_manager import settings
         settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
-        custom_permissions = {
-            'owner': ['view', 'change', 'delete'],
-            'group': ['view', 'change'],
-            'groups_upstream': ['view', 'change', 'delete'],
-            'groups_downstream': ['view'],
-            'groups_siblings': ['view'],
-        }
         fc_internazionale = models.Group.objects.create(name='F.C. Internazionale Milan')
         staff = models.Group.objects.create(name='Staff', parent=fc_internazionale)
         players = models.Group.objects.create(name='Players', parent=fc_internazionale)
@@ -373,7 +367,7 @@ class TestPermissions(TestCase):
         self.assertTrue(pg.django_group in pm.django_user.groups.all())
         pg.remove_member(pm)
         # Test catch exception
-        with self.assertRaises(exceptions.GetGroupMemberError):
+        with self.assertRaises(exceptions_gm.GetGroupMemberError):
             pg.remove_member(pm)
         self.assertFalse(pg.django_group in pm.django_user.groups.all())
         self.assertFalse(pm in pg.members)
@@ -447,3 +441,67 @@ class TestPermissions(TestCase):
         g = w.django_group
         g.delete()
         w.remove_member(m)
+
+    def test_model_mixins(self):
+        """
+        John Boss is the MicroSoft boss. Marcus and Juliet are members of Azure and Surface
+        groups, respectively. Barry is a member of Azure too, but has no ownership on products.
+        Teresa is in both groups as a secretary (sub groups).
+        """
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+        custom_permissions = {
+            'owner': ['view', 'change', 'delete'],
+            'group': ['view', 'change'],
+            'groups_upstream': ['view', 'change', 'delete'],
+            'groups_downstream': ['view'],
+            'groups_siblings': [],
+        }
+        microsoft = testproject_models.OrganizationGroupWithMixin.objects.create(name='MicroSoft')
+        azure = testproject_models.OrganizationGroupWithMixin.objects.create(name='Azure', parent=microsoft)
+        surface = testproject_models.OrganizationGroupWithMixin.objects.create(name='Surface', parent=microsoft)
+        secretaries_azure = testproject_models.OrganizationGroupWithMixin.objects.create(name='Secretaries (Azure)', parent=azure)
+        secretaries_surface = testproject_models.OrganizationGroupWithMixin.objects.create(name='Secretaries (Surface)', parent=surface)
+
+        john = testproject_models.OrganizationMemberWithMixin.objects.create(first_name='John', last_name='Boss')
+        microsoft.add_member(john)
+        marcus = testproject_models.OrganizationMemberWithMixin.objects.create(first_name='Marcus', last_name='Azure')
+        azure.add_member(marcus)
+        barry = testproject_models.OrganizationMemberWithMixin.objects.create(first_name='Barry', last_name='Azure2')
+        azure.add_member(barry)
+        juliet = testproject_models.OrganizationMemberWithMixin.objects.create(first_name='Juliet', last_name='Surface')
+        surface.add_member(juliet)
+        teresa = testproject_models.OrganizationMemberWithMixin.objects.create(first_name='Teresa', last_name='Secretary')
+        secretaries_azure.add_member(teresa)
+        secretaries_surface.add_member(teresa)
+
+        cloud_platform = testproject_models.CloudPlatform.objects.create(name='Cloud 1')
+        surface_tablet = testproject_models.SurfaceProduct.objects.create(name='Surface Pro 4')
+
+        marcus.assign_object(azure, cloud_platform, custom_permissions=custom_permissions)
+        juliet.assign_object(surface, surface_tablet, custom_permissions=custom_permissions)
+
+        # owner
+        self.assertTrue(marcus.has_perms(
+            ['testproject.view_cloudplatform', 'testproject.change_cloudplatform',
+             'testproject.delete_cloudplatform'], cloud_platform))
+        self.assertTrue(juliet.has_perms(
+            ['testproject.view_surfaceproduct', 'testproject.change_surfaceproduct',
+             'testproject.delete_surfaceproduct'], surface_tablet))
+        # parent group
+        self.assertTrue(john.has_perms(
+            ['testproject.view_cloudplatform', 'testproject.change_cloudplatform',
+             'testproject.delete_cloudplatform'], cloud_platform))
+        self.assertTrue(john.has_perms(
+            ['testproject.view_surfaceproduct', 'testproject.change_surfaceproduct',
+             'testproject.delete_surfaceproduct'], surface_tablet))
+        # secretaries
+        self.assertTrue(teresa.has_perms(['testproject.view_cloudplatform'], cloud_platform))
+        self.assertTrue(teresa.has_perms(['testproject.view_surfaceproduct'], surface_tablet))
+        # members of same group
+        self.assertTrue(barry.has_perms(
+            ['testproject.view_cloudplatform', 'testproject.view_cloudplatform'], cloud_platform))
+        # siblings
+        self.assertFalse(marcus.has_perm(surface_tablet, 'testproject.view_surfaceproduct'))
+        self.assertFalse(marcus.has_perm(cloud_platform, 'testproject.view_cloudplatform'))
+
