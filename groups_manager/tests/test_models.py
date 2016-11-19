@@ -90,6 +90,9 @@ class TestMember(TestCase):
         with self.assertRaises(exceptions_gm.MemberDjangoUserSyncError):
             member.has_perms(['view_member'], member)
 
+    def test_group_member_model(self):
+        member = models.Member(first_name='Caio', last_name='Mario')
+        self.assertIsInstance(member.group_member_model, models.GroupMember)
 
 class TestGroupType(TestCase):
 
