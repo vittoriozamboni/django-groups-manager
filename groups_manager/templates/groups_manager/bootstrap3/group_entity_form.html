@@ -1,10 +1,12 @@
-{% extends "groups_manager/group_entity.html" %}
+{% extends "groups_manager/bootstrap3/group_entity.html" %}
+
+
+{% load bootstrap3 %}
 
 
 {% block breadcrumbs %}
     {{ block.super }}
     <li>
-        <span class="divider">&raquo;</span>
         {% if group_entity %}
             <a href="{% url 'groups_manager:group_entity_edit' group_entity.id %}">Edit</a>
         {% else %}
@@ -29,9 +31,19 @@
 <form action="." method="post" id="group_entity_form" class="django form-horizontal">
 {% csrf_token %}
 
-{% include "django_helper_forms/forms/form_template.html" %}
+    {% bootstrap_form form layout="horizontal" %}
 
-{% include "django_helper_forms/forms/form_template_bottom.html" %}
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-9">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {% if group %}
+          <a class="btn btn-default" href="{% url 'groups_manager:group_entity_detail' group.id %}">Cancel</a>
+        {% else %}
+          <a class="btn btn-default" href="{% url 'groups_manager:group_entity_list' %}">Cancel</a>
+        {% endif %}
+      </div>
+    </div>
 
 </form>
         

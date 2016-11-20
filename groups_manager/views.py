@@ -6,12 +6,15 @@ from braces.views import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 
-from groups_manager import models
-from groups_manager import forms
+from groups_manager import models, forms, settings
+
+TS = settings.GROUPS_MANAGER['TEMPLATE_STYLE']
+if TS:
+    TS = '/%s' % TS
 
 
 class GroupsManagerView(TemplateView):
-    template_name = 'groups_manager/groups_manager_home.html'
+    template_name = 'groups_manager%s/groups_manager_home.html' % TS
 
 
 '''
@@ -29,26 +32,26 @@ class MemberMixin(object):
 
 
 class MemberListView(LoginRequiredMixin, MemberMixin, ListView):
-    template_name = 'groups_manager/member_list.html'
+    template_name = 'groups_manager%s/member_list.html' % TS
 
     def get_queryset(self):
         return models.Member.objects.all()
 
 
 class MemberDetailView(LoginRequiredMixin, MemberMixin, DetailView):
-    template_name = 'groups_manager/member_detail.html'
+    template_name = 'groups_manager%s/member_detail.html' % TS
 
 
 class MemberCreateView(LoginRequiredMixin, MemberMixin, CreateView):
-    template_name = 'groups_manager/member_form.html'
+    template_name = 'groups_manager%s/member_form.html' % TS
 
 
 class MemberEditView(LoginRequiredMixin, MemberMixin, UpdateView):
-    template_name = 'groups_manager/member_form.html'
+    template_name = 'groups_manager%s/member_form.html' % TS
 
 
 class MemberDeleteView(LoginRequiredMixin, MemberMixin, DeleteView):
-    template_name = 'groups_manager/member_confirm_delete.html'
+    template_name = 'groups_manager%s/member_confirm_delete.html' % TS
 
 
 '''
@@ -66,26 +69,26 @@ class GroupTypeMixin(object):
 
 
 class GroupTypeListView(LoginRequiredMixin, GroupTypeMixin, ListView):
-    template_name = 'groups_manager/group_type_list.html'
+    template_name = 'groups_manager%s/group_type_list.html' % TS
 
     def get_queryset(self):
         return models.GroupType.objects.all()
 
 
 class GroupTypeDetailView(LoginRequiredMixin, GroupTypeMixin, DetailView):
-    template_name = 'groups_manager/group_type_detail.html'
+    template_name = 'groups_manager%s/group_type_detail.html' % TS
 
 
 class GroupTypeCreateView(LoginRequiredMixin, GroupTypeMixin, CreateView):
-    template_name = 'groups_manager/group_type_form.html'
+    template_name = 'groups_manager%s/group_type_form.html' % TS
 
 
 class GroupTypeEditView(LoginRequiredMixin, GroupTypeMixin, UpdateView):
-    template_name = 'groups_manager/group_type_form.html'
+    template_name = 'groups_manager%s/group_type_form.html' % TS
 
 
 class GroupTypeDeleteView(LoginRequiredMixin, GroupTypeMixin, DeleteView):
-    template_name = 'groups_manager/group_type_confirm_delete.html'
+    template_name = 'groups_manager%s/group_type_confirm_delete.html' % TS
 
 
 '''
@@ -103,26 +106,26 @@ class GroupEntityMixin(object):
 
 
 class GroupEntityListView(LoginRequiredMixin, GroupEntityMixin, ListView):
-    template_name = 'groups_manager/group_entity_list.html'
+    template_name = 'groups_manager%s/group_entity_list.html' % TS
 
     def get_queryset(self):
         return models.GroupEntity.objects.all()
 
 
 class GroupEntityDetailView(LoginRequiredMixin, GroupEntityMixin, DetailView):
-    template_name = 'groups_manager/group_entity_detail.html'
+    template_name = 'groups_manager%s/group_entity_detail.html' % TS
 
 
 class GroupEntityCreateView(LoginRequiredMixin, GroupEntityMixin, CreateView):
-    template_name = 'groups_manager/group_entity_form.html'
+    template_name = 'groups_manager%s/group_entity_form.html' % TS
 
 
 class GroupEntityEditView(LoginRequiredMixin, GroupEntityMixin, UpdateView):
-    template_name = 'groups_manager/group_entity_form.html'
+    template_name = 'groups_manager%s/group_entity_form.html' % TS
 
 
 class GroupEntityDeleteView(LoginRequiredMixin, GroupEntityMixin, DeleteView):
-    template_name = 'groups_manager/group_entity_confirm_delete.html'
+    template_name = 'groups_manager%s/group_entity_confirm_delete.html' % TS
 
 
 '''
@@ -140,26 +143,22 @@ class GroupMixin(object):
 
 
 class GroupListView(LoginRequiredMixin, GroupMixin, ListView):
-    template_name = 'groups_manager/group_list.html'
+    template_name = 'groups_manager%s/group_list.html' % TS
 
     def get_queryset(self):
         return models.Group.objects.all()
 
 
 class GroupDetailView(LoginRequiredMixin, GroupMixin, DetailView):
-    template_name = 'groups_manager/group_detail.html'
+    template_name = 'groups_manager%s/group_detail.html' % TS
 
 
 class GroupCreateView(LoginRequiredMixin, GroupMixin, CreateView):
-    template_name = 'groups_manager/group_form.html'
-
-    def get_success_url(self):
-        group = self.get_object()
-        return reverse('groups_manager:group_detail', kwargs={'pk': group.id})
+    template_name = 'groups_manager%s/group_form.html' % TS
 
 
 class GroupEditView(LoginRequiredMixin, GroupMixin, UpdateView):
-    template_name = 'groups_manager/group_form.html'
+    template_name = 'groups_manager%s/group_form.html' % TS
 
     def get_success_url(self):
         group = self.get_object()
@@ -167,7 +166,7 @@ class GroupEditView(LoginRequiredMixin, GroupMixin, UpdateView):
 
 
 class GroupDeleteView(LoginRequiredMixin, GroupMixin, DeleteView):
-    template_name = 'groups_manager/group_confirm_delete.html'
+    template_name = 'groups_manager%s/group_confirm_delete.html' % TS
 
 
 '''
@@ -185,26 +184,26 @@ class GroupMemberRoleMixin(object):
 
 
 class GroupMemberRoleListView(LoginRequiredMixin, GroupMemberRoleMixin, ListView):
-    template_name = 'groups_manager/group_member_role_list.html'
+    template_name = 'groups_manager%s/group_member_role_list.html' % TS
 
     def get_queryset(self):
         return models.GroupMemberRole.objects.all()
 
 
 class GroupMemberRoleDetailView(LoginRequiredMixin, GroupMemberRoleMixin, DetailView):
-    template_name = 'groups_manager/group_member_role_detail.html'
+    template_name = 'groups_manager%s/group_member_role_detail.html' % TS
 
 
 class GroupMemberRoleCreateView(LoginRequiredMixin, GroupMemberRoleMixin, CreateView):
-    template_name = 'groups_manager/group_member_role_form.html'
+    template_name = 'groups_manager%s/group_member_role_form.html' % TS
 
 
 class GroupMemberRoleEditView(LoginRequiredMixin, GroupMemberRoleMixin, UpdateView):
-    template_name = 'groups_manager/group_member_role_form.html'
+    template_name = 'groups_manager%s/group_member_role_form.html' % TS
 
 
 class GroupMemberRoleDeleteView(LoginRequiredMixin, GroupMemberRoleMixin, DeleteView):
-    template_name = 'groups_manager/group_member_role_confirm_delete.html'
+    template_name = 'groups_manager%s/group_member_role_confirm_delete.html' % TS
 
 
 '''
@@ -218,7 +217,7 @@ class GroupMemberMixin(object):
 
 
 class GroupMemberEditView(LoginRequiredMixin, GroupMemberMixin, UpdateView):
-    template_name = 'groups_manager/group_member_form.html'
+    template_name = 'groups_manager%s/group_member_form.html' % TS
     form_class = forms.GroupMemberForm
 
     def get_context_data(self, **kwargs):
@@ -233,7 +232,7 @@ class GroupMemberEditView(LoginRequiredMixin, GroupMemberMixin, UpdateView):
 
 
 class GroupMemberDeleteView(LoginRequiredMixin, GroupMemberMixin, DeleteView):
-    template_name = 'groups_manager/group_member_confirm_delete.html'
+    template_name = 'groups_manager%s/group_member_confirm_delete.html' % TS
 
     def get_context_data(self, **kwargs):
         context = super(GroupMemberDeleteView, self).get_context_data(**kwargs)
@@ -247,7 +246,7 @@ class GroupMemberDeleteView(LoginRequiredMixin, GroupMemberMixin, DeleteView):
 
 
 class GroupMemberAddMemberView(LoginRequiredMixin, GroupMemberMixin, CreateView):
-    template_name = 'groups_manager/group_member_add_member_form.html'
+    template_name = 'groups_manager%s/group_member_add_member_form.html' % TS
     form_class = forms.GroupMemberAddMemberForm
 
     def get_initial(self):
@@ -268,7 +267,7 @@ class GroupMemberAddMemberView(LoginRequiredMixin, GroupMemberMixin, CreateView)
 
 
 class GroupMemberAddGroupView(LoginRequiredMixin, GroupMemberMixin, CreateView):
-    template_name = 'groups_manager/group_member_add_group_form.html'
+    template_name = 'groups_manager%s/group_member_add_group_form.html' % TS
     form_class = forms.GroupMemberAddGroupForm
 
     def get_initial(self):

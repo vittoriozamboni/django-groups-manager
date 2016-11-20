@@ -242,6 +242,7 @@ class GroupEntityMixin(models.Model):
     class Meta:
         abstract = True
         ordering = ('label', )
+        verbose_name_plural = 'group entities'
 
     def __unicode__(self):
         return self.label

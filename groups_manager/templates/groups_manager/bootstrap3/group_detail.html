@@ -1,0 +1,169 @@
+{% extends "groups_manager/bootstrap3/group.html" %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li>
+    <a href="{% url 'groups_manager:group_detail' group.id %}">{{ group }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+  {{ block.super }}
+
+  <ul class="nav nav-sidebar">
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.can_change_group %}
+      <li>
+        <a href="{% url 'groups_manager:group_edit' group.id %}">
+          <i class="fa fa-edit"></i>
+          Edit group
+        </a>
+      </li>
+    {% endif %}
+
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.can_delete_group %}
+      <li>
+        <a href="{% url 'groups_manager:group_delete' group.id %}">
+          <i class="fa fa-times"></i>
+          Delete group
+        </a>
+      </li>
+    {% endif %}
+    </li>
+  </ul>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+
+  <h2 class="page-title">
+    <i class="fa fa-groups-manager-group"></i> {{ group }}
+  </h2>
+
+  <div class="container-fluid">
+
+    {% if group.description %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="bs-callout bs-callout-info">
+            <p>{{ group.description|linebreaksbr }}</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Details</h3>
+        <table class="table table-striped">
+          <tr>
+            <th>Name</th>
+            <td>{{ group.name }}</td>
+          </tr>
+          <tr>
+            <th>Codename</th>
+            <td>{{ group.codename }}</td>
+          </tr>
+          {% if group.group_type %}
+            <tr>
+              <th>Group type</th>
+              <td>
+                {{ group.group_type }}
+              </td>
+            </tr>
+          {% endif %}
+          {% if group.group_entities.all %}
+            <tr>
+              <th>Group entities</th>
+              <td>
+                {% for group_entity in group.group_entities.all %}
+                  <a href="{% url 'groups_manager:group_entity_detail' group_entity.id %}">
+                    {{ group_entity.label }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          {% endif %}
+          {% if group.parent %}
+            <tr>
+              <th>Parent</th>
+              <td>
+                <a href="{% url 'groups_manager:group_detail' group.parent.id %}">
+                  {{ group.parent }}
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+          {% if group.comment %}
+            <tr>
+              <th>Comment</th>
+              <td>
+                {{ group.comment|linebreaksbr }}
+              </td>
+            </tr>
+          {% endif %}
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h3>Members</h3>
+        {% with group_memberships=group.group_membership.all %}
+          {% if group_memberships %}
+            <table class="table table-striped">
+              <tr>
+                <td>Member</td>
+                <td>Roles</td>
+                <td></td>
+              </tr>
+              {% for group_membership in group_memberships %}
+                <tr>
+                  <td>
+                    <a href="{% url 'groups_manager:member_detail' group_membership.member.id %}">
+                      {{ group_membership.member.full_name }}
+                    </a>
+                  </td>
+                  <td>
+                    {% for role in group_membership.roles.all %}
+                      {{ role }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td class="text-right">
+                    <!--PERMISSIONS_HERE-->
+                    {% if perms.groups_manager.can_change_groupmember %}
+                      <a href="{% url 'groups_manager:group_member_edit' group_membership.id %}" class="btn btn-sm btn-default">
+                        <i class="fa fa-edit"></i>
+                      </a>
+                    {% endif %}
+                    {% if perms.groups_manager.can_delete_groupmember %}
+                      <a href="{% url 'groups_manager:group_member_delete' group_membership.id %}" class="btn btn-sm btn-default">
+                        <i class="fa fa-times"></i>
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          {% else %}
+            <div class="bs-callout bs-callout-info">
+              <p>This group has no related members.</p>
+            </div>
+          {% endif %}
+
+          <!--PERMISSIONS_HERE-->
+          {% if perms.groups_manager.can_add_groupmember %}
+            <p>
+              <a href="{% url 'groups_manager:group_member_add_member' group.id %}">
+                <i class="fa fa-plus"></i>
+                Add member to group
+              </a>
+            </p>
+          {% endif %}
+
+        {% endwith %}
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

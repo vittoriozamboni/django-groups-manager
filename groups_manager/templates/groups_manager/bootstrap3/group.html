@@ -1,0 +1,27 @@
+{% extends "groups_manager/bootstrap3/groups_manager.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <a href="{% url 'groups_manager:group_list' %}">Groups</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-sidebar">
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.add_group %}
+    <li>
+        <a href="{% url 'groups_manager:group_add' %}">
+            <i class="fa fa-plus"></i> Add group
+        </a>
+    </li>
+    {% endif %}
+</ul>
+
+{% endblock sidebar %}
