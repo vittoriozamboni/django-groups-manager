@@ -4,7 +4,6 @@
 {% block breadcrumbs %}
   {{ block.super }}
   <li>
-    <span class="divider">&raquo;</span>
     <a href="{% url 'groups_manager:member_detail' member.id %}">{{ member }}</a>
   </li>
 {% endblock breadcrumbs %}
@@ -87,8 +86,8 @@
                   </a>
                 </td>
                 <td>
-                  {% for role in group_member.roles.all %}
-                    {{ role }}
+                  {% for role in group_membership.roles.all %}
+                    {{ role }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
                 </td>
               </tr>

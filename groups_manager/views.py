@@ -262,6 +262,7 @@ class GroupMemberAddMemberView(LoginRequiredMixin, GroupMemberMixin, CreateView)
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
+        form.save_m2m()
         return HttpResponseRedirect(
             reverse('groups_manager:group_detail', kwargs={'pk': self.object.group.id}))
 
@@ -277,11 +278,12 @@ class GroupMemberAddGroupView(LoginRequiredMixin, GroupMemberMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(GroupMemberAddGroupView, self).get_context_data(**kwargs)
-        context['member'] = models.Member.objects.get(id=self.request.GET.get('member_id'))
+        context['member'] = models.Member.objects.get(id=self.kwargs.get('member_id'))
         return context
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
+        form.save_m2m()
         return HttpResponseRedirect(
             reverse('groups_manager:group_detail', kwargs={'pk': self.object.group.id}))

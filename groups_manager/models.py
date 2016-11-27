@@ -14,6 +14,7 @@ from django.contrib.auth.models import User as DefaultUser
 DjangoUser = getattr(django_settings, 'AUTH_USER_MODEL', DefaultUser)
 
 from jsonfield import JSONField
+from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from slugify import slugify
 
@@ -315,7 +316,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         (default: True)
 
     .. note::
-     If you want to add a custom manager for a sublcass of Group, use django-mppt
+     If you want to add a custom manager for a sublcass of Group, use django-mptt
      mptt.models.TreeManager.
 
     """
@@ -330,6 +331,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
                             load_kwargs={'object_pairs_hook': OrderedDict})
 
     django_auth_sync = models.BooleanField(default=True, blank=True)
+    tree = TreeManager()
 
     class Meta:
         abstract = True
@@ -537,7 +539,9 @@ def group_save(sender, instance, created, *args, **kwargs):
                 django_group = DjangoGroup(name=name)
             django_group.save()
             instance.django_group = django_group
-            instance.save()
+            if instance.parent:
+                instance.move_to(instance.parent)
+            instance.save(update_fields=['django_group'])
         elif (instance.django_group.name != name and original_suffix != '_$$random') \
                 or (instance.django_group.name[:-len(suffix)] != name[:-len(suffix)] and
                     original_suffix == '_$$random'):
