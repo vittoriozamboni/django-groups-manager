@@ -243,7 +243,6 @@ class GroupEntityMixin(models.Model):
     class Meta:
         abstract = True
         ordering = ('label', )
-        verbose_name_plural = 'group entities'
 
     def __unicode__(self):
         return self.label
@@ -331,7 +330,6 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
                             load_kwargs={'object_pairs_hook': OrderedDict})
 
     django_auth_sync = models.BooleanField(default=True, blank=True)
-    tree = TreeManager()
 
     class Meta:
         abstract = True
