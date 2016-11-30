@@ -1,36 +1,33 @@
 {% extends "groups_manager/bootstrap3/group_type.html" %}
 
 
-{% load bootstrap3 %}
-
-
 {% block breadcrumbs %}
-    {{ block.super }}
-    <li>
-        <span class="divider">&raquo;</span>
-        {% if group_type %}
-            <a href="{% url 'groups_manager:group_type_edit' group_type.id %}">Edit</a>
-        {% else %}
-            <a href="{% url 'groups_manager:group_type_add' %}">Add</a>
-        {% endif %}
-    </li>
+  {{ block.super }}
+  <li>
+    <span class="divider">&raquo;</span>
+    {% if group_type %}
+      <a href="{% url 'groups_manager:group_type_edit' group_type.id %}">Edit</a>
+    {% else %}
+      <a href="{% url 'groups_manager:group_type_add' %}">Add</a>
+    {% endif %}
+  </li>
 {% endblock breadcrumbs %}
 
 
 {% block content %}
 
-<h2 class="page-title">
+  <h2 class="page-title">
     <i class="fa fa-groups-manager-group-type"></i>
     {% if group_type %}
-        Edit "{{ group_type }}"
+      Edit "{{ group_type }}"
     {% else %}
-        Create Group Type
+      Create Group Type
     {% endif %}
-</h2>
+  </h2>
 
 
-<form action="." method="post" id="group_type_form" class="django form-horizontal">
-{% csrf_token %}
+  <form action="." method="post" id="group_type_form" class="django form-horizontal">
+    {% csrf_token %}
 
     {% bootstrap_form form layout="horizontal" %}
 
@@ -39,13 +36,14 @@
       <div class="col-md-9">
         <button type="submit" class="btn btn-primary">Submit</button>
         {% if group %}
-          <a class="btn btn-default" href="{% url 'groups_manager:group_type_detail' group_type.id %}">Cancel</a>
+          <a class="btn btn-default"
+             href="{% url 'groups_manager:group_type_detail' group_type.id %}">Cancel</a>
         {% else %}
           <a class="btn btn-default" href="{% url 'groups_manager:group_type_list' %}">Cancel</a>
         {% endif %}
       </div>
     </div>
 
-</form>
-        
+  </form>
+
 {% endblock content %}

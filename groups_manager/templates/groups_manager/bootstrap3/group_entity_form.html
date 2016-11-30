@@ -1,35 +1,32 @@
 {% extends "groups_manager/bootstrap3/group_entity.html" %}
 
 
-{% load bootstrap3 %}
-
-
 {% block breadcrumbs %}
-    {{ block.super }}
-    <li>
-        {% if group_entity %}
-            <a href="{% url 'groups_manager:group_entity_edit' group_entity.id %}">Edit</a>
-        {% else %}
-            <a href="{% url 'groups_manager:group_entity_add' %}">Add</a>
-        {% endif %}
-    </li>
+  {{ block.super }}
+  <li>
+    {% if group_entity %}
+      <a href="{% url 'groups_manager:group_entity_edit' group_entity.id %}">Edit</a>
+    {% else %}
+      <a href="{% url 'groups_manager:group_entity_add' %}">Add</a>
+    {% endif %}
+  </li>
 {% endblock breadcrumbs %}
 
 
 {% block content %}
 
-<h2 class="page-title">
+  <h2 class="page-title">
     <i class="fa fa-groups-manager-group-entity"></i>
     {% if group_entity %}
-        Edit "{{ group_entity }}"
+      Edit "{{ group_entity }}"
     {% else %}
-        Create Group Entity
+      Create Group Entity
     {% endif %}
-</h2>
+  </h2>
 
 
-<form action="." method="post" id="group_entity_form" class="django form-horizontal">
-{% csrf_token %}
+  <form action="." method="post" id="group_entity_form" class="django form-horizontal">
+    {% csrf_token %}
 
     {% bootstrap_form form layout="horizontal" %}
 
@@ -45,6 +42,6 @@
       </div>
     </div>
 
-</form>
-        
+  </form>
+
 {% endblock content %}

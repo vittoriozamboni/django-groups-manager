@@ -1,9 +1,6 @@
 {% extends "groups_manager/bootstrap3/member.html" %}
 
 
-{% load bootstrap3 %}
-
-
 {% block breadcrumbs %}
   {{ block.super }}
   <li>
@@ -32,7 +29,7 @@
   <form action="." method="post" id="member_form" class="django form-horizontal">
     {% csrf_token %}
 
-    {% bootstrap_form form layout="horizontal" %}
+    {% include "groups_manager/bootstrap3/form_template.html" %}
 
     <div class="row">
       <div class="col-md-3"></div>

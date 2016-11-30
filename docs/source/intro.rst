@@ -17,10 +17,6 @@ Add ``groups_manager`` to installed apps::
 
 Run ``syncdb`` or ``migrate``::
 
-   # django < 1.7
-   python manage.py syncdb
-
-   # django >= 1.7
    python manage.py migrate
 
 If you are upgrading from version <0.4.2, fake the initial migration::
@@ -34,6 +30,12 @@ If you want to use standard templates, add groups_manager's urls from ``urls.py`
         url(r'^groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
         # ...
     )
+
+Supported templates are based on bootstrap3, and ``django-bootstrap3`` application is required::
+
+    pip install django-bootstrap3
+
+If you don't want to use bootstrap3, you can override forms (see ``Templates`` documentation).
 
 Basic usage
 ===========

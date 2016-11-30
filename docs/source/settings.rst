@@ -36,6 +36,11 @@ Valid keys are:
 
 An example of permissions assigned by role can be found on use cases.
 
+Templates
+---------
+
+- ``TEMPLATE_STYLE``: name of the templates folder inside "groups_manager". By default is ``"bootstrap3"``, this means that templates are searched inside folder "groups_manager/bootstrap3"
+
 Defaults
 --------
 
@@ -56,4 +61,6 @@ Default values are::
             'groups_downstream': [],
             'groups_siblings': ['view'],
         },
+        # Templates
+        'TEMPLATE_STYLE': "bootstrap3",
     }

@@ -1,9 +1,6 @@
 {% extends "groups_manager/bootstrap3/group_detail.html" %}
 
 
-{% load bootstrap3 %}
-
-
 {% block breadcrumbs %}
   {{ block.super }}
   <li>
@@ -37,7 +34,8 @@
       <div class="col-md-3"></div>
       <div class="col-md-9">
         <button type="submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-default" href="{% url 'groups_manager:group_detail' group.id %}">Cancel</a>
+        <a class="btn btn-default"
+           href="{% url 'groups_manager:group_detail' group.id %}">Cancel</a>
       </div>
     </div>
 

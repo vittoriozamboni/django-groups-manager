@@ -14,7 +14,6 @@ from django.contrib.auth.models import User as DefaultUser
 DjangoUser = getattr(django_settings, 'AUTH_USER_MODEL', DefaultUser)
 
 from jsonfield import JSONField
-from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from slugify import slugify
 
