@@ -1,0 +1,43 @@
+{% extends "groups_manager/bootstrap3/group_entity.html" %}
+
+
+{% block content %}
+
+  <h2 class="page-title">
+    <i class="fa fa-groups-manager-group-entity"></i> Group Entities
+  </h2>
+
+  <table class="table table-striped table-objects-list table-hover" id="group_entity_list">
+    <thead>
+    <tr>
+      <th>Label</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for group_entity in object_list %}
+      <tr>
+        <td>
+          <a href="{% url 'groups_manager:group_entity_detail' group_entity.id %}">
+            {{ group_entity.label }}
+          </a>
+        </td>
+        <td>
+          <!--PERMISSIONS_HERE-->
+          {% if perms.groups_manager.can_change_groupentity %}
+            <a href="{% url 'groups_manager:group_entity_edit' group_entity.id %}" class="btn btn-sm btn-default">
+              <i class="fa fa-edit"></i>
+            </a>
+          {% endif %}
+          {% if perms.groups_manager.can_delete_groupentity %}
+            <a href="{% url 'groups_manager:group_entity_delete' group_entity.id %}" class="btn btn-sm btn-default">
+              <i class="fa fa-times"></i>
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}

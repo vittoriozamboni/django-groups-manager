@@ -1,0 +1,48 @@
+{% extends "groups_manager/bootstrap3/group.html" %}
+
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li>
+    {% if group %}
+      <a href="{% url 'groups_manager:group_edit' group.id %}">Edit</a>
+    {% else %}
+      <a href="{% url 'groups_manager:group_add' %}">Add</a>
+    {% endif %}
+  </li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+  <h2 class="page-title">
+    <i class="fa fa-groups-manager-group"></i>
+    {% if group %}
+      Edit "{{ group }}"
+    {% else %}
+      Create Group
+    {% endif %}
+  </h2>
+
+
+  <form action="." method="post" id="group_form" class="django form-horizontal">
+    {% csrf_token %}
+
+    {% bootstrap_form form layout="horizontal" %}
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-9">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {% if group %}
+          <a class="btn btn-default"
+             href="{% url 'groups_manager:group_detail' group.id %}">Cancel</a>
+        {% else %}
+          <a class="btn btn-default" href="{% url 'groups_manager:group_list' %}">Cancel</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </form>
+
+{% endblock content %}

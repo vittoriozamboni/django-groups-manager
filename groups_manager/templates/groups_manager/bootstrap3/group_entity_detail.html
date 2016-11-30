@@ -1,0 +1,91 @@
+{% extends "groups_manager/bootstrap3/group_entity.html" %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li>
+    <a href="{% url 'groups_manager:group_entity_detail' group_entity.id %}">{{ group_entity }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+  {{ block.super }}
+
+  <ul class="nav nav-sidebar">
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.can_change_groupentity %}
+      <li>
+        <a href="{% url 'groups_manager:group_entity_edit' group_entity.id %}">
+          <i class="fa fa-edit"></i>
+          Edit group entity
+        </a>
+      </li>
+    {% endif %}
+
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.can_delete_groupentity %}
+      <li>
+        <a href="{% url 'groups_manager:group_entity_delete' group_entity.id %}">
+          <i class="fa fa-times"></i>
+          Delete group entity
+        </a>
+      </li>
+    {% endif %}
+    </li>
+  </ul>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+
+  <h2 class="page-title">
+    <i class="fa fa-groups-manager-group-entity"></i> {{ group_entity }}
+  </h2>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Details</h3>
+        <table class="table table-striped">
+          <tr>
+            <th>Label</th>
+            <td>{{ group_entity.label }}</td>
+          </tr>
+          <tr>
+            <th>Codename</th>
+            <td>{{ group_entity.codename }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h3>Groups</h3>
+        {% with group_entity_groups=group_entity.groups.all %}
+          {% if group_entity_groups %}
+            <table class="table table-striped">
+              <tr>
+                <td>Group</td>
+              </tr>
+              {% for group in group_entity_groups %}
+                <tr>
+                  <td>
+                    <a href="{% url 'groups_manager:group_detail' group.id %}">
+                      {{ group.name }}
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          {% else %}
+            <div class="bs-callout bs-callout-info">
+              <p>This group entity is not related to any group.</p>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

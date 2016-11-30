@@ -1,0 +1,50 @@
+{% extends "groups_manager/bootstrap3/group_member_role.html" %}
+
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li>
+    <span class="divider">&raquo;</span>
+    {% if group_member_role %}
+      <a href="{% url 'groups_manager:group_member_role_edit' group_member_role.id %}">Edit</a>
+    {% else %}
+      <a href="{% url 'groups_manager:group_member_role_add' %}">Add</a>
+    {% endif %}
+  </li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+  <h2 class="page-title">
+    <i class="fa fa-groups-manager-group-member-role"></i>
+    {% if group_member_role %}
+      Edit "{{ group_member_role }}"
+    {% else %}
+      Create Group Member Role
+    {% endif %}
+  </h2>
+
+
+  <form action="." method="post" id="group_member_role_form" class="django form-horizontal">
+    {% csrf_token %}
+
+    {% bootstrap_form form layout="horizontal" %}
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-9">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {% if group %}
+          <a class="btn btn-default"
+             href="{% url 'groups_manager:group_member_role_detail' group_member_role.id %}">Cancel</a>
+        {% else %}
+          <a class="btn btn-default"
+             href="{% url 'groups_manager:group_member_role_list' %}">Cancel</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </form>
+
+{% endblock content %}

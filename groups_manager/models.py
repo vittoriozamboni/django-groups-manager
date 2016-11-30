@@ -314,7 +314,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         (default: True)
 
     .. note::
-     If you want to add a custom manager for a sublcass of Group, use django-mppt
+     If you want to add a custom manager for a sublcass of Group, use django-mptt
      mptt.models.TreeManager.
 
     """
@@ -536,7 +536,9 @@ def group_save(sender, instance, created, *args, **kwargs):
                 django_group = DjangoGroup(name=name)
             django_group.save()
             instance.django_group = django_group
-            instance.save()
+            if instance.parent:
+                instance.move_to(instance.parent)
+            instance.save(update_fields=['django_group'])
         elif (instance.django_group.name != name and original_suffix != '_$$random') \
                 or (instance.django_group.name[:-len(suffix)] != name[:-len(suffix)] and
                     original_suffix == '_$$random'):

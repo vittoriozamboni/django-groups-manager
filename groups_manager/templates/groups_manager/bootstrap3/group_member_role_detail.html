@@ -1,0 +1,69 @@
+{% extends "groups_manager/bootstrap3/group_member_role.html" %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li>
+        <a href="{% url 'groups_manager:group_member_role_detail' group_member_role.id %}">{{ group_member_role }}</a>
+    </li>
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+        <ul class="nav nav-sidebar">
+            <!--PERMISSIONS_HERE-->
+            {% if perms.groups_manager.can_change_groupmemberrole %}
+            <li>
+                <a href="{% url 'groups_manager:group_member_role_edit' group_member_role.id %}">
+                    <i class="fa fa-edit"></i>
+                    Edit group member role
+                </a>    
+            </li>
+            {% endif %}
+        
+            <!--PERMISSIONS_HERE-->
+            {% if perms.groups_manager.can_delete_groupmemberrole %}
+            <li>
+                <a href="{% url 'groups_manager:group_member_role_delete' group_member_role.id %}">
+                    <i class="fa fa-times"></i>
+                    Delete group member role
+                </a>
+            </li>
+            {% endif %}
+            </li>
+        </ul>
+
+{% endblock sidebar %}
+
+{% block content %}
+
+
+<h2 class="page-title">
+    <i class="fa fa-groups-manager-group-member-role"></i> {{ group_member_role }}
+</h2>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Details</h3>
+            <table class="table table-striped">
+            <tr>
+                <th>Label</th>
+                <td>{{ group_member_role.label }}</td>
+            </tr>
+            <tr>
+                <th>Codename</th>
+                <td>{{ group_member_role.codename }}</td>
+            </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

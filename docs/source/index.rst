@@ -25,7 +25,8 @@ Documentation
    auth_integration
    settings
    use_cases
-   API 
+   API
+   templates
    tests
    todo
    changelog
