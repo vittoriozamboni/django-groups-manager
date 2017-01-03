@@ -9,6 +9,7 @@ The supported templates requires bootstrap3. Forms are based on ``django-bootstr
     pip install django-bootstrap3
 
 This application is used only to render forms.
+If you don't want to use it's default rendering, you can override the ``form_template.html`` file as described in the example below.
 
 Structure
 ^^^^^^^^^

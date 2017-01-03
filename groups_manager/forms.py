@@ -1,7 +1,5 @@
 from django import forms
 
-from django_helper_forms.forms import DictionaryFieldsForm
-
 import models
 
 
@@ -26,16 +24,11 @@ class GroupEntityForm(forms.ModelForm):
         exclude = set()
 
 
-class GroupForm(forms.ModelForm, DictionaryFieldsForm):
+class GroupForm(forms.ModelForm):
 
     class Meta:
         model = models.Group
         exclude = ('group_members', )
-
-    def __init__(self, *args, **kwargs):
-        super(GroupForm, self).__init__(*args, **kwargs)
-        self.dictionary_fields = ['properties', ]
-        self.format_dictionary_fields()
 
 
 class GroupMemberRoleForm(forms.ModelForm):
