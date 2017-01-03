@@ -39,9 +39,6 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
-    # Only for interface test
-    'django_helper_forms',
-
     # App test
     'guardian',
     'groups_manager',

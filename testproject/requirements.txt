@@ -6,4 +6,3 @@ django-mptt
 jsonfield
 
 django-extensions
-https://bitbucket.org/zamboni/django-helper-forms/get/tip.zip
