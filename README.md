@@ -52,7 +52,7 @@ pip install django-groups-manager
 
     ```python
     GROUPS_MANAGER = {
-        'DJANGO_AUTH_SYNC': True,
+        'AUTH_MODELS_SYNC': True,
     }
     ```
 
