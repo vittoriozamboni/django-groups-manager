@@ -1,6 +1,6 @@
 from django import forms
 
-import models
+from groups_manager import models
 
 
 class MemberForm(forms.ModelForm):
