@@ -193,6 +193,40 @@ class TestPermissions(TestCase):
         self.assertTrue(patrick.has_perms(['view_site', 'change_site', 'delete_site'], site))
         self.assertFalse(patrick.has_perm('sell_site', site))
 
+    def test_group_types_permissions(self):
+        """
+        John and Patrick are member of the group. John is the commercial referent,
+        and Patrick is the web developer. John and Patrick can view the site, but only Patrick can change and delete it.
+        """
+        from groups_manager import settings
+        settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
+        custom_permissions = {
+            'owner': [],
+            'group': ['view'],
+            'groups_downstream': {'developer': ['change', 'delete'], 'default': ['view']},
+        }
+        company = models.Group.objects.create(name='Company')
+        developer = models.GroupType.objects.create(label='developer')
+        developers = models.Group.objects.create(name='Developers', group_type=developer, parent=company)
+
+        referent = models.GroupType.objects.create(label='referent')
+        referents = models.Group.objects.create(name='Referents', group_type=referent, parent=company)
+
+        john = models.Member.objects.create(first_name='John', last_name='Money')
+        patrick = models.Member.objects.create(first_name='Patrick', last_name='Html')
+        company.add_member(john)
+        company.add_member(patrick)
+        referents.add_member(john)
+        developers.add_member(patrick)
+        site = testproject_models.Site.objects.create(name='Django groups manager website')
+        john.assign_object(company, site, custom_permissions=custom_permissions)
+
+        self.assertTrue(john.has_perm('view_site', site))
+        self.assertFalse(john.has_perm('change_site', site))
+        self.assertFalse(john.has_perm('delete_site', site))
+
+        self.assertTrue(patrick.has_perms(['view_site', 'change_site', 'delete_site'], site))
+
     def test_football_match(self):
         """
         Thohir is the president of FC Internazionale, and Palacio is a team player.

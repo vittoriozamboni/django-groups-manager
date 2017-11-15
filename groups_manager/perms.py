@@ -10,11 +10,27 @@ from groups_manager.utils import get_permission_name
 
 
 def assign_related(related_groups, perms, obj):
-    for group in related_groups:
-        django_group = group.django_group
-        for permission in list(set(perms)):
-            perm_name = get_permission_name(permission, obj)
-            assign_perm(perm_name, django_group, obj)
+    if isinstance(perms, dict):
+        default = set(perms.pop('default', []))
+
+        for group in related_groups:
+            django_group = group.django_group
+
+            for permission in default:
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
+
+            if group.group_type is not None:
+                for permission in set(perms.get(group.group_type.codename, [])):
+                    perm_name = get_permission_name(permission, obj)
+                    assign_perm(perm_name, django_group, obj)
+
+    else:
+        for group in related_groups:
+            django_group = group.django_group
+            for permission in list(set(perms)):
+                perm_name = get_permission_name(permission, obj)
+                assign_perm(perm_name, django_group, obj)
 
 
 def assign_object_to_member(group_member, obj, **kwargs):
