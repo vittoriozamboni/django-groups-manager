@@ -427,13 +427,18 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         """Return group entities."""
         return self.get_entities(True)
 
-    def add_member(self, member, roles=None):
+    def add_member(self, member, roles=None, expiration_date=None):
         """Add a member to the group.
 
         :Parameters:
           - `member`: member (required)
           - `roles`: list of roles. Each role could be a role id, a role label or codename,
             a role instance (optional, default: ``[]``)
+          - `expiration_date`: A timestamp specifying when the membership
+            expires. Note that this doesn't automatically remove the member
+            from the group but is only an indicator to an external application
+            to check if the membership still is valid
+            (optional, default: ``None``)
         """
         if roles is None:
             roles = []
@@ -444,7 +449,8 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
             raise exceptions_gm.MemberNotSavedError(
                 "You must save the member before to create a relation with groups")
         group_member_model = self.group_member_model
-        group_member = group_member_model(member=member, group=self)
+        group_member = group_member_model(member=member, group=self,
+                                          expiration_date=expiration_date)
         group_member.save()
         if roles:
             for role in roles:
@@ -634,11 +640,13 @@ class GroupMember(GroupMemberMixin):
       - `group`: Group (required) (defined in non abstract model)
       - `member`: Member (required) (defined in non abstract model)
       - `roles`: m2m to GroupMemberRole
+      - `expiration_date`: DateTimeField indicating if the membership has expired
     """
 
     group = models.ForeignKey(Group, related_name='group_membership')
     member = models.ForeignKey(Member, related_name='group_membership')
     roles = models.ManyToManyField(GroupMemberRole, blank=True)
+    expiration_date = models.DateTimeField(null=True, default=None)
 
     class Meta(GroupMemberMixin.Meta):
         unique_together = (('group', 'member'), )  # compatibility with Django < 1.8
