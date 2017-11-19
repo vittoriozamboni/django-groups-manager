@@ -10,3 +10,5 @@ Use cases
 .. include:: custom_member.rst
 
 .. include:: custom_signals.rst
+
+.. include:: expiring_memberships.rst
