@@ -214,12 +214,10 @@ class TestPermissions(TestCase):
 
         john = models.Member.objects.create(first_name='John', last_name='Money')
         patrick = models.Member.objects.create(first_name='Patrick', last_name='Html')
-        company.add_member(john)
-        company.add_member(patrick)
         referents.add_member(john)
         developers.add_member(patrick)
         site = testproject_models.Site.objects.create(name='Django groups manager website')
-        john.assign_object(company, site, custom_permissions=custom_permissions)
+        company.assign_object(site, custom_permissions=custom_permissions)
 
         self.assertTrue(john.has_perm('view_site', site))
         self.assertFalse(john.has_perm('change_site', site))
