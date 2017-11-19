@@ -286,6 +286,7 @@ class OrganizationGroupMemberWithMixin(GroupMemberMixin):
     group = models.ForeignKey('OrganizationGroupWithMixin', related_name='group_membership')
     member = models.ForeignKey('OrganizationMemberWithMixin', related_name='group_membership')
     roles = models.ManyToManyField(OrganizationMemberRoleWithMixin, null=True, blank=True)
+    expiration_date = models.DateTimeField(null=True, default=None)
 
 
 def organization_group_member_save(*args, **kwargs):
