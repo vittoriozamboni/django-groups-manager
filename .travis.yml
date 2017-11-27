@@ -13,7 +13,7 @@ install:
   - pip install "django-guardian$GUARDIAN_VERSION" "django-mptt$MPTT_VERSION"
   - pip install .
   - pip install -r testproject/requirements.txt
-  - pip uninstall jsonfield
+  - pip uninstall -y jsonfield
   - pip install "$JSONFIELD"
 
 script:
