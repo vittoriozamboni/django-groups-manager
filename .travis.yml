@@ -4,14 +4,17 @@ python:
  - 3.4
 
 env:
- - DJANGO_VERSION="<1.9" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2"
- - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2"
+ - DJANGO_VERSION="<1.9" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2" JSONFIELD="jsonfield"
+ - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2" JSONFIELD="jsonfield"
+ - DJANGO_VERSION=">=1.9,<2.0" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2" JSONFIELD="django-jsonfield"
 
 install:
   - pip install -q "Django$DJANGO_VERSION" coverage coveralls
   - pip install "django-guardian$GUARDIAN_VERSION" "django-mptt$MPTT_VERSION"
   - pip install .
   - pip install -r testproject/requirements.txt
+  - pip uninstall jsonfield
+  - pip install "$JSONFIELD"
 
 script:
   - coverage run testproject/manage.py test testproject groups_manager
@@ -24,6 +27,6 @@ after_success:
 matrix:
     include:
         - python: 2.7
-          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8" JSONFIELD="jsonfield"
         - python: 3.4
-          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"
+          env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8" JSONFIELD="jsonfield"
