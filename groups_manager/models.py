@@ -325,8 +325,11 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True,
                             related_name='sub_%(app_label)s_%(class)s_set')
     full_name = models.CharField(max_length=255, default='', blank=True)
-    properties = JSONField(default={}, blank=True,
-                            load_kwargs={'object_pairs_hook': OrderedDict})
+    try:
+        properties = JSONField(default={}, blank=True,
+                                load_kwargs={'object_pairs_hook': OrderedDict})
+    except TypeError:
+        properties = JSONField(default={}, blank=True)
 
     django_auth_sync = models.BooleanField(default=True, blank=True)
 
