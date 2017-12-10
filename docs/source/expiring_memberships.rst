@@ -1,13 +1,13 @@
 Expiring memberships
 -------------------------------------
 
-Members can be added to groups with an (optional) date that specifies when the
+Members can be added to groups with an optional date that specifies when the
 membership expires.
 
-.. note::
- The ``expiration_date`` is only a field that is used to indicate when the
- membership expires. How this is used is up to the user of the library. For
- example to filter out expired memberships or periodically delete them.
+``expiration_date`` property is only used to indicate when the
+membership expires and has no effect on the permissions.
+How this property is used is up to the user of the library.
+This can be useful for example to filter out expired memberships or periodically delete them.
 
 **Set expiration date to one week from today** ::
 
