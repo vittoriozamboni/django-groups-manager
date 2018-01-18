@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from groups_manager import views
 
+app_name = 'groups_manager'
 
 urlpatterns = [
 

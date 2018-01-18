@@ -27,3 +27,5 @@ matrix:
           env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"
         - python: 3.4
           env: DJANGO_VERSION="<1.8" GUARDIAN_VERSION="<1.4" MPTT_VERSION="<0.8"
+        - python: 3.4
+          env: DJANGO_VERSION=">=2" GUARDIAN_VERSION=">=1.4" MPTT_VERSION="<2"

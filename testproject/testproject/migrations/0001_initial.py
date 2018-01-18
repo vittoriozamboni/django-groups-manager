@@ -135,7 +135,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrganizationMemberSubclass',
             fields=[
-                ('member_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Member')),
+                ('member_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Member', on_delete=models.CASCADE)),
                 ('phone_number', models.CharField(max_length=20)),
             ],
             options={
@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrganizationSubclass',
             fields=[
-                ('group_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Group')),
+                ('group_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Group', on_delete=models.CASCADE)),
                 ('address', models.CharField(max_length=200)),
             ],
             options={
@@ -200,7 +200,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProjectGroup',
             fields=[
-                ('group_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Group')),
+                ('group_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Group', on_delete=models.CASCADE)),
             ],
             options={
                 'permissions': (('view_projectgroup', 'View Project Group'),),
@@ -210,7 +210,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProjectGroupMember',
             fields=[
-                ('groupmember_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.GroupMember')),
+                ('groupmember_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.GroupMember', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('group', 'member'),
@@ -221,7 +221,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProjectMember',
             fields=[
-                ('member_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Member')),
+                ('member_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Member', on_delete=models.CASCADE)),
             ],
             options={
                 'permissions': (('view_projectmember', 'View Project Member'),),
@@ -288,19 +288,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='organizationgroupwithmixin',
             name='parent',
-            field=mptt.fields.TreeForeignKey(related_name='sub_testproject_organizationgroupwithmixin_set', blank=True, to='testproject.OrganizationGroupWithMixin', null=True),
+            field=mptt.fields.TreeForeignKey(related_name='sub_testproject_organizationgroupwithmixin_set', blank=True, to='testproject.OrganizationGroupWithMixin', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='organizationgroupmemberwithmixin',
             name='group',
-            field=models.ForeignKey(related_name='group_membership', to='testproject.OrganizationGroupWithMixin'),
+            field=models.ForeignKey(related_name='group_membership', to='testproject.OrganizationGroupWithMixin', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='organizationgroupmemberwithmixin',
             name='member',
-            field=models.ForeignKey(related_name='group_membership', to='testproject.OrganizationMemberWithMixin'),
+            field=models.ForeignKey(related_name='group_membership', to='testproject.OrganizationMemberWithMixin', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -312,13 +312,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='match',
             name='away',
-            field=models.ForeignKey(related_name='match_away', to='groups_manager.Group'),
+            field=models.ForeignKey(related_name='match_away', to='groups_manager.Group', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='match',
             name='home',
-            field=models.ForeignKey(related_name='match_home', to='groups_manager.Group'),
+            field=models.ForeignKey(related_name='match_home', to='groups_manager.Group', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.CreateModel(

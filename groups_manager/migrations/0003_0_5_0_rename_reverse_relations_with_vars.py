@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='parent',
-            field=mptt.fields.TreeForeignKey(related_name='sub_groups_manager_group_set', blank=True, to='groups_manager.Group', null=True),
+            field=mptt.fields.TreeForeignKey(related_name='sub_groups_manager_group_set', on_delete=django.db.models.CASCADE, blank=True, to='groups_manager.Group', null=True),
             preserve_default=True,
         ),
         migrations.AlterField(

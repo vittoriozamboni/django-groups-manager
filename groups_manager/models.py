@@ -322,7 +322,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
     codename = models.SlugField(blank=True, max_length=255)
     description = models.TextField(default='', blank=True)
     comment = models.TextField(default='', blank=True)
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.CASCADE,
                             related_name='sub_%(app_label)s_%(class)s_set')
     full_name = models.CharField(max_length=255, default='', blank=True)
     try:
@@ -646,8 +646,8 @@ class GroupMember(GroupMemberMixin):
       - `expiration_date`: DateTimeField indicating if the membership has expired
     """
 
-    group = models.ForeignKey(Group, related_name='group_membership')
-    member = models.ForeignKey(Member, related_name='group_membership')
+    group = models.ForeignKey(Group, related_name='group_membership', on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, related_name='group_membership', on_delete=models.CASCADE)
     roles = models.ManyToManyField(GroupMemberRole, blank=True)
     expiration_date = models.DateTimeField(null=True, default=None)
 

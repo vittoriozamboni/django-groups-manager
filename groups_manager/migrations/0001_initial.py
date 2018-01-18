@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
             name='GroupMember',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('group', models.ForeignKey(related_name='group_membership', to='groups_manager.Group')),
+                ('group', models.ForeignKey(related_name='group_membership', to='groups_manager.Group', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('group', 'member'),
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='groupmember',
             name='member',
-            field=models.ForeignKey(related_name='group_membership', to='groups_manager.Member'),
+            field=models.ForeignKey(related_name='group_membership', to='groups_manager.Member', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='group',
             name='parent',
-            field=mptt.fields.TreeForeignKey(related_name='subgroups', blank=True, to='groups_manager.Group', null=True),
+            field=mptt.fields.TreeForeignKey(related_name='subgroups', on_delete=models.CASCADE, blank=True, to='groups_manager.Group', null=True),
             preserve_default=True,
         ),
     ]

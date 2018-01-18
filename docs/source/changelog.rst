@@ -1,5 +1,8 @@
 Changelog
 =========
+- 18-01-18 (0.6.1):
+    - Added support for Django 2
+
 - 17-12-09 (0.6.0) (thank you Oskar Persson!):
     - Added group type permission handling
     - Added ``expiration_date`` attribute

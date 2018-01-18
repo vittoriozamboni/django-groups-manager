@@ -1,6 +1,10 @@
 import json
 
-from django.core.urlresolvers import reverse
+try:    
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
+    
 from django.http import HttpResponseRedirect
 from braces.views import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView

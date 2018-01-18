@@ -39,8 +39,8 @@ class TeamBudget(models.Model):
 
 
 class Match(models.Model):
-    home = models.ForeignKey(Group, related_name='match_home')
-    away = models.ForeignKey(Group, related_name='match_away')
+    home = models.ForeignKey(Group, related_name='match_home', on_delete=models.CASCADE)
+    away = models.ForeignKey(Group, related_name='match_away', on_delete=models.CASCADE)
 
     class Meta:
         permissions = (('view_match', 'View match'),
@@ -283,8 +283,10 @@ class OrganizationTypeWithMixin(GroupMemberRoleMixin):
 
 
 class OrganizationGroupMemberWithMixin(GroupMemberMixin):
-    group = models.ForeignKey('OrganizationGroupWithMixin', related_name='group_membership')
-    member = models.ForeignKey('OrganizationMemberWithMixin', related_name='group_membership')
+    group = models.ForeignKey('OrganizationGroupWithMixin', related_name='group_membership',
+                              on_delete=models.CASCADE)
+    member = models.ForeignKey('OrganizationMemberWithMixin', related_name='group_membership',
+                               on_delete=models.CASCADE)
     roles = models.ManyToManyField(OrganizationMemberRoleWithMixin, null=True, blank=True)
     expiration_date = models.DateTimeField(null=True, default=None)
 
