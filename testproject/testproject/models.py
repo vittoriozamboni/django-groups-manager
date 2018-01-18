@@ -287,7 +287,7 @@ class OrganizationGroupMemberWithMixin(GroupMemberMixin):
                               on_delete=models.CASCADE)
     member = models.ForeignKey('OrganizationMemberWithMixin', related_name='group_membership',
                                on_delete=models.CASCADE)
-    roles = models.ManyToManyField(OrganizationMemberRoleWithMixin, null=True, blank=True)
+    roles = models.ManyToManyField(OrganizationMemberRoleWithMixin, blank=True)
     expiration_date = models.DateTimeField(null=True, default=None)
 
 
@@ -306,7 +306,7 @@ class OrganizationGroupWithMixin(GroupMixin):
 
     group_type = models.ForeignKey(GroupType, null=True, blank=True, on_delete=models.SET_NULL,
                                    related_name='%(app_label)s_%(class)s_set')
-    group_entities = models.ManyToManyField(OrganizationEntityWithMixin, null=True, blank=True,
+    group_entities = models.ManyToManyField(OrganizationEntityWithMixin, blank=True,
                                             related_name='%(app_label)s_%(class)s_set')
 
     django_group = models.ForeignKey(DjangoGroup, null=True, blank=True, on_delete=models.SET_NULL)

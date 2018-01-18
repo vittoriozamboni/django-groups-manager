@@ -1,5 +1,6 @@
 awesome-slugify
-django>=1.7
+# automatic tests are done with django <2
+django>=1.7,<2
 django-braces
 django-guardian
 django-mptt

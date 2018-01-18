@@ -147,7 +147,13 @@ def member_save(sender, instance, created, *args, **kwargs):
             suffix = '_%s' % str(uuid4())[:8]
         username = '%s%s%s' % (prefix, instance.username, suffix)
         if not instance.django_user:
-            UserModel = instance._meta.get_field('django_user').rel.to
+            user_field = instance._meta.get_field('django_user')
+            if hasattr(user_field, 'rel') and hasattr(user_field.rel, 'to'):
+                UserModel = user_field.rel.to
+            elif hasattr(user_field, 'remote_field') and hasattr(user_field.remote_field, 'model'):            
+                UserModel = user_field.remote_field.model
+            else:
+                raise AttributeError('Cannot find a relation to User class')
             if GROUPS_MANAGER['AUTH_MODELS_GET_OR_CREATE']:
                 django_user, _ = UserModel.objects.get_or_create(username=username)
             else:
@@ -649,7 +655,7 @@ class GroupMember(GroupMemberMixin):
     group = models.ForeignKey(Group, related_name='group_membership', on_delete=models.CASCADE)
     member = models.ForeignKey(Member, related_name='group_membership', on_delete=models.CASCADE)
     roles = models.ManyToManyField(GroupMemberRole, blank=True)
-    expiration_date = models.DateTimeField(null=True, default=None)
+    expiration_date = models.DateTimeField(null=True, default=None, blank=True)
 
     class Meta(GroupMemberMixin.Meta):
         unique_together = (('group', 'member'), )  # compatibility with Django < 1.8

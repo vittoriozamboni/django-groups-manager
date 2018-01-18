@@ -7,9 +7,12 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
+from distutils.version import StrictVersion
+import os
+
+import django
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -39,21 +42,34 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
+    # Uncomment for testing templates, and after a `pip install django-bootstrap3`
+    # 'bootstrap3',
+
     # App test
     'guardian',
     'groups_manager',
     'testproject',
 )
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+if StrictVersion(django.get_version()) >= StrictVersion('2.0'):
+    MIDDLEWARE = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
+else:
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
 
 # django-guardian required settings
 AUTHENTICATION_BACKENDS = (
@@ -100,3 +116,36 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 SESSION_COOKIE_NAME = "testproject"
 LOGIN_URL = '/admin/login/'
 
+if StrictVersion(django.get_version()) >= StrictVersion('2.0'):
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.contrib.auth.context_processors.auth'                
+                ]
+            },
+        },
+    ]
+
+# Uncomment for testing application settings
+
+"""
+GROUPS_MANAGER = {
+    'AUTH_MODELS_SYNC': True,
+    'AUTH_MODELS_GET_OR_CREATE': False,
+    'GROUP_NAME_PREFIX': '',
+    'GROUP_NAME_SUFFIX': '',
+    'USER_USERNAME_PREFIX': '',
+    'USER_USERNAME_SUFFIX': '',
+    'PERMISSIONS': {
+        'owner': ['view', 'change', 'delete'],
+        'group': ['view', 'change'],
+        'groups_upstream': ['view'],
+        'groups_downstream': [],
+        'groups_siblings': ['view'],
+    },
+}
+"""

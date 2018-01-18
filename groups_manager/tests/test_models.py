@@ -394,7 +394,13 @@ class TestGroupMember(TestCase):
         # Test remove user
         username = m1.django_user.username
         m1.delete()
-        UserModel = m1._meta.get_field('django_user').rel.to
+        user_field = m1._meta.get_field('django_user')
+
+        if hasattr(user_field, 'rel') and hasattr(user_field.rel, 'to'): 
+            UserModel = user_field.rel.to
+        elif hasattr(user_field, 'remote_field') and hasattr(user_field.remote_field, 'model'):            
+            UserModel = user_field.remote_field.model
+        
         self.assertEqual(len(UserModel.objects.filter(username=username)), 0)
         # Test remove group
         name = main.django_group.name
