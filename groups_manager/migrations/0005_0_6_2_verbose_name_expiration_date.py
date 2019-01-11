@@ -15,6 +15,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
+            model_name='groupmember',
+            name='expiration_date',
+            field=models.DateTimeField(blank=True, default=None, null=True),
+        ),
+        migrations.AlterField(
             model_name='group',
             name='codename',
             field=models.SlugField(blank=True, max_length=255, verbose_name='codename'),
