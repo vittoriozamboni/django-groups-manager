@@ -1,6 +1,12 @@
 import os
 from setuptools import setup
 
+try:
+    import jsonfield
+    _HAD_JSONFIELD = True
+except ImportError:
+    _HAD_JSONFIELD = False
+
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
@@ -8,6 +14,17 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 from groups_manager import VERSION
+
+install_requires=[
+    'awesome-slugify',
+    'django>=1.7',
+    'django-braces',
+    'django-guardian',
+    'django-mptt',
+]
+
+if not _HAD_JSONFIELD:
+    install_requires.append('jsonfield')
 
 setup(
     name='django-groups-manager',
@@ -24,14 +41,7 @@ setup(
         'groups_manager.templatetags',
     ],
     include_package_data=True,
-    install_requires=[
-        'awesome-slugify',
-        'django>=1.7',
-        'django-braces',
-        'django-guardian',
-        'django-mptt',
-        'jsonfield',
-    ],
+    install_requires=install_requires,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
