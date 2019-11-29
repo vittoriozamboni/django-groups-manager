@@ -1,5 +1,3 @@
-from distutils.version import StrictVersion
-
 import django
 from django.conf import settings
 from django.conf.urls import include, url
@@ -8,7 +6,7 @@ from django.contrib import admin
 
 from testproject import views
 
-if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
+if django.VERSION >= (1, 9, 0):
     urlpatterns = [
         url(r'^admin/', admin.site.urls),
     ]
