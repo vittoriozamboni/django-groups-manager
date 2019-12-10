@@ -1,16 +1,13 @@
 import json
 
-try:    
-    from django.core.urlresolvers import reverse
-except ImportError:
-    from django.urls import reverse
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from braces.views import LoginRequiredMixin
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 
 from groups_manager import models, forms, settings
+
 
 TS = settings.GROUPS_MANAGER['TEMPLATE_STYLE']
 if TS:

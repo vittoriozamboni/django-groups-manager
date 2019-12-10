@@ -1,6 +1,10 @@
 Installation
 ============
 
+Requirements
+    - Python >= 3.5
+    - Django >= 2
+
 First of all, install the latest build with ``pip``::
 
    pip install django-groups-manager
@@ -10,18 +14,15 @@ or the repository master version for latest updates::
    pip install https://github.com/vittoriozamboni/django-groups-manager/archive/master.zip
 
 Add ``groups_manager`` to installed apps::
-   
+
    INSTALLED_APPS += (
+       # 'guardian', # add as well to use permissions related features
        'groups_manager',
    )
 
 Run ``syncdb`` or ``migrate``::
 
    python manage.py migrate
-
-If you are upgrading from version <0.4.2, fake the initial migration::
-
-   python manage.py migrate groups_manager 0001 --fake
 
 If you want to use standard templates, add groups_manager's urls from ``urls.py``::
 
@@ -43,7 +44,7 @@ Basic usage
 A simple use case for this application is the tracking of customers groups. Each *organization* can have more than one *division*, and a *member* can be in more than one::
 
     from groups_manager.models import Group, GroupType, Member
-	
+
     # Create group types (optional)
     organization = models.GroupType.objects.create(label='Organization')
     division = models.GroupType.objects.create(label='Division')

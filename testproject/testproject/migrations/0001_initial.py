@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_cloudplatform', 'View Cloud Platform'),),
             },
             bases=(models.Model,),
@@ -36,6 +37,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_itobject', 'View IT Object'), ('manage_itobject', 'Manage IT Object')),
             },
             bases=(models.Model,),
@@ -47,6 +49,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_legion', 'View Legion'),),
             },
             bases=(models.Model,),
@@ -57,6 +60,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_match', 'View match'), ('play_match', 'Play match')),
             },
             bases=(models.Model,),
@@ -68,6 +72,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_newsletter', 'View Newsletter'), ('send_newsletter', 'Send Newsletter')),
             },
             bases=(models.Model,),
@@ -193,6 +198,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_pipeline', 'View Pipeline'),),
             },
             bases=(models.Model,),
@@ -203,6 +209,7 @@ class Migration(migrations.Migration):
                 ('group_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Group', on_delete=models.CASCADE)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_projectgroup', 'View Project Group'),),
             },
             bases=('groups_manager.group',),
@@ -224,6 +231,7 @@ class Migration(migrations.Migration):
                 ('member_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='groups_manager.Member', on_delete=models.CASCADE)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_projectmember', 'View Project Member'),),
             },
             bases=('groups_manager.member',),
@@ -235,6 +243,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_site', 'View site'), ('sell_site', 'Sell site')),
             },
             bases=(models.Model,),
@@ -246,6 +255,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_surfaceproduct', 'View Surface Product'),),
             },
             bases=(models.Model,),
@@ -257,6 +267,7 @@ class Migration(migrations.Migration):
                 ('euros', models.IntegerField()),
             ],
             options={
+                'default_permissions': ('add', 'change', 'delete'),
                 'permissions': (('view_teambudget', 'View team budget'),),
             },
             bases=(models.Model,),

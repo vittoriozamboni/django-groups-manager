@@ -17,14 +17,13 @@ from groups_manager import VERSION
 
 install_requires=[
     'awesome-slugify',
-    'django>=1.7',
-    'django-braces',
+    'django>=2',
     'django-guardian',
     'django-mptt',
 ]
 
 if not _HAD_JSONFIELD:
-    install_requires.append('jsonfield')
+    install_requires.append('jsonfield2')
 
 setup(
     name='django-groups-manager',
@@ -43,17 +42,18 @@ setup(
     include_package_data=True,
     install_requires=install_requires,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License', # example license
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Security',
     ],
 )
