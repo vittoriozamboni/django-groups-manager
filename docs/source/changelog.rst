@@ -1,7 +1,11 @@
 Changelog
 =========
+- 19-12-10 (1.0.0):
+    - Dropped support for Django < 2 and Python 2.*
+
 - 19-01-11 (0.6.2):
     - Added migrations for expiration_date and verbose names
+
 - 18-01-18 (0.6.1):
     - Added support for Django 2
 

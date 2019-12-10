@@ -1,9 +1,7 @@
 awesome-slugify
-# automatic tests are done with django <2
-django>=1.7,<2
-django-braces
+django>=2
 django-guardian
 django-mptt
-jsonfield
+jsonfield2
 
 django-extensions

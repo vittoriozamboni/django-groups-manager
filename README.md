@@ -7,12 +7,12 @@ It is also possible to synchronize the groups with Django's ``auth.models`` Grou
 
 ## Documentation
 
-Online documentation is available at http://django-groups-manager.rtfd.org/.
+Online documentation is available at http://django-groups-manager.readthedocs.org/.
 
 ## Requirements
 
-    - Django >= 1.7
-    - django-guardian for user permissions (<1.4 for Django < 1.8)
+    - Django >= 2
+    - django-guardian for user permissions
 
 ## Installation
 
@@ -29,11 +29,10 @@ pip install django-groups-manager
     ```python
     INSTALLED_APPS = (
        ...
+       # 'guardian', # add as well to use permissions related features
        'groups_manager',
     )
     ```
-
- If you want to use permissions related features, add also ``django-guardian``.
 
 2. Create models with ``migrate``:
 
