@@ -6,11 +6,15 @@ except ImportError:
     from django.urls import reverse
 
 from django.http import HttpResponseRedirect
-from braces.views import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 
 from groups_manager import models, forms, settings
+
+try:
+    from django.contrib.auth.mixins import LoginRequiredMixin
+except ImportError:  # Django 1.8
+    from braces.views import LoginRequiredMixin
 
 TS = settings.GROUPS_MANAGER['TEMPLATE_STYLE']
 if TS:

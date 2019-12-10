@@ -17,6 +17,7 @@ class Legion(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_legion', 'View Legion'), )
 
     def __unicode__(self):
@@ -35,6 +36,7 @@ class TeamBudget(models.Model):
     euros = models.IntegerField()
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_teambudget', 'View team budget'), )
 
 
@@ -43,6 +45,7 @@ class Match(models.Model):
     away = models.ForeignKey(Group, related_name='match_away', on_delete=models.CASCADE)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_match', 'View match'),
                        ('play_match', 'Play match'), )
 
@@ -56,6 +59,7 @@ class ITObject(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_itobject', 'View IT Object'),
                        ('manage_itobject', 'Manage IT Object'), )
 
@@ -64,6 +68,7 @@ class Newsletter(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_newsletter', 'View Newsletter'),
                        ('send_newsletter', 'Send Newsletter'), )
 
@@ -76,6 +81,7 @@ Signals kwargs example with subclass
 class ProjectGroup(Group):
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_projectgroup', 'View Project Group'), )
 
     class GroupsManagerMeta:
@@ -86,6 +92,7 @@ class ProjectGroup(Group):
 class ProjectMember(Member):
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_projectmember', 'View Project Member'), )
 
 
@@ -142,6 +149,7 @@ class Site(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_site', 'View site'),
                        ('sell_site', 'Sell site'), )
 
@@ -252,6 +260,7 @@ class Pipeline(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_pipeline', 'View Pipeline'), )
 
 
@@ -365,6 +374,7 @@ class CloudPlatform(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_cloudplatform', 'View Cloud Platform'), )
 
 
@@ -372,6 +382,7 @@ class SurfaceProduct(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        default_permissions = ('add', 'change', 'delete')
         permissions = (('view_surfaceproduct', 'View Surface Product'), )
 
 
