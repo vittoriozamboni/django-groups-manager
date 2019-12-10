@@ -10,9 +10,11 @@ It is also possible to synchronize the groups with Django's ``auth.models`` Grou
 Online documentation is available at http://django-groups-manager.readthedocs.org/.
 
 ## Requirements
-
+    - Python >= 3.5
     - Django >= 2
     - django-guardian for user permissions
+
+For older versions of Python or Django, please look at 0.6.2 version.
 
 ## Installation
 

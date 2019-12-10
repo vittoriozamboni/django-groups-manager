@@ -1,6 +1,10 @@
 Installation
 ============
 
+Requirements
+    - Python >= 3.5
+    - Django >= 2
+
 First of all, install the latest build with ``pip``::
 
    pip install django-groups-manager
