@@ -5,7 +5,7 @@ import warnings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models.signals import post_save, post_delete
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from django.apps import apps
 django_get_model = apps.get_model
