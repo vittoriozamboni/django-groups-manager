@@ -24,6 +24,12 @@ Use pip to install ``django-groups-manager``:
 pip install django-groups-manager
 ```
 
+To use per-object permissions related features, ``django-guardian`` is required as well:
+
+```bash
+pip install django-guardian
+```
+
 ### Django Configuration
 
 1. Add ``groups_manager`` into your ``INSTALLED_APPS``:

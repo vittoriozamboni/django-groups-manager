@@ -8,6 +8,8 @@ Requirements
 First of all, install the latest build with ``pip``::
 
    pip install django-groups-manager
+   # and, in case you want per-object permissions related features
+   pip install django-guardian
 
 or the repository master version for latest updates::
 

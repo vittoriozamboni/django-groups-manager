@@ -1,11 +1,18 @@
 from copy import deepcopy
 import re
+import unittest
 
 from django.contrib.auth import models as auth_models
 from django.test import TestCase
 
 from groups_manager import models, exceptions_gm
 from testproject import models as testproject_models
+
+try:
+    import guardian
+    has_guardian = True
+except ImportError:
+    has_guardian = False
 
 GROUPS_MANAGER_MOCK = {
     'AUTH_MODELS_SYNC': True,
@@ -66,6 +73,7 @@ class TestPermissions(TestCase):
         models.GroupMember.objects.create(group=self.plebeians, member=self.quintus)
         models.GroupMember.objects.create(group=self.greeks, member=self.archelaus)
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_standard_permissions(self):
         from groups_manager import settings
         settings.GROUPS_MANAGER = deepcopy(GROUPS_MANAGER_MOCK)
@@ -114,6 +122,7 @@ class TestPermissions(TestCase):
         legio_4.save()
         self.sulla.assign_object(self.consuls, legio_4)
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_all_true_permissions(self):
         self.create_legions()
         from groups_manager import settings
@@ -160,6 +169,7 @@ class TestPermissions(TestCase):
             ['testproject.view_legion', 'testproject.change_legion', 'testproject.delete_legion'],
             legio_4))
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_roles(self):
         """
         John and Patrick are member of the group. John is the commercial referent,
@@ -193,6 +203,7 @@ class TestPermissions(TestCase):
         self.assertTrue(patrick.has_perms(['view_site', 'change_site', 'delete_site'], site))
         self.assertFalse(patrick.has_perm('sell_site', site))
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_group_types_permissions(self):
         """
         John and Patrick are member of the group. John is the commercial referent,
@@ -225,6 +236,7 @@ class TestPermissions(TestCase):
 
         self.assertTrue(patrick.has_perms(['view_site', 'change_site', 'delete_site'], site))
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_football_match(self):
         """
         Thohir is the president of FC Internazionale, and Palacio is a team player.
@@ -255,6 +267,7 @@ class TestPermissions(TestCase):
         self.assertFalse(thohir.has_perm('play_match', friendly_match))
         self.assertTrue(palacio.has_perm('play_match', friendly_match))
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_group_permissions(self):
         """
         On company IT Stars, Mike is the sys admin and Juliet is the marketing manager.
@@ -292,6 +305,7 @@ class TestPermissions(TestCase):
         self.assertFalse(anna.has_perm('send_newsletter', newsletter_tech))
         # test downstream groups
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_proxy_models(self):
         """
         John Boss is the project leader. Marcus Worker and Julius Backend are the
@@ -474,6 +488,7 @@ class TestPermissions(TestCase):
         g.delete()
         w.remove_member(m)
 
+    @unittest.skipIf(not has_guardian, "django-guardian is required for standard permissions")
     def test_model_mixins(self):
         """
         John Boss is the MicroSoft boss. Marcus and Juliet are members of Azure and Surface

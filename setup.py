@@ -18,7 +18,6 @@ from groups_manager import VERSION
 install_requires=[
     'awesome-slugify',
     'django>=2',
-    'django-guardian',
     'django-mptt',
 ]
 
