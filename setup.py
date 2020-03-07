@@ -29,6 +29,7 @@ setup(
     version=VERSION,
     description="Django groups manager through django-mptt.",
     long_description=README,
+    long_description_content_type="text/markdown",
     author='Vittorio Zamboni',
     author_email='vittorio.zamboni@gmail.com',
     license='MIT',
