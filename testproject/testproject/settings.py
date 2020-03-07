@@ -11,6 +11,12 @@ import os
 
 import django
 
+try:
+    import guardian
+    has_guardian = True
+except ImportError:
+    has_guardian = False
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -45,10 +51,12 @@ INSTALLED_APPS = (
     # 'bootstrap3',
 
     # App test
-    'guardian',
     'groups_manager',
     'testproject',
 )
+
+if has_guardian:
+    INSTALLED_APPS += ('guardian',)
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
