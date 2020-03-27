@@ -13,6 +13,7 @@ Online documentation is available at http://django-groups-manager.readthedocs.or
     - Python >= 3.5
     - Django >= 2
     - django-guardian for user permissions
+    - jsonfield == 3.1.0
 
 For older versions of Python or Django, please look at 0.6.2 version.
 
