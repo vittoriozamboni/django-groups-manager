@@ -2,6 +2,6 @@ awesome-slugify
 django>=2
 django-guardian
 django-mptt
-jsonfield2
+jsonfield
 
 django-extensions
