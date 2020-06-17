@@ -1,5 +1,12 @@
 Changelog
 =========
+- 20-06-17 (1.0.2):
+    - Changed jsonfield2 to jsonfield in requirements
+
+- 20-03-07 (1.0.1):
+    - Amended Django 3 deprecations
+    - Documentation changes
+
 - 19-12-10 (1.0.0):
     - Dropped support for Django < 2 and Python 2.*
 
