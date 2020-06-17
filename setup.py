@@ -22,7 +22,7 @@ install_requires=[
 ]
 
 if not _HAD_JSONFIELD:
-    install_requires.append('jsonfield2')
+    install_requires.append('jsonfield')
 
 setup(
     name='django-groups-manager',
