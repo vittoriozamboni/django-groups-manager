@@ -1,0 +1,48 @@
+{% extends "groups_manager/bulma/member.html" %}
+
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li>
+    <span class="divider">&raquo;</span>
+    {% if member %}
+    <a href="{% url 'groups_manager:member_edit' member.id %}">Edit</a>
+    {% else %}
+    <a href="{% url 'groups_manager:member_add' %}">Add</a>
+    {% endif %}
+</li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="title is-2">
+    <i class="fa fa-groups-manager-member"></i>
+    {% if member %}
+    Edit "{{ member }}"
+    {% else %}
+    Create Member
+    {% endif %}
+</h2>
+
+
+<form action="." method="post" id="member_form" class="django form">
+    {% csrf_token %}
+
+    {% include "groups_manager/bulma/form_template.html" %}
+
+    <div class="buttons are-medium columns">
+        <div class="column">
+            <button type="submit" class="button
+                          is-primary is-fullwidth">Submit</button></div>
+        <div class="column ">
+            <a class="button is-warning is-fullwidth" href={% if group %}
+               "{% url 'groups_manager:member_detail' member.id %}"
+               {% else %}
+               "{% url 'groups_manager:member_list' %}"{% endif %}>
+            Cancel</a></div>
+    </div>
+
+</form>
+
+{% endblock content %}

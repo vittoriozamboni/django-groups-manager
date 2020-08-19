@@ -1,0 +1,161 @@
+{% load widget_tweaks %}
+<!-- fullname -->
+<div  class="field is-horizontal"  id="field_name">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.full_name.id_for_label}}">
+            {{form.full_name.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.full_name class+="input" %}</div>
+        <span class="help is-invalid">{{ form.full_name.errors }}</span>
+    </div>
+</div>
+<!-- name -->
+<div  class="field is-horizontal"  id="field_name">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.name.id_for_label}}">
+            {{form.name.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.name class+="input" %}</div>
+        <span class="help is-invalid">{{ form.name.errors }}</span>
+    </div>
+</div>
+<!-- codename -->
+<div class="field is-horizontal" id="field_codename">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.codename.id_for_label}}">
+            {{form.codename.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.codename class+="input" %}</div>
+        <span class="help is-invalid">{{ form.codename.errors }}</span>
+    </div>
+</div>
+<!-- description  -->
+<div class="field is-horizontal" id="field_description">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.description.id_for_label}}">
+            {{form.description.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.description class+="textarea" %}</div>
+        <span class="help is-invalid">{{ form.description.errors }}</span>
+    </div>
+</div>
+<!-- comment -->
+<div class="field is-horizontal" id="field_comment">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.comment.id_for_label}}">
+            {{form.comment.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.comment class+="textarea" %}</div>
+        <span class="help is-invalid">{{ form.comment.errors }}</span>
+    </div>
+</div>
+<!-- parent -->
+
+<!-- selector user  -->
+<div  class="field is-horizontal" id="field_parent">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.parent.id_for_label}}">
+            {{form.parent.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select">
+                {% render_field form.parent class+="select" %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.parent.errors }}</span>
+    </div>
+</div>
+<!-- properties -->
+<div class="field is-horizontal" id="field_properties">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.properties.id_for_label}}">
+            {{form.properties.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.properties class+="textarea" placeholder="{}"%}</div>
+        <span class="help is-invalid">{{ form.properties.errors }}</span>
+    </div>
+</div>
+
+<!-- django sync to group -->
+<div  class="field is-horizontal" id="field_sync">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.django_auth_sync.id_for_label}}">
+            {{form.django_auth_sync.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.django_auth_sync class+="checkbox" %}</div>
+        <span class="help is-invalid">{{ form.django_auth_sync.errors }}</span>
+    </div>
+</div>
+
+<!-- Group type  -->
+<div  class="field is-horizontal" id="field_group_type">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.group_type.id_for_label}}">
+            {{form.group_type.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select">
+                {% render_field form.group_type class+="select" %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.group_type.errors }}</span>
+    </div>
+</div>
+
+<!-- entities -->
+<div  class="field is-horizontal" id="field_group_entities">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.group_entities.id_for_label}}">
+            {{form.group_entities.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select is-multiple">
+                {% render_field form.group_entities class+="select multiple" size=4 %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.group_entities.errors }}</span>
+    </div>
+</div>
+<!-- selector user  -->
+<div  class="field is-horizontal" id="field_django_group">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.django_group.id_for_label}}">
+            {{form.django_group.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select">
+                {% render_field form.django_group class+="select" %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.django_group.errors }}</span>
+    </div>
+</div>

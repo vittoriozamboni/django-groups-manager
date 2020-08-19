@@ -20,7 +20,6 @@ except ImportError:
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -34,7 +33,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -44,11 +42,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'django_extensions',
 
     # Uncomment for testing templates, and after a `pip install django-bootstrap3`
-    # 'bootstrap3',
+    'bootstrap3',
 
     # App test
     'groups_manager',
@@ -56,7 +53,7 @@ INSTALLED_APPS = (
 )
 
 if has_guardian:
-    INSTALLED_APPS += ('guardian',)
+    INSTALLED_APPS += ('guardian', )
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -79,7 +76,6 @@ ANONYMOUS_USER_ID = -1
 ROOT_URLCONF = 'testproject.urls'
 
 WSGI_APPLICATION = 'testproject.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -104,7 +100,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
@@ -121,23 +116,22 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                 'django.contrib.auth.context_processors.auth',
-                 'django.contrib.messages.context_processors.messages',
-	     ]
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ]
         },
     },
 ]
 
 # Uncomment for testing application settings
 
-"""
 GROUPS_MANAGER = {
     'AUTH_MODELS_SYNC': True,
     'AUTH_MODELS_GET_OR_CREATE': False,
-    'GROUP_NAME_PREFIX': '',
-    'GROUP_NAME_SUFFIX': '',
-    'USER_USERNAME_PREFIX': '',
-    'USER_USERNAME_SUFFIX': '',
+    'GROUP_NAME_PREFIX': 'BULMA_',
+    'GROUP_NAME_SUFFIX': '_TEST',
+    'USER_USERNAME_PREFIX': 'BULMA_',
+    'USER_USERNAME_SUFFIX': '_TEST',
     'PERMISSIONS': {
         'owner': ['view', 'change', 'delete'],
         'group': ['view', 'change'],
@@ -146,4 +140,3 @@ GROUPS_MANAGER = {
         'groups_siblings': ['view'],
     },
 }
-"""

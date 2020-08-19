@@ -1,0 +1,9 @@
+{% load static %}
+<nav class="navbar is-fixed-top is-link" role="navigation" aria-label="main navigation">
+    <div class="navbar-menu">
+        <a href="{% url 'home' %}" alt="home" class="navbar-item">
+            Home</a>
+        <a href="{% url 'groups_manager:groups_manager' %}" alt="groups" class="navbar-item">
+            Groups Manager</a>
+    </div>
+</nav>

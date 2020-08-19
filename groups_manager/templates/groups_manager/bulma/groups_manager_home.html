@@ -1,0 +1,55 @@
+{% extends "groups_manager/bulma/groups_manager.html" %}
+
+{% block content %}
+<h1 class="title is-1">Groups Manager</h1>
+
+<div class="content is-medium">
+    <div class="list-group">
+        <ul>
+        <li><a href="{% url 'groups_manager:group_list' %}" class="list-group-item">
+            <h4 class="list-group-item-heading">Groups</h4>
+            <p class="list-group-item-text">
+                List of managed groups
+            </p>
+        </a></li>
+        <li><a href="{% url 'groups_manager:member_list' %}" class="list-group-item">
+            <h4 class="list-group-item-heading">Members</h4>
+            <p class="list-group-item-text">
+                Full list of members
+            </p>
+        </a></li>
+        </ul>
+    </div>
+    <div class="list-group">
+        <ul>
+            <li><a href="{% url 'groups_manager:group_type_list' %}" class="list-group-item">
+                <h4 class="list-group-item-heading">Group Types</h4>
+                <p class="list-group-item-text">
+                    Define types (i.e. "Organization")
+                </p>
+            </a></li>
+            <li><a href="{% url 'groups_manager:group_entity_list' %}" class="list-group-item">
+                <h4 class="list-group-item-heading">Group Entities</h4>
+                <p class="list-group-item-text">
+                    Manage Group Entities (i.e. "Collaborators")
+                </p>
+            </a></li>
+            <li><a href="{% url 'groups_manager:group_member_role_list' %}" class="list-group-item">
+                <h4 class="list-group-item-heading">Group Member Roles</h4>
+                <p class="list-group-item-text">
+                    User Roles within groups
+                </p>
+            </a></li>
+
+
+        </ul>
+    </div>
+    
+</div>
+<style>
+    .list-group > ul{
+    list-style-type:none;
+    }
+
+</style>
+{% endblock content %}

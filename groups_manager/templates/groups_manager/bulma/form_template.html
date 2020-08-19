@@ -1,0 +1,87 @@
+{% load widget_tweaks %}
+
+<!-- first name -->
+<div  class="field is-horizontal"  id="field_first_name">
+    <div class="field-label is-normal">
+    <label class="label"
+           for="{{form.first_name.id_for_label}}">
+        {{form.first_name.label}}</label>
+    </div>
+    <div class="field-body">
+    <div class="control">
+        {% render_field form.first_name class+="input" %}</div>
+    <span class="help is-invalid">{{ form.last_name.errors }}</span>
+    </div>
+</div>
+<!-- last name -->
+<div class="field is-horizontal" id="field_last_name">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.last_name.id_for_label}}">
+            {{form.last_name.label}}</label>
+    </div>
+    <div class="field-body">
+    <div class="control">
+        {% render_field form.last_name class+="input" %}</div>
+    <span class="help is-invalid">{{ form.last_name.errors }}</span>
+    </div>
+</div>
+<!-- username -->
+<div class="field  is-horizontal" id="field_username">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.username.id_for_label}}">
+            {{form.username.label}}</label>
+    </div>
+    <div class="field-body">
+    <div class="control">
+        {% render_field form.username class+="input" %}</div>
+    <span class="help is-invalid">{{ form.username.errors }}</span>
+    </div>
+</div>
+<!-- email -->
+<div class="field is-horizontal" id="field_email">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.email.id_for_label}}">
+            {{form.email.label}}</label>
+    </div>
+    <div class="field-body">
+    <div class="control">
+        {% render_field form.email class+="input" %}</div>
+    <span class="help is-invalid">{{ form.email.errors }}</span>
+    </div>
+</div>
+<!-- django sync to user auth -->
+<div  class="field is-horizontal" id="field_sync">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.django_auth_sync.id_for_label}}">
+            {{form.django_auth_sync.label}}</label>
+    </div>
+    <div class="field-body">
+    <div class="control">
+        {% render_field form.django_auth_sync class+="checkbox" %}</div>
+    <span class="help is-invalid">{{ form.django_auth_sync.errors }}</span>
+    </div>
+</div>
+<!-- selector user  -->
+<div  class="field is-horizontal" id="field_django_user">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.django_user.id_for_label}}">
+            {{form.django_user.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select">
+                {% render_field form.django_user class+="select" %}
+            </div>
+        </div>
+    <span class="help is-invalid">{{ form.django_user.errors }}</span>
+    </div>
+</div>
+
+
+
+
