@@ -1,0 +1,36 @@
+{% extends "groups_manager/bulma/group_detail.html" %}
+
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li>
+    <a href=".">Add member</a>
+</li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="title is-2">
+    <i class="fa fa-groups-manager-group-member"></i>
+    Add member to group {{ group }}
+</h2>
+
+
+<form action="." method="post" id="group_member_form" class="django form-horizontal">
+    {% csrf_token %}
+
+    {% include "groups_manager/bulma/group_member_add_member_form_template.html" %}
+
+    <div class="columns">
+        <div class="column">
+            <button type="submit" class="button is-primary is-fullwidth">Submit</button>
+        </div>
+        <div class="column"> 
+            <a class="button is-warning is-fullwidth" href="{% url 'groups_manager:group_detail' group.id %}">Cancel</a>
+        </div>
+    </div>
+
+</form>
+
+{% endblock content %}

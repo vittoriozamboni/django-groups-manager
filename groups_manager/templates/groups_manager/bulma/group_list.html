@@ -7,12 +7,12 @@
     <i class="fa fa-groups-manager-group"></i> Groups
 </h2>
 
-<table class="table is-hoverable is-fullwidth is-narrow" id="group_list">
+<table class="table is-hoverable is-fullwidth is-striped" id="group_list">
     <thead>
         <tr>
             <th>Name</th>
             <th>Parent</th>
-            <th>Action</th>
+            <th class="has-text-right">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
                 </a>
                 {% endif %}
             </td>
-            <td class="text-right">
+            <td class="has-text-right">
                 <!--PERMISSIONS_HERE-->
                 {% if perms.groups_manager.can_change_group %}
                 <a href="{% url 'groups_manager:group_edit' group.id %}" class="btn btn-sm btn-default">

@@ -1,0 +1,34 @@
+{% extends "groups_manager/bulma/group_member.html" %}
+
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li>
+    <a href="{% url 'groups_manager:group_member_delete' group_member.id %}">Delete</a>
+</li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="title is-2">
+    <i class="fa fa-groups-manager-group-type"></i> Delete group member
+</h2>
+
+<div class="container">
+    <h3 class="title is-3">{{ group_member }}</h3>
+    <p>Are you sure you want to delete this group member?</p>
+    <form action="{% url 'groups_manager:group_member_delete' group_member.id %}" method="post">
+        {% csrf_token %}
+        <div class="buttons are-medium columns">
+            <div class="column">
+                <input type="submit" class="button is-danger is-fullwidth" value="Delete" />
+            </div>
+            <div class="column">
+                <a href="{% url 'groups_manager:group_member_detail' group_member.id %}" class="button
+                         is-warning  is-fullwidth">Back to details</a></div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends "groups_manager/bulma/group_type.html" %}
+
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li>
+    <span class="divider">&raquo;</span>
+    {% if group_type %}
+    <a href="{% url 'groups_manager:group_type_edit' group_type.id %}">Edit</a>
+    {% else %}
+    <a href="{% url 'groups_manager:group_type_add' %}">Add</a>
+    {% endif %}
+</li>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<h2 class="title is-2">
+    <i class="fa fa-groups-manager-group-type"></i>
+    {% if group_type %}
+    Edit "{{ group_type }}"
+    {% else %}
+    Create Group Type
+    {% endif %}
+</h2>
+
+
+<form action="." method="post" id="group_type_form" class="django form-horizontal">
+    {% csrf_token %}
+
+    {% include "groups_manager/bulma/group_type_form_template.html" %}
+
+    <div class="buttons are-medium columns">
+        <div class="column">
+            <button type="submit" class="button
+                          is-primary is-fullwidth">Submit</button></div>
+        <div class="column ">
+            <a class="button is-warning is-fullwidth" href={% if group %}
+               "{% url 'groups_manager:group_type_detail' group.id %}"
+               {% else %}
+               "{% url 'groups_manager:group_type_list' %}"{% endif %}>
+                Cancel</a></div>
+    </div>
+</form>
+
+{% endblock content %}

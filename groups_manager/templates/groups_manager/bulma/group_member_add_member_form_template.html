@@ -1,0 +1,50 @@
+{% load widget_tweaks %}
+
+<!-- Group type  -->
+<div  class="field is-horizontal" id="field_member">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.member.id_for_label}}">
+            {{form.member.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select">
+                {% render_field form.member class+="select" %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.member.errors }}</span>
+    </div>
+</div>
+
+<!-- roles -->
+<div  class="field is-horizontal" id="field_roles">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.roles.id_for_label}}">
+            {{form.roles.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            <div class="select is-multiple">
+                {% render_field form.roles class+="multiple" size=4 %}
+            </div>
+        </div>
+        <span class="help is-invalid">{{ form.roles.errors }}</span>
+    </div>
+</div>
+
+<!-- expiration date -->
+<div  class="field is-horizontal"  id="field_expiration_date">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.expiration_date.id_for_label}}">
+            {{form.expiration_date.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.expiration_date class+="input" type="date" %}</div>
+        <span class="help is-invalid">{{ form.expiration_date.errors }}</span>
+    </div>
+</div>
+

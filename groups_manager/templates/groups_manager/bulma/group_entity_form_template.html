@@ -1,0 +1,28 @@
+{% load widget_tweaks %}
+
+<!-- label -->
+<div  class="field is-horizontal"  id="field_label">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.label.id_for_label}}">
+            {{form.label.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.label class+="input" %}</div>
+        <span class="help is-invalid">{{ form.label.errors }}</span>
+    </div>
+</div>
+<!-- last name -->
+<div class="field is-horizontal" id="field_codename">
+    <div class="field-label is-normal">
+        <label class="label"
+               for="{{form.codename.id_for_label}}">
+            {{form.codename.label}}</label>
+    </div>
+    <div class="field-body">
+        <div class="control">
+            {% render_field form.codename class+="input" %}</div>
+        <span class="help is-invalid">{{ form.codename.errors }}</span>
+    </div>
+</div>
