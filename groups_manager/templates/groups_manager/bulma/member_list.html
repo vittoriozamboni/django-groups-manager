@@ -12,7 +12,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Username</th>
-            <th>Action</th>
+            <th class="has-text-right">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
             </td>
             <td>{{ member.email }}</td>
             <td>{{ member.username }}</td>
-            <td class="text-right">
+            <td class="has-text-right">
                 <!--PERMISSIONS_HERE-->
                 {% if perms.groups_manager.can_change_member %}
                 <a href="{% url 'groups_manager:member_edit' member.id %}"
