@@ -1,4 +1,4 @@
-{% extends "groups_manager/bulma/group_member.html" %}
+{% extends "groups_manager/bulma/group.html" %}
 
 
 {% block breadcrumbs %}
@@ -25,7 +25,7 @@
                 <input type="submit" class="button is-danger is-fullwidth" value="Delete" />
             </div>
             <div class="column">
-                <a href="{% url 'groups_manager:group_member_detail' group_member.id %}" class="button
+                <a href="{% url 'groups_manager:group_detail' group_member.id %}" class="button
                          is-warning  is-fullwidth">Back to details</a></div>
         </div>
     </form>

@@ -8,7 +8,6 @@ from django.views.generic.base import TemplateView
 
 from groups_manager import models, forms, settings
 
-
 TS = settings.GROUPS_MANAGER['TEMPLATE_STYLE']
 if TS:
     TS = '/%s' % TS
@@ -184,26 +183,31 @@ class GroupMemberRoleMixin(object):
         return reverse('groups_manager:group_member_role_list')
 
 
-class GroupMemberRoleListView(LoginRequiredMixin, GroupMemberRoleMixin, ListView):
+class GroupMemberRoleListView(LoginRequiredMixin, GroupMemberRoleMixin,
+                              ListView):
     template_name = 'groups_manager%s/group_member_role_list.html' % TS
 
     def get_queryset(self):
         return models.GroupMemberRole.objects.all()
 
 
-class GroupMemberRoleDetailView(LoginRequiredMixin, GroupMemberRoleMixin, DetailView):
+class GroupMemberRoleDetailView(LoginRequiredMixin, GroupMemberRoleMixin,
+                                DetailView):
     template_name = 'groups_manager%s/group_member_role_detail.html' % TS
 
 
-class GroupMemberRoleCreateView(LoginRequiredMixin, GroupMemberRoleMixin, CreateView):
+class GroupMemberRoleCreateView(LoginRequiredMixin, GroupMemberRoleMixin,
+                                CreateView):
     template_name = 'groups_manager%s/group_member_role_form.html' % TS
 
 
-class GroupMemberRoleEditView(LoginRequiredMixin, GroupMemberRoleMixin, UpdateView):
+class GroupMemberRoleEditView(LoginRequiredMixin, GroupMemberRoleMixin,
+                              UpdateView):
     template_name = 'groups_manager%s/group_member_role_form.html' % TS
 
 
-class GroupMemberRoleDeleteView(LoginRequiredMixin, GroupMemberRoleMixin, DeleteView):
+class GroupMemberRoleDeleteView(LoginRequiredMixin, GroupMemberRoleMixin,
+                                DeleteView):
     template_name = 'groups_manager%s/group_member_role_confirm_delete.html' % TS
 
 
@@ -229,7 +233,8 @@ class GroupMemberEditView(LoginRequiredMixin, GroupMemberMixin, UpdateView):
 
     def get_success_url(self):
         group_member = self.get_object()
-        return reverse('groups_manager:group_detail', kwargs={'pk': group_member.group.id})
+        return reverse('groups_manager:group_detail',
+                       kwargs={'pk': group_member.group.id})
 
 
 class GroupMemberDeleteView(LoginRequiredMixin, GroupMemberMixin, DeleteView):
@@ -243,43 +248,55 @@ class GroupMemberDeleteView(LoginRequiredMixin, GroupMemberMixin, DeleteView):
 
     def get_success_url(self):
         group_member = self.get_object()
-        return reverse('groups_manager:group_detail', kwargs={'pk': group_member.group.id})
+        return reverse('groups_manager:group_detail',
+                       kwargs={'pk': group_member.group.id})
 
 
-class GroupMemberAddMemberView(LoginRequiredMixin, GroupMemberMixin, CreateView):
+class GroupMemberAddMemberView(LoginRequiredMixin, GroupMemberMixin,
+                               CreateView):
     template_name = 'groups_manager%s/group_member_add_member_form.html' % TS
     form_class = forms.GroupMemberAddMemberForm
 
     def get_initial(self):
         initial = super(GroupMemberAddMemberView, self).get_initial()
-        initial['group'] = models.Group.objects.get(id=self.kwargs.get('group_id'))
+        initial['group'] = models.Group.objects.get(
+            id=self.kwargs.get('group_id'))
         return initial
 
     def get_context_data(self, **kwargs):
-        context = super(GroupMemberAddMemberView, self).get_context_data(**kwargs)
-        context['group'] = models.Group.objects.get(id=self.kwargs.get('group_id'))
+        context = super(GroupMemberAddMemberView,
+                        self).get_context_data(**kwargs)
+        context['group'] = models.Group.objects.get(
+            id=self.kwargs.get('group_id'))
         return context
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
         form.save_m2m()
+        print("Validacion...add member to group", form, self.object)
         return HttpResponseRedirect(
-            reverse('groups_manager:group_detail', kwargs={'pk': self.object.group.id}))
+            reverse('groups_manager:group_detail',
+                    kwargs={'pk': self.object.group.id}))
 
 
-class GroupMemberAddGroupView(LoginRequiredMixin, GroupMemberMixin, CreateView):
+class GroupMemberAddGroupView(LoginRequiredMixin, GroupMemberMixin,
+                              CreateView):
     template_name = 'groups_manager%s/group_member_add_group_form.html' % TS
     form_class = forms.GroupMemberAddGroupForm
 
     def get_initial(self):
         initial = super(GroupMemberAddGroupView, self).get_initial()
-        initial['member'] = models.Member.objects.get(id=self.kwargs.get('member_id'))
+        initial['member'] = models.Member.objects.get(
+            id=self.kwargs.get('member_id'))
         return initial
 
     def get_context_data(self, **kwargs):
-        context = super(GroupMemberAddGroupView, self).get_context_data(**kwargs)
-        context['member'] = models.Member.objects.get(id=self.kwargs.get('member_id'))
+        context = super(GroupMemberAddGroupView,
+                        self).get_context_data(**kwargs)
+        context['member'] = models.Member.objects.get(
+            id=self.kwargs.get('member_id'))
+        context["form"].fields["member"].initial = context["member"].id
         return context
 
     def form_valid(self, form):
@@ -287,4 +304,5 @@ class GroupMemberAddGroupView(LoginRequiredMixin, GroupMemberMixin, CreateView):
         self.object.save()
         form.save_m2m()
         return HttpResponseRedirect(
-            reverse('groups_manager:group_detail', kwargs={'pk': self.object.group.id}))
+            reverse('groups_manager:group_detail',
+                    kwargs={'pk': self.object.group.id}))

@@ -1,18 +1,19 @@
 {% load widget_tweaks %}
-<!-- member  -->
-<div  class="field is-horizontal" id="field_member">
+
+<!-- Group  -->
+<div  class="field is-horizontal" id="field_group">
     <div class="field-label is-normal">
         <label class="label"
-               for="{{form.member.id_for_label}}">
-            {{form.member.label}}</label>
+               for="{{form.group.id_for_label}}">
+            {{form.group.label}}</label>
     </div>
     <div class="field-body">
         <div class="control">
             <div class="select">
-                {% render_field form.member class+="select" %}
+                {% render_field form.group class+="select" %}
             </div>
         </div>
-        <span class="help is-invalid">{{ form.member.errors }}</span>
+        <span class="help is-invalid">{{ form.group.errors }}</span>
     </div>
 </div>
 
@@ -47,5 +48,4 @@
     </div>
 </div>
 
-
-{% render_field form.group class+="select" value=group.id %}
+{% render_field form.member class+="select" value=member.id %}

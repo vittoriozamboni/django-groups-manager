@@ -54,6 +54,8 @@ INSTALLED_APPS = (
 if has_guardian:
     INSTALLED_APPS += ('guardian', )
 
+SESSION_COOKIE_NAME = 'session_bulma'
+
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
