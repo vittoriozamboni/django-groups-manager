@@ -1,4 +1,4 @@
-awesome-slugify
+python-slugify
 django>=2
 django-guardian
 django-mptt

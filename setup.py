@@ -16,7 +16,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 from groups_manager import VERSION
 
 install_requires=[
-    'awesome-slugify',
+    'python-slugify',
     'django>=2',
     'django-mptt',
 ]
