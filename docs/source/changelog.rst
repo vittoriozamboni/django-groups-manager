@@ -1,5 +1,9 @@
 Changelog
 =========
+- 21-04-11 (1.1.0):
+    - Removed `awesome-slugify` from requirements. It needs to be installed separately due to his licence (see issue #54, thank you BoPeng!);
+    - Added a new settings to customize the slugify functions for username and other cases.
+
 - 20-06-17 (1.0.2):
     - Changed jsonfield2 to jsonfield in requirements
 

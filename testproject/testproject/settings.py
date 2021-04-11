@@ -123,12 +123,15 @@ TEMPLATES = [
             'context_processors': [
                  'django.contrib.auth.context_processors.auth',
                  'django.contrib.messages.context_processors.messages',
+                 'django.template.context_processors.request',
 	     ]
         },
     },
 ]
 
-# Uncomment for testing application settings
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Uncomment to test application settings
 
 """
 GROUPS_MANAGER = {
@@ -145,5 +148,15 @@ GROUPS_MANAGER = {
         'groups_downstream': [],
         'groups_siblings': ['view'],
     },
+}
+"""
+
+# Uncomment to test slugify function with awesome-slugify
+
+"""
+from slugify import slugify
+GROUPS_MANAGER = {
+    'SLUGIFY_FUNCTION': lambda s: slugify(s, to_lower=True),
+    'SLUGIFY_USERNAME_FUNCTION': lambda s: slugify(s, to_lower=True, separator="_")
 }
 """

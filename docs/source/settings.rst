@@ -41,6 +41,27 @@ Templates
 
 - ``TEMPLATE_STYLE``: name of the templates folder inside "groups_manager". By default is ``"bootstrap3"``, this means that templates are searched inside folder "groups_manager/bootstrap3"
 
+Slugify function
+----------------
+
+- ``SLUGIFY_FUNCTION``: function used to slugify codenames;
+- ``SLUGIFY_USERNAME_FUNCTION``: function used to slugify auto-created usernames.
+
+.. note::
+    Prior to `1.1.0`, the default function was `awesome-slugify`. Due to its licence, it cannot be distributed with `django-groups-manager`.
+
+By default Django's slugify is used, with conversion to lower and, only for username, `_` as separator.
+
+To use a different function with it's own parameters, you can define a lambda function in settings (i.e. using `awesome-slugify`)::
+
+    from slugify import slugify
+
+    GROUPS_MANAGER = {
+        'SLUGIFY_FUNCTION': lambda s: slugify(s, to_lower=True),
+        'SLUGIFY_USERNAME_FUNCTION': lambda s: slugify(s, to_lower=True, separator="_")
+    }
+
+
 Defaults
 --------
 
@@ -63,4 +84,6 @@ Default values are::
         },
         # Templates
         'TEMPLATE_STYLE': "bootstrap3",
+        'SLUGIFY_FUNCTION': lambda s: slugify(s).lower(),
+        'SLUGIFY_USERNAME_FUNCTION': lambda s: slugify(s).lower().replace('-', '_'),
     }

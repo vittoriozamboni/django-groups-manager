@@ -64,6 +64,9 @@ target/
 #PyCharm
 .idea/*
 
+#VScode
+.vscode
+
 # testproject local files
 testproject/static*
 testproject/db.sqlite3

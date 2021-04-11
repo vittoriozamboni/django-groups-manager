@@ -1,5 +1,5 @@
 from django.conf import settings
-
+from django.utils.text import slugify
 
 GROUPS_MANAGER_SETTINGS = getattr(settings, 'GROUPS_MANAGER', {})
 
@@ -13,6 +13,13 @@ PERMISSIONS = {
 }
 PERMISSIONS.update(SETTINGS_PERMISSIONS)
 
+def slugify_function(s):
+    return slugify(s).lower()
+
+def slugify_username_function(s):
+    return slugify_function(s).replace('-', '_')
+
+
 GROUPS_MANAGER = {
     # User and Groups sync settings
     'AUTH_MODELS_SYNC': GROUPS_MANAGER_SETTINGS.get('AUTH_MODELS_SYNC', False),
@@ -24,5 +31,8 @@ GROUPS_MANAGER = {
     # Permissions
     'PERMISSIONS': PERMISSIONS,
     # Templates
-    'TEMPLATE_STYLE': GROUPS_MANAGER_SETTINGS.get('TEMPLATE_STYLE', 'bootstrap3')
+    'TEMPLATE_STYLE': GROUPS_MANAGER_SETTINGS.get('TEMPLATE_STYLE', 'bootstrap3'),
+    # Slugify function
+    'SLUGIFY_FUNCTION':  GROUPS_MANAGER_SETTINGS.get('SLUGIFY_FUNCTION', slugify_function),
+    'SLUGIFY_USERNAME_FUNCTION':  GROUPS_MANAGER_SETTINGS.get('SLUGIFY_USERNAME_FUNCTION', slugify_username_function),
 }
