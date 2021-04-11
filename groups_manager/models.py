@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from importlib import import_module
 from uuid import uuid4
 import warnings
 
@@ -16,11 +17,13 @@ DjangoUser = getattr(django_settings, 'AUTH_USER_MODEL', DefaultUser)
 
 from jsonfield import JSONField
 from mptt.models import MPTTModel, TreeForeignKey
-from slugify import slugify
 
 from groups_manager import exceptions_gm
 from groups_manager.perms import assign_object_to_member, assign_object_to_group
+from groups_manager.settings import GROUPS_MANAGER
 
+slugify = GROUPS_MANAGER['SLUGIFY_FUNCTION']
+slugify_username = GROUPS_MANAGER['SLUGIFY_USERNAME_FUNCTION']
 
 def get_auth_models_sync_func_default(instance):
     from groups_manager.settings import GROUPS_MANAGER
@@ -76,7 +79,7 @@ class MemberMixin(MemberRelationsMixin, models.Model):
 
     def save(self, *args, **kwargs):
         if not self.username:
-            self.username = slugify(self.full_name, to_lower=True, separator="_")
+            self.username = slugify_username(self.full_name)
         super(MemberMixin, self).save(*args, **kwargs)
 
     @property
@@ -151,7 +154,7 @@ def member_save(sender, instance, created, *args, **kwargs):
             user_field = instance._meta.get_field('django_user')
             if hasattr(user_field, 'rel') and hasattr(user_field.rel, 'to'):
                 UserModel = user_field.rel.to
-            elif hasattr(user_field, 'remote_field') and hasattr(user_field.remote_field, 'model'):            
+            elif hasattr(user_field, 'remote_field') and hasattr(user_field.remote_field, 'model'):
                 UserModel = user_field.remote_field.model
             else:
                 raise AttributeError('Cannot find a relation to User class')
@@ -217,7 +220,7 @@ class GroupTypeMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.codename:
-            self.codename = slugify(self.label, to_lower=True)
+            self.codename = slugify(self.label)
         super(GroupTypeMixin, self).save(*args, **kwargs)
 
     @property
@@ -258,7 +261,7 @@ class GroupEntityMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.codename:
-            self.codename = slugify(self.label, to_lower=True)
+            self.codename = slugify(self.label)
         super(GroupEntityMixin, self).save(*args, **kwargs)
 
     @property
@@ -360,7 +363,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
     def save(self, *args, **kwargs):
         self.full_name = self._get_full_name()[:255]
         if not self.codename:
-            self.codename = slugify(self.name, to_lower=True)
+            self.codename = slugify(self.name)
         super(GroupMixin, self).save(*args, **kwargs)
 
     def _get_full_name(self):
@@ -602,7 +605,7 @@ class GroupMemberRoleMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.codename:
-            self.codename = slugify(self.label, to_lower=True)
+            self.codename = slugify(self.label)
         super(GroupMemberRoleMixin, self).save(*args, **kwargs)
 
 
