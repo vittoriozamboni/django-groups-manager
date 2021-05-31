@@ -48,8 +48,8 @@ A simple use case for this application is the tracking of customers groups. Each
     from groups_manager.models import Group, GroupType, Member
 
     # Create group types (optional)
-    organization = models.GroupType.objects.create(label='Organization')
-    division = models.GroupType.objects.create(label='Division')
+    organization = GroupType.objects.create(label='Organization')
+    division = GroupType.objects.create(label='Division')
 
     # Organization A has 'commercials' and 'managers'
     org_a = Group.objects.create(name='Org A, Inc.', group_type=organization)
