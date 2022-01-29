@@ -70,3 +70,4 @@ target/
 # testproject local files
 testproject/static*
 testproject/db.sqlite3
+/.venv/
