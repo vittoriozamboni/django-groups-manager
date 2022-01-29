@@ -1,11 +1,15 @@
 Changelog
 =========
+- 22-01-29 (1.2.0):
+    - Support Django 4: uses correct url parser function `re_path` (see issue #60, thank you Lukas Hennies!)
+    - Updated intro.rst, fixed wrong example (see issue #57, thank you Areski Belaid!)
+
 - 21-04-11 (1.1.0):
     - Removed `awesome-slugify` from requirements. It needs to be installed separately due to his licence (see issue #54, thank you BoPeng!);
     - Added a new settings to customize the slugify functions for username and other cases.
 
 - 20-06-17 (1.0.2):
-    - Changed jsonfield2 to jsonfield in requirements
+    - Changed jsonfield2 to jsonfield in requirements and tests (see issue #49, thank you ioio!);
 
 - 20-03-07 (1.0.1):
     - Amended Django 3 deprecations
