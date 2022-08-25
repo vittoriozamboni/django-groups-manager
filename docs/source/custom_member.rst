@@ -16,8 +16,8 @@ The value of the attribute is in ``<application>.<model_name>`` form.
 
     class Organization(Group):
     
-        class GroupsModelMeta:
-            model_name = 'myApp.OrganizationMember'
+        class GroupsManagerMeta:
+            member_model = 'myApp.OrganizationMember'
     
 
     class OrganizationMember(Member):
