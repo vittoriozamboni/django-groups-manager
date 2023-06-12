@@ -4,3 +4,6 @@ django-mptt
 jsonfield
 
 django-extensions
+
+# for testing templates and admin UI
+django-bootstrap3

@@ -9,8 +9,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 import os
 
-import django
-
 try:
     import guardian
     has_guardian = True
@@ -48,11 +46,14 @@ INSTALLED_APPS = (
     'django_extensions',
 
     # Uncomment for testing templates, and after a `pip install django-bootstrap3`
-    # 'bootstrap3',
+    'bootstrap3',
 
     # App test
     'groups_manager',
     'testproject',
+
+    # mptt provides the templates for rendering trees in admin
+    'mptt',
 )
 
 if has_guardian:
@@ -100,7 +101,6 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
 
 USE_TZ = True
 
@@ -124,7 +124,7 @@ TEMPLATES = [
                  'django.contrib.auth.context_processors.auth',
                  'django.contrib.messages.context_processors.messages',
                  'django.template.context_processors.request',
-	     ]
+            ],
         },
     },
 ]
@@ -160,3 +160,6 @@ GROUPS_MANAGER = {
     'SLUGIFY_USERNAME_FUNCTION': lambda s: slugify(s, to_lower=True, separator="_")
 }
 """
+
+# Setting for mptt-tree in admin UI (default: 20)
+MPTT_ADMIN_LEVEL_INDENT = 25
