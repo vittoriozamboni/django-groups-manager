@@ -1,0 +1,3 @@
+sphinx
+sphinxcontrib-django2
+sphinx_rtd_theme
