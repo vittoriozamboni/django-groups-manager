@@ -2,8 +2,8 @@ Installation
 ============
 
 Requirements
-    - Python >= 3.5
-    - Django >= 2
+    - Python >= 3.8
+    - Django >= 3.2
 
 First of all, install the latest build with ``pip``::
 

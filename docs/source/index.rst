@@ -6,11 +6,11 @@
 Django Groups Manager
 =====================
 
-Django Groups Manager allows to manage groups based on `django-mptt <https://github.com/django-mptt/django-mptt>`_.
-
-The application offers three main classes: `Group`, `Member` and `GroupMember`.
+Django Groups Manager allows to manage groups, group membership and members. 
 It's possible to *map* groups and members with Django's auth models, in order to use external applcations such `django-guardian <https://github.com/lukaszb/django-guardian>`_ to handle permissions.
+Groups can have a hierarchical structure based on `django-mptt <https://github.com/django-mptt/django-mptt>`_.
 
+The application offers three main classes: `Group`, `Member` and `GroupMember`. 
 The basic idea of Groups is that each `Group` instance could have a `Group` instance as parent (this relation is managed via django-mptt).
 
 The code is hosted on `github <https://github.com/vittoriozamboni/django-groups-manager>`_.

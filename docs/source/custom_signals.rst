@@ -1,5 +1,3 @@
-.. _custom-signals:
-
 Custom signals
 --------------
 

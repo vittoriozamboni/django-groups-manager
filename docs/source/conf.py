@@ -38,18 +38,12 @@ sys.path.insert(1, os.path.join(base_path, 'testproject'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    "sphinx.ext.autosectionlabel",
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinxcontrib_django2',
 ]
-
-# Set options for extension "sphinxcontrib-django2"
-# Configure the path to the Django settings module
-django_settings = 'testproject.settings'
-autodoc_default_options = {
-    "exclude-members": "__weakref__,DoesNotExist,MultipleObjectsReturned"
-}
 
 todo_include_todos = True
 
@@ -290,3 +284,16 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# -- Options for sphinx.ext.autosectionlabel ------------------------------
+
+# Make sure the ref targets created by are unique
+autosectionlabel_prefix_document = True
+
+# -- Options for sphinxcontrib-django2 ------------------------------------
+
+# Configure the path to the Django settings module
+django_settings = 'testproject.settings'
+autodoc_default_options = {
+    "exclude-members": "__weakref__,DoesNotExist,MultipleObjectsReturned"
+}

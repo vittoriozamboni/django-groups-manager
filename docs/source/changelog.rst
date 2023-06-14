@@ -1,5 +1,12 @@
 Changelog
 =========
+
+- 2023-mm-dd (1.3.0):
+    - Verified compatibility with Django up to 4.2 and Python up to 3.11.
+    - Dropped compatibility guarantees with anything older than Django 3.2 and Python 3.8.
+    - Use Django's build in models.JSONField instead of the one from the jsonfield package.
+    - Minor documentation changes
+
 - 2022-01-29 (1.2.0):
     - Support Django 4: uses correct url parser function `re_path` (see issue #60, thank you Lukas Hennies!)
     - Updated intro.rst, fixed wrong example (see issue #57, thank you Areski Belaid!)
@@ -54,6 +61,6 @@ Changelog
 
 - 2015-05-05 (0.2.0):
     - Changed retrieval of permission's name: 'view', 'change' and 'delete' will be translated to '<name>_<model_name>', the others are left untouched (see :ref:`permission name policy <permission-name-policy>`)
-    - Added GroupsManagerMeta class to Group that allows to specify the member model to use for members list (see :ref:`custom Member model <custom-member-model>`)
+    - Added GroupsManagerMeta class to Group that allows to specify the member model to use for members list (see `custom Member model <custom_member>`)
 
 - 2014-10-29 (0.1.0): Initial version

@@ -1,5 +1,3 @@
-.. _custom-permissions-by-role:
-
 Resource assignment via role permissions
 ----------------------------------------
 
