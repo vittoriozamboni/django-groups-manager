@@ -113,7 +113,8 @@ class TestGroupType(TestCase):
         g1 = models.Group.objects.create(name='Group 1', group_type=self.group_type)
         self.assertEqual(list(self.group_type.groups_manager_group_set.all()), [g1])
         # Deprecated
-        self.assertEqual(list(self.group_type.groups.all()), [g1])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(self.group_type.groups.all()), [g1])
 
 
 class TestGroupEntity(TestCase):
@@ -140,7 +141,8 @@ class TestGroupEntity(TestCase):
         g1.group_entities.add(self.group_entity)
         self.assertEqual(list(self.group_entity.groups_manager_group_set.all()), [g1])
         # Deprecated
-        self.assertEqual(list(self.group_entity.groups.all()), [g1])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(self.group_entity.groups.all()), [g1])
 
 
 class TestGroup(TestCase):
@@ -387,4 +389,5 @@ class TestGroupMember(TestCase):
         models.GroupMember.objects.create(group=g2, member=m1)
         self.assertEqual(list(m1.groups_manager_group_set.all()), [g1, g2])
         # Deprecated
-        self.assertEqual(list(m1.groups.all()), [g1, g2])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(m1.groups.all()), [g1, g2])

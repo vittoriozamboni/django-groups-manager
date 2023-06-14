@@ -399,7 +399,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         else:
             members = [gm.member for gm in group_member_model.objects.filter(group=self)]
         if subgroups:
-            for subgroup in self.subgroups.all():
+            for subgroup in self.sub_groups_manager_group_set.all():
                 members += subgroup.members
         members = list(set(members))
         return members
@@ -426,7 +426,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         """
         entities = list(self.group_entities.all())
         if subgroups:
-            for subgroup in self.subgroups.all():
+            for subgroup in self.sub_groups_manager_group_set.all():
                 entities += subgroup.entities
             entities = list(set(entities))
         return entities
