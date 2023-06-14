@@ -34,11 +34,11 @@ pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
-.tox/
+.tox
 .coverage
 .coverage_html
 .cache
-nosetests.xml
+.pytest_cache
 coverage.xml
 
 # Translations
@@ -71,4 +71,4 @@ target/
 # testproject local files
 testproject/static*
 testproject/db.sqlite3
-.venv/
+.venv

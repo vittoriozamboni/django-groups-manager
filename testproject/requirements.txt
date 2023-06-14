@@ -1,6 +1,8 @@
 django>=2
 django-guardian
 django-mptt
+
+# still used in early migrations
 jsonfield
 
 django-extensions

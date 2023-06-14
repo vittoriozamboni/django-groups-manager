@@ -26,12 +26,12 @@ GROUPS_MANAGER = {
 
 ## Requirements
 
-    - Python >= 3.5
-    - Django >= 2
+    - Python >= 3.8
+    - Django >= 3.2
     - django-guardian for user permissions
     - jsonfield == 3.1.0
 
-For older versions of Python or Django, please look at 0.6.2 version.
+For older versions of Python or Django, please look at 1.2.0 (Django <3.2, Python < 3.8>) or 0.6.2 version (Django 1.x, Python < 3.5).
 
 ## Installation
 
