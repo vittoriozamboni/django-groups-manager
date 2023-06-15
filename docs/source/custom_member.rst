@@ -1,5 +1,3 @@
-.. _custom-member-model:
-
 Custom member model
 -------------------
 

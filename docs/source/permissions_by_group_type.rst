@@ -1,7 +1,5 @@
-.. _custom-permissions-by-group-type:
-
 Resource assignment via group type permissions
-----------------------------------------
+----------------------------------------------
 
 Permissions can also be applied to related groups filtered by group types.
 Instead of simply using a list to specify permissions one can use a ``dict`` to
@@ -9,8 +7,7 @@ specify which group types get which permissions.
 
 
 Example
-#######
-
+^^^^^^^
 
 John Money is the commercial referent of the company; Patrick Html is the web
 developer. John and Patrick can view the site, but only Patrick can change and

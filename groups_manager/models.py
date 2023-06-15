@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from importlib import import_module
 from uuid import uuid4
 import warnings
 
@@ -15,7 +14,6 @@ from django.conf import settings as django_settings
 from django.contrib.auth.models import User as DefaultUser
 DjangoUser = getattr(django_settings, 'AUTH_USER_MODEL', DefaultUser)
 
-from jsonfield import JSONField
 from mptt.models import MPTTModel, TreeForeignKey
 
 from groups_manager import exceptions_gm
@@ -70,9 +68,6 @@ class MemberMixin(MemberRelationsMixin, models.Model):
     class Meta:
         abstract = True
         ordering = ('last_name', 'first_name')
-
-    def __unicode__(self):
-        return self.full_name
 
     def __str__(self):
         return self.full_name
@@ -131,6 +126,7 @@ class Member(MemberMixin):
     django_user = models.ForeignKey(DjangoUser, null=True, blank=True, on_delete=models.SET_NULL,
                                     related_name='%(app_label)s_%(class)s_set', verbose_name=_('django user'))
 
+    # This class Meta is not necessary acc. to https://docs.djangoproject.com/en/4.2/topics/db/models/#meta-inheritance
     class Meta(MemberMixin.Meta):
         abstract = False
 
@@ -182,7 +178,7 @@ def member_save(sender, instance, created, *args, **kwargs):
 
 def member_delete(sender, instance, *args, **kwargs):
     """
-    Remove the related Django Group
+    Remove the related Django User
     """
     get_auth_models_sync_func = kwargs.get('get_auth_models_sync_func',
                                            get_auth_models_sync_func_default)
@@ -313,7 +309,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
       - `description`: text field
       - `comment`: text field
       - `full_name`: auto generated full name starting from tree root
-      - `properties`: jsonfield properties
+      - `properties`: JSONField properties
       - `group_members`: m2m to Member, through GroupMember model (related name: `groups`)
       - `group_type`: foreign key to GroupType (related name: `groups`)
       - `group_entities`: m2m to GroupEntity (related name: `groups`)
@@ -336,10 +332,10 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
                             related_name='sub_%(app_label)s_%(class)s_set', verbose_name=_('parent'))
     full_name = models.CharField(_('full name'), max_length=255, default='', blank=True)
     try:
-        properties = JSONField(_('properties'), default={}, blank=True,
+        properties = models.JSONField(_('properties'), default=dict, blank=True,
                                 load_kwargs={'object_pairs_hook': OrderedDict})
     except TypeError:
-        properties = JSONField(_('properties'), default={}, blank=True)
+        properties = models.JSONField(_('properties'), default=dict, blank=True)
 
     django_auth_sync = models.BooleanField(default=True, blank=True)
 
@@ -403,7 +399,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         else:
             members = [gm.member for gm in group_member_model.objects.filter(group=self)]
         if subgroups:
-            for subgroup in self.subgroups.all():
+            for subgroup in self.sub_groups_manager_group_set.all():
                 members += subgroup.members
         members = list(set(members))
         return members
@@ -430,7 +426,7 @@ class GroupMixin(GroupRelationsMixin, MPTTModel):
         """
         entities = list(self.group_entities.all())
         if subgroups:
-            for subgroup in self.subgroups.all():
+            for subgroup in self.sub_groups_manager_group_set.all():
                 entities += subgroup.entities
             entities = list(set(entities))
         return entities
@@ -620,7 +616,8 @@ class GroupMemberMixin(models.Model):
     class Meta:
         abstract = True
         ordering = ('group', 'member')
-        # BUG in Django: https://code.djangoproject.com/ticket/16732
+        # BUG in Django: "Unable to have abstract model with unique_together"
+        # https://code.djangoproject.com/ticket/16732
         # unique_together = (('group', 'member'), )
 
     def __unicode__(self):

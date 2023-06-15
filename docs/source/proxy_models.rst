@@ -4,7 +4,7 @@ Projects management with Proxy Models
 John Boss is the project leader. Marcus Worker and Julius Backend are the
 django backend guys; Teresa Html is the front-end developer and Jack College is the
 student that has to learn to write good backends.
-The Celery pipeline is owned by Marcus, and Jack must see it without intercations.
+The Celery pipeline is owned by Marcus, and Jack must see it without interactions.
 Teresa can't see the pipeline, but John has full permissions as project leader.
 As part of the backend group, Julius has the right of viewing and editing, but not to
 stop (delete) the pipeline.

@@ -32,7 +32,7 @@ Valid keys are:
 
 .. note::
    The four special permission names ``"add"``, ``"view"``, ``"change"``,  and ``"delete"`` are translated to ``<permission>_<model_name>`` string during permission's name lookup.
-   This allows to use a standard permission policy (*view*, *change*, *delete*) but also allows to use :ref:`custom permissions <custom-permissions-by-role>`.
+   This allows to use a standard permission policy (*view*, *change*, *delete*) but also allows to use `custom permissions <custom-permissions-by-role>`.
 
 An example of permissions assigned by role can be found on use cases.
 

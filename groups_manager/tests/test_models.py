@@ -1,6 +1,5 @@
 from copy import deepcopy
 import re
-import sys
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
@@ -39,10 +38,6 @@ class TestMember(TestCase):
 
     def test_str(self):
         self.assertEqual(str(self.member), 'Lucio Silla')
-
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            self.assertEqual(unicode(self.member), 'Lucio Silla')
 
     def test_full_name(self):
         self.assertEqual(self.member.full_name, 'Lucio Silla')
@@ -103,10 +98,6 @@ class TestGroupType(TestCase):
     def test_str(self):
         self.assertEqual(str(self.group_type), 'Organization')
 
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            self.assertEqual(unicode(self.group_type), 'Organization')
-
     def test_save(self):
         self.group_type.codename = ''
         self.group_type.save()
@@ -122,7 +113,8 @@ class TestGroupType(TestCase):
         g1 = models.Group.objects.create(name='Group 1', group_type=self.group_type)
         self.assertEqual(list(self.group_type.groups_manager_group_set.all()), [g1])
         # Deprecated
-        self.assertEqual(list(self.group_type.groups.all()), [g1])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(self.group_type.groups.all()), [g1])
 
 
 class TestGroupEntity(TestCase):
@@ -133,10 +125,6 @@ class TestGroupEntity(TestCase):
 
     def test_str(self):
         self.assertEqual(str(self.group_entity), 'Organization Partner')
-
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            self.assertEqual(unicode(self.group_entity), 'Organization Partner')
 
     def test_save(self):
         self.group_entity.save()
@@ -153,7 +141,8 @@ class TestGroupEntity(TestCase):
         g1.group_entities.add(self.group_entity)
         self.assertEqual(list(self.group_entity.groups_manager_group_set.all()), [g1])
         # Deprecated
-        self.assertEqual(list(self.group_entity.groups.all()), [g1])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(self.group_entity.groups.all()), [g1])
 
 
 class TestGroup(TestCase):
@@ -164,10 +153,6 @@ class TestGroup(TestCase):
 
     def test_str(self):
         self.assertEqual(str(self.group), 'Istituto di Genomica Applicata')
-
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            self.assertEqual(unicode(self.group), 'Istituto di Genomica Applicata')
 
     def test_save(self):
         group = models.Group.objects.create(name='Istituto di Genomica Applicata')
@@ -348,10 +333,6 @@ class TestGroupMemberRole(TestCase):
     def test_str(self):
         self.assertEqual(str(self.group_member_role), 'Administrator')
 
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            self.assertEqual(unicode(self.group_member_role), 'Administrator')
-
     def test_save(self):
         self.group_member_role.save()
         self.assertEqual(self.group_member_role.codename, 'administrator')
@@ -369,13 +350,6 @@ class TestGroupMember(TestCase):
         main = models.Group.objects.create(name='Main')
         gm = models.GroupMember.objects.create(group=main, member=m1)
         self.assertEqual(str(gm), 'Main - Caio Mario')
-
-    def test_unicode(self):
-        if sys.version_info < (3, ):
-            m1 = models.Member.objects.create(first_name='Caio', last_name='Mario')
-            main = models.Group.objects.create(name='Main')
-            gm = models.GroupMember.objects.create(group=main, member=m1)
-            self.assertEqual(unicode(gm), 'Main - Caio Mario')
 
     def test_groups_membership_django_integration(self):
         from groups_manager import settings
@@ -415,4 +389,5 @@ class TestGroupMember(TestCase):
         models.GroupMember.objects.create(group=g2, member=m1)
         self.assertEqual(list(m1.groups_manager_group_set.all()), [g1, g2])
         # Deprecated
-        self.assertEqual(list(m1.groups.all()), [g1, g2])
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(list(m1.groups.all()), [g1, g2])

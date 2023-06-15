@@ -13,8 +13,8 @@ Cons:
  - all external foreign keys must be declared in the concrete model;
  - all signals must be declared with concrete models.
 
-Model mixins example
---------------------
+Mixins Example
+^^^^^^^^^^^^^^
 
 The following models allow to manage a set of Organizations with related members (from ``organization`` app).
 In this example, a ``last_edit_date`` is added to models, and member display name has the user email (if defined).
