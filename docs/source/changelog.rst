@@ -1,7 +1,7 @@
 Changelog
 =========
 
-- 2023-mm-dd (1.3.0):
+- 2023-06-15 (1.3.0):
     - Verified compatibility with Django up to 4.2 and Python up to 3.11.
     - Dropped compatibility guarantees with anything older than Django 3.2 and Python 3.8.
     - Use Django's build in models.JSONField instead of the one from the jsonfield package.
